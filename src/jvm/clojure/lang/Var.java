@@ -19,53 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class Var extends ARef implements IFn, IRef, Settable, Serializable {
 
-    static class TBox {
-
-        volatile Object val;
-        final Thread thread;
-
-        public TBox(Thread t, Object val) {
-            this.thread = t;
-            this.val = val;
-        }
-    }
-
-    static public class Unbound extends AFn {
-        final public Var v;
-
-        public Unbound(Var v) {
-            this.v = v;
-        }
-
-        public String toString() {
-            return "Unbound: " + v;
-        }
-
-        public Object throwArity(int n) {
-            throw new IllegalStateException("Attempting to call unbound fn: " + v);
-        }
-    }
-
-    static class Frame {
-        final static Frame TOP = new Frame(PersistentHashMap.EMPTY, null);
-        //Var->TBox
-        Associative bindings;
-        //Var->val
-//	Associative frameBindings;
-        Frame prev;
-
-        public Frame(Associative bindings, Frame prev) {
-//		this.frameBindings = frameBindings;
-            this.bindings = bindings;
-            this.prev = prev;
-        }
-
-        protected Object clone() {
-            return new Frame(this.bindings, null);
-        }
-
-    }
-
     static final ThreadLocal<Frame> dvals = new ThreadLocal<Frame>() {
 
         protected Frame initialValue() {
@@ -89,16 +42,28 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
     public final Symbol sym;
     public final Namespace ns;
 
-//IPersistentMap _meta;
-
+    /**
+     * Used in core.async to capture the bindings.
+     *
+     * @return
+     */
     public static Object getThreadBindingFrame() {
         return dvals.get();
     }
 
+    /**
+     *
+     * @return
+     */
     public static Object cloneThreadBindingFrame() {
         return dvals.get().clone();
     }
 
+    /**
+     * Used in core.async to reset bindings.
+     *
+     * @param frame
+     */
     public static void resetThreadBindingFrame(Object frame) {
         dvals.set((Frame) frame);
     }
@@ -712,25 +677,6 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
         }
     };
 
-
-    /***
-     Note - serialization only supports reconnecting the Var identity on the deserializing end
-     Neither the value in the var nor any of its properties are serialized
-     ***/
-
-    private static class Serialized implements Serializable {
-        public Serialized(Symbol nsName, Symbol sym) {
-            this.nsName = nsName;
-            this.sym = sym;
-        }
-
-        private Symbol nsName;
-        private Symbol sym;
-
-        private Object readResolve() throws ObjectStreamException {
-            return intern(nsName, sym);
-        }
-    }
 
     private Object writeReplace() throws ObjectStreamException {
         return new Serialized(ns.getName(), sym);
