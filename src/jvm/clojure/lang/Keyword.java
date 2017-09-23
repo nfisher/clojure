@@ -15,16 +15,48 @@ package clojure.lang;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
-import java.util.concurrent.ConcurrentHashMap;
 import java.lang.ref.ReferenceQueue;
-import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+
+class KeywordTable {
+	private static final KeywordTable _instance = new KeywordTable();
+	private final ConcurrentHashMap<Symbol, Reference<Keyword>> table = new ConcurrentHashMap<Symbol, Reference<Keyword>>();
+	private final ReferenceQueue rq = new ReferenceQueue();
+
+	public static KeywordTable instance() {
+		return _instance;
+	}
+
+	public Reference<Keyword> get(final Symbol sym) {
+		return table.get(sym);
+	}
+
+	public boolean remove(final Symbol sym, final Reference<Keyword> ref) {
+		return table.remove(sym, ref);
+	}
+
+	public Reference<Keyword> putIfAbsent(final Symbol sym, final Keyword key) {
+		return table.putIfAbsent(sym, new WeakReference<Keyword>(key, rq));
+	}
+
+	public void clear() {
+		if (rq.poll() != null) {
+			while (rq.poll() != null) {
+			}
+			for (Map.Entry<Symbol, Reference<Keyword>> e : table.entrySet()) {
+				final Reference<Keyword> val = e.getValue();
+				if (val != null && val.get() == null) {
+					table.remove(e.getKey(), val);
+				}
+			}
+		}
+	}
+}
 
 public class Keyword implements IFn, Comparable, Named, Serializable, IHashEq {
-
-	static final ReferenceQueue rq = new ReferenceQueue();
-	private static ConcurrentHashMap<Symbol, Reference<Keyword>> table = new ConcurrentHashMap();
 	public final Symbol sym;
 	final int hasheq;
 	transient String _str;
@@ -34,16 +66,35 @@ public class Keyword implements IFn, Comparable, Named, Serializable, IHashEq {
 		hasheq = sym.hasheq() + 0x9e3779b9;
 	}
 
+	public static Keyword find(Symbol sym) {
+		Reference<Keyword> ref = KeywordTable.instance().get(sym);
+		if (ref != null) {
+			return ref.get();
+		} else {
+			return null;
+		}
+	}
+
+	public static Keyword find(String ns, String name) {
+		return find(Symbol.intern(ns, name));
+	}
+
+	public static Keyword find(String nsname) {
+		return find(Symbol.intern(nsname));
+	}
+
 	public static Keyword intern(Symbol sym) {
+	    KeywordTable table = KeywordTable.instance();
+
 		Keyword k = null;
 		Reference<Keyword> existingRef = table.get(sym);
 		if (existingRef == null) {
-			Util.clearCache(rq, table);
+			table.clear();
 			if (sym.meta() != null) {
 				sym = (Symbol) sym.withMeta(null);
 			}
 			k = new Keyword(sym);
-			existingRef = table.putIfAbsent(sym, new WeakReference<Keyword>(k, rq));
+			existingRef = table.putIfAbsent(sym, k);
 		}
 		if (existingRef == null) {
 			return k;
@@ -63,23 +114,6 @@ public class Keyword implements IFn, Comparable, Named, Serializable, IHashEq {
 
 	public static Keyword intern(String nsname) {
 		return intern(Symbol.intern(nsname));
-	}
-
-	public static Keyword find(Symbol sym) {
-		Reference<Keyword> ref = table.get(sym);
-		if (ref != null) {
-			return ref.get();
-		} else {
-			return null;
-		}
-	}
-
-	public static Keyword find(String ns, String name) {
-		return find(Symbol.intern(ns, name));
-	}
-
-	public static Keyword find(String nsname) {
-		return find(Symbol.intern(nsname));
 	}
 
 	public final int hashCode() {
@@ -253,5 +287,4 @@ public class Keyword implements IFn, Comparable, Named, Serializable, IHashEq {
 	public Object applyTo(ISeq arglist) {
 		return AFn.applyToHelper(this, arglist);
 	}
-
 }
