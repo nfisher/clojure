@@ -204,17 +204,14 @@ static public ISeq ret1(ISeq ret, Object nil){
 
 static public <K,V> void clearCache(ReferenceQueue rq, ConcurrentHashMap<K, Reference<V>> cache){
 		//cleanup any dead entries
-	if(rq.poll() != null)
-		{
-		while(rq.poll() != null)
-			;
-		for(Map.Entry<K, Reference<V>> e : cache.entrySet())
-			{
-            Reference<V> val = e.getValue();
+	if(rq.poll() != null) {
+		while(rq.poll() != null) { }
+		for(Map.Entry<K, Reference<V>> e : cache.entrySet()) {
+			Reference<V> val = e.getValue();
 			if(val != null && val.get() == null)
 				cache.remove(e.getKey(), val);
-			}
 		}
+	}
 }
 
 static public RuntimeException runtimeException(String s){

@@ -45,7 +45,7 @@ static final Symbol LET = Symbol.intern("let*");
 static final Symbol LETFN = Symbol.intern("letfn*");
 static final Symbol DO = Symbol.intern("do");
 static final Symbol FN = Symbol.intern("fn*");
-static final Symbol FNONCE = (Symbol) Symbol.intern("fn*").withMeta(RT.map(Keyword.intern(null, "once"), RT.T));
+static final Symbol FNONCE = (Symbol) Symbol.intern("fn*").withMeta(RT.map(KeywordTable.intern(null, "once"), RT.T));
 static final Symbol QUOTE = Symbol.intern("quote");
 static final Symbol THE_VAR = Symbol.intern("var");
 static final Symbol DOT = Symbol.intern(".");
@@ -78,21 +78,21 @@ static final Symbol IDENTITY = Symbol.intern("clojure.core", "identity");
 static final Symbol _AMP_ = Symbol.intern("&");
 static final Symbol ISEQ = Symbol.intern("clojure.lang.ISeq");
 
-static final Keyword loadNs = Keyword.intern(null, "load-ns");
-static final Keyword inlineKey = Keyword.intern(null, "inline");
-static final Keyword inlineAritiesKey = Keyword.intern(null, "inline-arities");
-static final Keyword staticKey = Keyword.intern(null, "static");
-static final Keyword arglistsKey = Keyword.intern(null, "arglists");
+static final Keyword loadNs = KeywordTable.intern(null, "load-ns");
+static final Keyword inlineKey = KeywordTable.intern(null, "inline");
+static final Keyword inlineAritiesKey = KeywordTable.intern(null, "inline-arities");
+static final Keyword staticKey = KeywordTable.intern(null, "static");
+static final Keyword arglistsKey = KeywordTable.intern(null, "arglists");
 static final Symbol INVOKE_STATIC = Symbol.intern("invokeStatic");
 
-static final Keyword volatileKey = Keyword.intern(null, "volatile");
-static final Keyword implementsKey = Keyword.intern(null, "implements");
+static final Keyword volatileKey = KeywordTable.intern(null, "volatile");
+static final Keyword implementsKey = KeywordTable.intern(null, "implements");
 static final String COMPILE_STUB_PREFIX = "compile__stub";
 
-static final Keyword protocolKey = Keyword.intern(null, "protocol");
-static final Keyword onKey = Keyword.intern(null, "on");
-static Keyword dynamicKey = Keyword.intern("dynamic");
-static final Keyword redefKey = Keyword.intern(null, "redef");
+static final Keyword protocolKey = KeywordTable.intern(null, "protocol");
+static final Keyword onKey = KeywordTable.intern(null, "on");
+static Keyword dynamicKey = KeywordTable.intern("dynamic");
+static final Keyword redefKey = KeywordTable.intern(null, "redef");
 
 static final Symbol NS = Symbol.intern("ns");
 static final Symbol IN_NS = Symbol.intern("in-ns");
@@ -234,29 +234,29 @@ static final public Var NO_RECUR = Var.create(null).setDynamic();
 static final public Var LOADER = Var.create().setDynamic();
 
 //String
-static final public Var SOURCE = Var.intern(Namespace.findOrCreate(Symbol.intern("clojure.core")),
+static final public Var SOURCE = Var.intern(NamespaceTable.findOrCreate(Symbol.intern("clojure.core")),
                                             Symbol.intern("*source-path*"), "NO_SOURCE_FILE").setDynamic();
 
 //String
-static final public Var SOURCE_PATH = Var.intern(Namespace.findOrCreate(Symbol.intern("clojure.core")),
+static final public Var SOURCE_PATH = Var.intern(NamespaceTable.findOrCreate(Symbol.intern("clojure.core")),
                                                  Symbol.intern("*file*"), "NO_SOURCE_PATH").setDynamic();
 
 //String
-static final public Var COMPILE_PATH = Var.intern(Namespace.findOrCreate(Symbol.intern("clojure.core")),
+static final public Var COMPILE_PATH = Var.intern(NamespaceTable.findOrCreate(Symbol.intern("clojure.core")),
                                                   Symbol.intern("*compile-path*"), null).setDynamic();
 //boolean
-static final public Var COMPILE_FILES = Var.intern(Namespace.findOrCreate(Symbol.intern("clojure.core")),
+static final public Var COMPILE_FILES = Var.intern(NamespaceTable.findOrCreate(Symbol.intern("clojure.core")),
                                                    Symbol.intern("*compile-files*"), Boolean.FALSE).setDynamic();
 
-static final public Var INSTANCE = Var.intern(Namespace.findOrCreate(Symbol.intern("clojure.core")),
+static final public Var INSTANCE = Var.intern(NamespaceTable.findOrCreate(Symbol.intern("clojure.core")),
                                               Symbol.intern("instance?"));
 
-static final public Var ADD_ANNOTATIONS = Var.intern(Namespace.findOrCreate(Symbol.intern("clojure.core")),
+static final public Var ADD_ANNOTATIONS = Var.intern(NamespaceTable.findOrCreate(Symbol.intern("clojure.core")),
                                             Symbol.intern("add-annotations"));
 
-static final public Keyword disableLocalsClearingKey = Keyword.intern("disable-locals-clearing");
-static final public Keyword directLinkingKey = Keyword.intern("direct-linking");
-static final public Keyword elideMetaKey = Keyword.intern("elide-meta");
+static final public Keyword disableLocalsClearingKey = KeywordTable.intern("disable-locals-clearing");
+static final public Keyword directLinkingKey = KeywordTable.intern("direct-linking");
+static final public Keyword elideMetaKey = KeywordTable.intern("elide-meta");
 
 static final public Var COMPILER_OPTIONS;
 
@@ -280,7 +280,7 @@ static public Object getCompilerOption(Keyword k){
             }
         }
 
-        COMPILER_OPTIONS = Var.intern(Namespace.findOrCreate(Symbol.intern("clojure.core")),
+        COMPILER_OPTIONS = Var.intern(NamespaceTable.findOrCreate(Symbol.intern("clojure.core")),
                 Symbol.intern("*compiler-options*"), compilerOptions).setDynamic();
     }
 
@@ -1650,7 +1650,7 @@ static class StaticMethodExpr extends MethodExpr{
 	final static Method forNameMethod = Method.getMethod("Class classForName(String)");
 	final static Method invokeStaticMethodMethod =
 			Method.getMethod("Object invokeStaticMethod(Class,String,Object[])");
-	final static Keyword warnOnBoxedKeyword = Keyword.intern("warn-on-boxed");
+	final static Keyword warnOnBoxedKeyword = KeywordTable.intern("warn-on-boxed");
     Class jc;
 
 	public StaticMethodExpr(String source, int line, int column, Symbol tag, Class c,
@@ -1990,7 +1990,7 @@ static class ConstantExpr extends LiteralExpr{
 	}
 
 	static class Parser implements IParser{
-		static Keyword formKey = Keyword.intern("form");
+		static Keyword formKey = KeywordTable.intern("form");
 
 		public Expr parse(C context, Object form){
 			int argCount = RT.count(form) - 1;
@@ -3617,8 +3617,8 @@ static class InvokeExpr implements Expr{
 	public int siteIndex = -1;
 	public Class protocolOn;
 	public java.lang.reflect.Method onMethod;
-	static Keyword onKey = Keyword.intern("on");
-	static Keyword methodMapKey = Keyword.intern("method-map");
+	static Keyword onKey = KeywordTable.intern("on");
+	static Keyword methodMapKey = KeywordTable.intern("method-map");
     Class jc;
 
     static Object sigTag(int argcount, Var v){
@@ -3655,7 +3655,7 @@ static class InvokeExpr implements Expr{
 				if(this.protocolOn != null)
 					{
 					IPersistentMap mmap = (IPersistentMap) RT.get(pvar.get(), methodMapKey);
-                    Keyword mmapVal = (Keyword) mmap.valAt(Keyword.intern(fvar.sym));
+                    Keyword mmapVal = (Keyword) mmap.valAt(KeywordTable.intern(fvar.sym));
                     if (mmapVal == null) {
                         throw new IllegalArgumentException(
                               "No method of interface: " + protocolOn.getName() +
@@ -3954,14 +3954,14 @@ static public class FnExpr extends ObjExpr{
 	static Expr parse(C context, ISeq form, String name) {
 		ISeq origForm = form;
 		FnExpr fn = new FnExpr(tagOf(form));
-		Keyword retkey = Keyword.intern(null, "rettag");
+		Keyword retkey = KeywordTable.intern(null, "rettag");
 		Object rettag = RT.get(RT.meta(form), retkey);
 		fn.src = form;
 		ObjMethod enclosingMethod = (ObjMethod) METHOD.deref();
         fn.hasEnclosingMethod = enclosingMethod != null;
 		if(((IMeta) form.first()).meta() != null)
 			{
-			fn.onceOnly = RT.booleanCast(RT.get(RT.meta(form.first()), Keyword.intern(null, "once")));
+			fn.onceOnly = RT.booleanCast(RT.get(RT.meta(form.first()), KeywordTable.intern(null, "once")));
 //			fn.superName = (String) RT.get(RT.meta(form.first()), Keyword.intern(null, "super-name"));
 			}
 		//fn.thisName = name;
@@ -4939,12 +4939,12 @@ static public class ObjExpr implements Expr{
 	boolean isMutable(LocalBinding lb){
 		return isVolatile(lb) ||
 		       RT.booleanCast(RT.contains(fields, lb.sym)) &&
-		       RT.booleanCast(RT.get(lb.sym.meta(), Keyword.intern("unsynchronized-mutable")));
+		       RT.booleanCast(RT.get(lb.sym.meta(), KeywordTable.intern("unsynchronized-mutable")));
 	}
 
 	boolean isVolatile(LocalBinding lb){
 		return RT.booleanCast(RT.contains(fields, lb.sym)) &&
-		       RT.booleanCast(RT.get(lb.sym.meta(), Keyword.intern("volatile-mutable")));
+		       RT.booleanCast(RT.get(lb.sym.meta(), KeywordTable.intern("volatile-mutable")));
 	}
 
 	boolean isDeftype(){
@@ -7255,7 +7255,7 @@ static Namespace namespaceFor(Namespace inns, Symbol sym){
 	if(ns == null)
 		{
 		// ...otherwise check the Namespaces map.
-		ns = Namespace.find(nsSym);
+		ns = NamespaceTable.find(nsSym);
 		}
 	return ns;
 }
@@ -8649,11 +8649,11 @@ public static class CaseExpr implements Expr, MaybePrimitiveExpr{
 	final static Method hashMethod = Method.getMethod("int hash(Object)");
 	final static Method hashCodeMethod = Method.getMethod("int hashCode()");
 	final static Method equivMethod = Method.getMethod("boolean equiv(Object, Object)");
-    final static Keyword compactKey = Keyword.intern(null, "compact");
-    final static Keyword sparseKey = Keyword.intern(null, "sparse");
-    final static Keyword hashIdentityKey = Keyword.intern(null, "hash-identity");
-    final static Keyword hashEquivKey = Keyword.intern(null, "hash-equiv");
-    final static Keyword intKey = Keyword.intern(null, "int");
+    final static Keyword compactKey = KeywordTable.intern(null, "compact");
+    final static Keyword sparseKey = KeywordTable.intern(null, "sparse");
+    final static Keyword hashIdentityKey = KeywordTable.intern(null, "hash-identity");
+    final static Keyword hashEquivKey = KeywordTable.intern(null, "hash-equiv");
+    final static Keyword intKey = KeywordTable.intern(null, "int");
 	//(case* expr shift mask default map<minhash, [test then]> table-type test-type skip-check?)
 	public CaseExpr(int line, int column, LocalBindingExpr expr, int shift, int mask, int low, int high, Expr defaultExpr,
 	        SortedMap<Integer,Expr> tests,HashMap<Integer,Expr> thens, Keyword switchType, Keyword testType, Set<Integer> skipCheck){

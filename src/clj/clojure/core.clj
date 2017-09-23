@@ -610,9 +610,9 @@
    :added "1.0"
    :static true}
   ([name] (cond (keyword? name) name
-                (symbol? name) (clojure.lang.Keyword/intern ^clojure.lang.Symbol name)
-                (string? name) (clojure.lang.Keyword/intern ^String name)))
-  ([ns name] (clojure.lang.Keyword/intern ns name)))
+                (symbol? name) (clojure.lang.KeywordTable/intern ^clojure.lang.Symbol name)
+                (string? name) (clojure.lang.KeywordTable/intern ^String name)))
+  ([ns name] (clojure.lang.KeywordTable/intern ns name)))
 
 (defn find-keyword
   "Returns a Keyword with the given namespace and name if one already
@@ -623,9 +623,9 @@
    :added "1.3"
    :static true}
   ([name] (cond (keyword? name) name
-                (symbol? name) (clojure.lang.Keyword/find ^clojure.lang.Symbol name)
-                (string? name) (clojure.lang.Keyword/find ^String name)))
-  ([ns name] (clojure.lang.Keyword/find ns name)))
+                (symbol? name) (clojure.lang.KeywordTable/find ^clojure.lang.Symbol name)
+                (string? name) (clojure.lang.KeywordTable/find ^String name)))
+  ([ns name] (clojure.lang.KeywordTable/find ns name)))
 
 
 (defn spread
@@ -4098,7 +4098,7 @@
   "Returns the namespace named by the symbol or nil if it doesn't exist."
   {:added "1.0"
    :static true}
-  [sym] (clojure.lang.Namespace/find sym))
+  [sym] (clojure.lang.NamespaceTable/find sym))
 
 (defn create-ns
   "Create a new namespace named by the symbol if one doesn't already
@@ -4106,20 +4106,20 @@
   name."
   {:added "1.0"
    :static true}
-  [sym] (clojure.lang.Namespace/findOrCreate sym))
+  [sym] (clojure.lang.NamespaceTable/findOrCreate sym))
 
 (defn remove-ns
   "Removes the namespace named by the symbol. Use with caution.
   Cannot be used to remove the clojure namespace."
   {:added "1.0"
    :static true}
-  [sym] (clojure.lang.Namespace/remove sym))
+  [sym] (.remove (clojure.lang.NamespaceTable/instance) sym))
 
 (defn all-ns
   "Returns a sequence of all namespaces."
   {:added "1.0"
    :static true}
-  [] (clojure.lang.Namespace/all))
+  [] (clojure.lang.NamespaceTable/all))
 
 (defn the-ns
   "If passed a namespace, returns it. Else, when passed a symbol,
@@ -5750,7 +5750,7 @@
     `(do
        (clojure.core/in-ns '~name)
        ~@(when name-metadata
-           `((.resetMeta (clojure.lang.Namespace/find '~name) ~name-metadata)))
+           `((.resetMeta (clojure.lang.NamespaceTable/find '~name) ~name-metadata)))
        (with-loading-context
         ~@(when gen-class-call (list gen-class-call))
         ~@(when (and (not= name 'clojure.core) (not-any? #(= :refer-clojure (first %)) references))

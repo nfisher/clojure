@@ -28,18 +28,19 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
 
     static public volatile int rev = 0;
 
-    static Keyword privateKey = Keyword.intern(null, "private");
+    static Keyword privateKey = KeywordTable.intern(null, "private");
+    static Keyword macroKey = KeywordTable.intern(null, "macro");
+    static Keyword nameKey = KeywordTable.intern(null, "name");
+    static Keyword nsKey = KeywordTable.intern(null, "ns");
     static IPersistentMap privateMeta = new PersistentArrayMap(new Object[]{privateKey, Boolean.TRUE});
-    static Keyword macroKey = Keyword.intern(null, "macro");
-    static Keyword nameKey = Keyword.intern(null, "name");
-    static Keyword nsKey = Keyword.intern(null, "ns");
-//static Keyword tagKey = Keyword.intern(null, "tag");
+
     static IFn assoc = new AFn() {
         @Override
         public Object invoke(Object m, Object k, Object v) {
             return RT.assoc(m, k, v);
         }
     };
+
     static IFn dissoc = new AFn() {
         @Override
         public Object invoke(Object c, Object k) {
@@ -104,7 +105,7 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
         if (nsQualifiedSym.ns == null) {
             throw new IllegalArgumentException("Symbol must be namespace-qualified");
         }
-        Namespace ns = Namespace.find(Symbol.intern(nsQualifiedSym.ns));
+        Namespace ns = NamespaceTable.find(Symbol.intern(nsQualifiedSym.ns));
         if (ns == null) {
             throw new IllegalArgumentException("No such namespace: " + nsQualifiedSym.ns);
         }
@@ -124,7 +125,7 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
     }
 
     public static Var intern(Symbol nsName, Symbol sym) {
-        Namespace ns = Namespace.findOrCreate(nsName);
+        Namespace ns = NamespaceTable.findOrCreate(nsName);
         return intern(ns, sym);
     }
 
@@ -133,7 +134,7 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
     }
 
     public static Var internPrivate(String nsName, String sym) {
-        Namespace ns = Namespace.findOrCreate(Symbol.intern(nsName));
+        Namespace ns = NamespaceTable.findOrCreate(Symbol.intern(nsName));
         Var ret = intern(ns, Symbol.intern(sym));
         ret.setMeta(privateMeta);
         return ret;

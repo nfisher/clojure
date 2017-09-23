@@ -33,8 +33,8 @@ static class ActionQueue {
 		}
 }
 
-static final Keyword CONTINUE = Keyword.intern(null, "continue");
-static final Keyword FAIL = Keyword.intern(null, "fail");
+static final Keyword CONTINUE = KeywordTable.intern(null, "continue");
+static final Keyword FAIL = KeywordTable.intern(null, "fail");
 
 volatile Object state;
     AtomicReference<ActionQueue> aq = new AtomicReference<ActionQueue>(ActionQueue.EMPTY);

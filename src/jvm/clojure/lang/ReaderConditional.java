@@ -12,8 +12,8 @@ package clojure.lang;
 
 public class ReaderConditional implements ILookup {
 
-public static final Keyword FORM_KW = Keyword.intern("form");
-public static final Keyword SPLICING_KW = Keyword.intern("splicing?");
+public static final Keyword FORM_KW = KeywordTable.intern("form");
+public static final Keyword SPLICING_KW = KeywordTable.intern("splicing?");
 
 public final Object form;
 public final Boolean splicing;

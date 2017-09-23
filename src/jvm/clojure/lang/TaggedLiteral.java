@@ -12,8 +12,8 @@ package clojure.lang;
 
 public class TaggedLiteral implements ILookup {
 
-public static final Keyword TAG_KW = Keyword.intern("tag");
-public static final Keyword FORM_KW = Keyword.intern("form");
+public static final Keyword TAG_KW = KeywordTable.intern("tag");
+public static final Keyword FORM_KW = KeywordTable.intern("form");
 
 public final Symbol tag;
 public final Object form;

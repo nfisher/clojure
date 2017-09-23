@@ -144,10 +144,10 @@ public class RT {
         } else if (s.equals("false")) {
             return Boolean.FALSE;
         }
-        return Keyword.intern(null, "unknown");
+        return KeywordTable.intern(null, "unknown");
     }
 
-    static public final Namespace CLOJURE_NS = Namespace.findOrCreate(Symbol.intern("clojure.core"));
+    static public final Namespace CLOJURE_NS = NamespaceTable.findOrCreate(Symbol.intern("clojure.core"));
     final static public Var OUT =
             Var.intern(CLOJURE_NS, Symbol.intern("*out*"), new OutputStreamWriter(System.out)).setDynamic();
     final static public Var IN =
@@ -156,8 +156,8 @@ public class RT {
     final static public Var ERR =
             Var.intern(CLOJURE_NS, Symbol.intern("*err*"),
                     new PrintWriter(new OutputStreamWriter(System.err), true)).setDynamic();
-    final static Keyword TAG_KEY = Keyword.intern(null, "tag");
-    final static Keyword CONST_KEY = Keyword.intern(null, "const");
+    final static Keyword TAG_KEY = KeywordTable.intern(null, "tag");
+    final static Keyword CONST_KEY = KeywordTable.intern(null, "const");
     final static public Var AGENT = Var.intern(CLOJURE_NS, Symbol.intern("*agent*"), null).setDynamic();
     static Object readeval = readTrueFalseUnknown(System.getProperty("clojure.read.eval", "true"));
     final static public Var READEVAL = Var.intern(CLOJURE_NS, Symbol.intern("*read-eval*"), readeval).setDynamic();
@@ -167,15 +167,15 @@ public class RT {
     final static public Var SUPPRESS_READ = Var.intern(CLOJURE_NS, Symbol.intern("*suppress-read*"), null).setDynamic();
     final static public Var ASSERT = Var.intern(CLOJURE_NS, Symbol.intern("*assert*"), T).setDynamic();
     final static public Var MATH_CONTEXT = Var.intern(CLOJURE_NS, Symbol.intern("*math-context*"), null).setDynamic();
-    static Keyword LINE_KEY = Keyword.intern(null, "line");
-    static Keyword COLUMN_KEY = Keyword.intern(null, "column");
-    static Keyword FILE_KEY = Keyword.intern(null, "file");
-    static Keyword DECLARED_KEY = Keyword.intern(null, "declared");
-    static Keyword DOC_KEY = Keyword.intern(null, "doc");
+    static Keyword LINE_KEY = KeywordTable.intern(null, "line");
+    static Keyword COLUMN_KEY = KeywordTable.intern(null, "column");
+    static Keyword FILE_KEY = KeywordTable.intern(null, "file");
+    static Keyword DECLARED_KEY = KeywordTable.intern(null, "declared");
+    static Keyword DOC_KEY = KeywordTable.intern(null, "doc");
     final static public Var USE_CONTEXT_CLASSLOADER =
             Var.intern(CLOJURE_NS, Symbol.intern("*use-context-classloader*"), T).setDynamic();
     //boolean
-    static final public Var UNCHECKED_MATH = Var.intern(Namespace.findOrCreate(Symbol.intern("clojure.core")),
+    static final public Var UNCHECKED_MATH = Var.intern(NamespaceTable.findOrCreate(Symbol.intern("clojure.core")),
             Symbol.intern("*unchecked-math*"), Boolean.FALSE).setDynamic();
 
 //final static public Var CURRENT_MODULE = Var.intern(Symbol.intern("clojure.core", "current-module"),
@@ -207,7 +207,7 @@ public class RT {
     final static IFn inNamespace = new AFn() {
         public Object invoke(Object arg1) {
             Symbol nsname = (Symbol) arg1;
-            Namespace ns = Namespace.findOrCreate(nsname);
+            Namespace ns = NamespaceTable.findOrCreate(nsname);
             CURRENT_NS.set(ns);
             return ns;
         }
@@ -216,7 +216,7 @@ public class RT {
     final static IFn bootNamespace = new AFn() {
         public Object invoke(Object __form, Object __env, Object arg1) {
             Symbol nsname = (Symbol) arg1;
-            Namespace ns = Namespace.findOrCreate(nsname);
+            Namespace ns = NamespaceTable.findOrCreate(nsname);
             CURRENT_NS.set(ns);
             return ns;
         }
@@ -262,7 +262,7 @@ public class RT {
     static volatile boolean CHECK_SPECS = false;
 
     static {
-        Keyword arglistskw = Keyword.intern(null, "arglists");
+        Keyword arglistskw = KeywordTable.intern(null, "arglists");
         Symbol namesym = Symbol.intern("name");
         OUT.setTag(Symbol.intern("java.io.Writer"));
         CURRENT_NS.setTag(Symbol.intern("clojure.lang.Namespace"));
@@ -297,15 +297,15 @@ public class RT {
     }
 
     static public Keyword keyword(String ns, String name) {
-        return Keyword.intern((Symbol.intern(ns, name)));
+        return KeywordTable.intern((Symbol.intern(ns, name)));
     }
 
     static public Var var(String ns, String name) {
-        return Var.intern(Namespace.findOrCreate(Symbol.intern(null, ns)), Symbol.intern(null, name));
+        return Var.intern(NamespaceTable.findOrCreate(Symbol.intern(null, ns)), Symbol.intern(null, name));
     }
 
     static public Var var(String ns, String name, Object init) {
-        return Var.intern(Namespace.findOrCreate(Symbol.intern(null, ns)), Symbol.intern(null, name), init);
+        return Var.intern(NamespaceTable.findOrCreate(Symbol.intern(null, ns)), Symbol.intern(null, name), init);
     }
 
     public static void loadResourceScript(String name) throws IOException {

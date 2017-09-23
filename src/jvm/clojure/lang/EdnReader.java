@@ -105,7 +105,7 @@ static public int read1(Reader r){
 		}
 }
 
-static final Keyword EOF = Keyword.intern(null,"eof");
+static final Keyword EOF = KeywordTable.intern(null,"eof");
 
 static public Object read(PushbackReader r, IPersistentMap opts){
 	return read(r,!opts.containsKey(EOF),opts.valAt(EOF),false,opts);
@@ -304,7 +304,7 @@ private static Object matchSymbol(String s){
 		boolean isKeyword = s.charAt(0) == ':';
 		Symbol sym = Symbol.intern(s.substring(isKeyword ? 1 : 0));
 		if(isKeyword)
-			return Keyword.intern(sym);
+			return KeywordTable.intern(sym);
 		return sym;
 		}
 	return null;
@@ -515,9 +515,9 @@ public static class NamespaceMapReader extends AFn{
 			if(key instanceof Keyword) {
 				Keyword kw = (Keyword) key;
 				if (kw.getNamespace() == null) {
-					key = Keyword.intern(ns, kw.getName());
+					key = KeywordTable.intern(ns, kw.getName());
 				} else if (kw.getNamespace().equals("_")) {
-					key = Keyword.intern(null, kw.getName());
+					key = KeywordTable.intern(null, kw.getName());
 				}
 			} else if(key instanceof Symbol) {
 				Symbol s = (Symbol) key;
@@ -783,8 +783,8 @@ public static class TaggedReader extends AFn{
 		return readTagged(r, sym, (IPersistentMap) opts);
 	}
 
-	static Keyword READERS = Keyword.intern(null,"readers");
-	static Keyword DEFAULT = Keyword.intern(null,"default");
+	static Keyword READERS = KeywordTable.intern(null,"readers");
+	static Keyword DEFAULT = KeywordTable.intern(null,"default");
 
 	private Object readTagged(PushbackReader reader, Symbol tag, IPersistentMap opts){
 		Object o = read(reader, true, null, true, opts);

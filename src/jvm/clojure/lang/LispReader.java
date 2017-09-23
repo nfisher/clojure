@@ -57,7 +57,7 @@ static Symbol META = Symbol.intern("clojure.core", "meta");
 static Symbol DEREF = Symbol.intern("clojure.core", "deref");
 static Symbol READ_COND = Symbol.intern("clojure.core", "read-cond");
 static Symbol READ_COND_SPLICING = Symbol.intern("clojure.core", "read-cond-splicing");
-static Keyword UNKNOWN = Keyword.intern(null, "unknown");
+static Keyword UNKNOWN = KeywordTable.intern(null, "unknown");
 //static Symbol DEREF_BANG = Symbol.intern("clojure.core", "deref!");
 
 static IFn[] macros = new IFn[256];
@@ -166,20 +166,20 @@ static public int read1(Reader r){
 }
 
 // Reader opts
-static public final Keyword OPT_EOF = Keyword.intern(null,"eof");
-static public final Keyword OPT_FEATURES = Keyword.intern(null,"features");
-static public final Keyword OPT_READ_COND = Keyword.intern(null, "read-cond");
+static public final Keyword OPT_EOF = KeywordTable.intern(null,"eof");
+static public final Keyword OPT_FEATURES = KeywordTable.intern(null,"features");
+static public final Keyword OPT_READ_COND = KeywordTable.intern(null, "read-cond");
 
 // EOF special value to throw on eof
-static public final Keyword EOFTHROW = Keyword.intern(null,"eofthrow");
+static public final Keyword EOFTHROW = KeywordTable.intern(null,"eofthrow");
 
 // Platform features - always installed
-static private final Keyword PLATFORM_KEY = Keyword.intern(null, "clj");
+static private final Keyword PLATFORM_KEY = KeywordTable.intern(null, "clj");
 static private final Object PLATFORM_FEATURES = PersistentHashSet.create(PLATFORM_KEY);
 
 // Reader conditional options - use with :read-cond
-static public final Keyword COND_ALLOW = Keyword.intern(null, "allow");
-    static public final Keyword COND_PRESERVE = Keyword.intern(null, "preserve");
+static public final Keyword COND_ALLOW = KeywordTable.intern(null, "allow");
+    static public final Keyword COND_PRESERVE = KeywordTable.intern(null, "preserve");
 
 static public Object read(PushbackReader r, Object opts){
     boolean eofIsError = true;
@@ -426,7 +426,7 @@ private static Object matchSymbol(String s, Resolver resolver){
                     nsym = resolver.currentNS();
                 //auto-resolving keyword
                 if(nsym != null)
-                    return Keyword.intern(nsym.name, ks.name);
+                    return KeywordTable.intern(nsym.name, ks.name);
                 else
                     return null;
                 }
@@ -439,7 +439,7 @@ private static Object matchSymbol(String s, Resolver resolver){
                     kns = Compiler.currentNS();
                 //auto-resolving keyword
                 if(kns != null)
-                    return Keyword.intern(kns.name.name, ks.name);
+                    return KeywordTable.intern(kns.name.name, ks.name);
                 else
                     return null;
                 }
@@ -447,7 +447,7 @@ private static Object matchSymbol(String s, Resolver resolver){
 		boolean isKeyword = s.charAt(0) == ':';
 		Symbol sym = Symbol.intern(s.substring(isKeyword ? 1 : 0));
 		if(isKeyword)
-			return Keyword.intern(sym);
+			return KeywordTable.intern(sym);
 		return sym;
 		}
 	return null;
@@ -710,9 +710,9 @@ public static class NamespaceMapReader extends AFn{
 			if(key instanceof Keyword) {
 				Keyword kw = (Keyword) key;
 				if (kw.getNamespace() == null) {
-					key = Keyword.intern(ns, kw.getName());
+					key = KeywordTable.intern(ns, kw.getName());
 				} else if (kw.getNamespace().equals("_")) {
-					key = Keyword.intern(null, kw.getName());
+					key = KeywordTable.intern(null, kw.getName());
 				}
 			} else if(key instanceof Symbol) {
 				Symbol s = (Symbol) key;
@@ -1500,9 +1500,9 @@ static boolean isPreserveReadCond(Object opts) {
 public static class ConditionalReader extends AFn {
 
 	final static private Object READ_STARTED = new Object();
-	final static public Keyword DEFAULT_FEATURE = Keyword.intern(null, "default");
+	final static public Keyword DEFAULT_FEATURE = KeywordTable.intern(null, "default");
 	final static public IPersistentSet RESERVED_FEATURES =
-		RT.set(Keyword.intern(null, "else"), Keyword.intern(null, "none"));
+		RT.set(KeywordTable.intern(null, "else"), KeywordTable.intern(null, "none"));
 
 	public static boolean hasFeature(Object feature, Object opts) {
 		if (! (feature instanceof Keyword))

@@ -14,19 +14,12 @@ package clojure.lang;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Namespace extends AReference implements Serializable {
     final public Symbol name;
     transient final AtomicReference<IPersistentMap> mappings = new AtomicReference<IPersistentMap>();
     transient final AtomicReference<IPersistentMap> aliases = new AtomicReference<IPersistentMap>();
-
-    final static ConcurrentHashMap<Symbol, Namespace> namespaces = new ConcurrentHashMap<Symbol, Namespace>();
-
-    public String toString() {
-        return name.toString();
-    }
 
     Namespace(Symbol name) {
         super(name.meta());
@@ -35,8 +28,19 @@ public class Namespace extends AReference implements Serializable {
         aliases.set(RT.map());
     }
 
-    public static ISeq all() {
-        return RT.seq(namespaces.values());
+    public boolean areDifferentInstancesOfSameClassName(Class cls1, Class cls2) {
+        return (cls1 != cls2) && (cls1.getName().equals(cls2.getName()));
+    }
+
+    public static Namespace remove(Symbol name) {
+        if (name.equals(RT.CLOJURE_NS.name)) {
+            throw new IllegalArgumentException("Cannot remove clojure namespace");
+        }
+        return NamespaceTable.instance().remove(name);
+    }
+
+    public String toString() {
+        return name.toString();
     }
 
     public Symbol getName() {
@@ -117,10 +121,6 @@ public class Namespace extends AReference implements Serializable {
         return val;
     }
 
-    public static boolean areDifferentInstancesOfSameClassName(Class cls1, Class cls2) {
-        return (cls1 != cls2) && (cls1.getName().equals(cls2.getName()));
-    }
-
     Class referenceClass(Symbol sym, Class val) {
         if (sym.ns != null) {
             throw new IllegalArgumentException("Can't intern namespace-qualified symbol");
@@ -165,27 +165,6 @@ public class Namespace extends AReference implements Serializable {
     public Var refer(Symbol sym, Var var) {
         return (Var) reference(sym, var);
 
-    }
-
-    public static Namespace findOrCreate(Symbol name) {
-        Namespace ns = namespaces.get(name);
-        if (ns != null) {
-            return ns;
-        }
-        Namespace newns = new Namespace(name);
-        ns = namespaces.putIfAbsent(name, newns);
-        return ns == null ? newns : ns;
-    }
-
-    public static Namespace remove(Symbol name) {
-        if (name.equals(RT.CLOJURE_NS.name)) {
-            throw new IllegalArgumentException("Cannot remove clojure namespace");
-        }
-        return namespaces.remove(name);
-    }
-
-    public static Namespace find(Symbol name) {
-        return namespaces.get(name);
     }
 
     public Object getMapping(Symbol name) {
@@ -239,6 +218,6 @@ public class Namespace extends AReference implements Serializable {
     private Object readResolve() throws ObjectStreamException {
         // ensures that serialized namespaces are "deserialized" to the
         // namespace in the present runtime
-        return findOrCreate(name);
+        return NamespaceTable.findOrCreate(name);
     }
 }
