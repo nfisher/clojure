@@ -19,27 +19,20 @@ import java.io.ObjectStreamException;
 public class Symbol extends AFn implements IObj, Comparable, Named, Serializable, IHashEq {
     final String ns;
     final String name;
-    private int _hasheq;
     final IPersistentMap _meta;
     transient String _str;
+    private int _hasheq;
 
-    public String toString() {
-        if (_str == null) {
-            if (ns != null) {
-                _str = (ns + "/" + name);
-            } else {
-                _str = name;
-            }
-        }
-        return _str;
+    private Symbol(String ns_interned, String name_interned) {
+        this.name = name_interned;
+        this.ns = ns_interned;
+        this._meta = null;
     }
 
-    public String getNamespace() {
-        return ns;
-    }
-
-    public String getName() {
-        return name;
+    private Symbol(IPersistentMap meta, String ns, String name) {
+        this.name = name;
+        this.ns = ns;
+        this._meta = meta;
     }
 
     // the create thunks preserve binary compatibility with code compiled
@@ -65,10 +58,23 @@ public class Symbol extends AFn implements IObj, Comparable, Named, Serializable
         }
     }
 
-    private Symbol(String ns_interned, String name_interned) {
-        this.name = name_interned;
-        this.ns = ns_interned;
-        this._meta = null;
+    public String toString() {
+        if (_str == null) {
+            if (ns != null) {
+                _str = (ns + "/" + name);
+            } else {
+                _str = name;
+            }
+        }
+        return _str;
+    }
+
+    public String getNamespace() {
+        return ns;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean equals(Object o) {
@@ -97,12 +103,6 @@ public class Symbol extends AFn implements IObj, Comparable, Named, Serializable
 
     public IObj withMeta(IPersistentMap meta) {
         return new Symbol(meta, ns, name);
-    }
-
-    private Symbol(IPersistentMap meta, String ns, String name) {
-        this.name = name;
-        this.ns = ns;
-        this._meta = meta;
     }
 
     public int compareTo(Object o) {

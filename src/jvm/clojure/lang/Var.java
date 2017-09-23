@@ -34,13 +34,37 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
     static Keyword nameKey = Keyword.intern(null, "name");
     static Keyword nsKey = Keyword.intern(null, "ns");
 //static Keyword tagKey = Keyword.intern(null, "tag");
-
-    volatile Object root;
-
-    volatile boolean dynamic = false;
-    transient final AtomicBoolean threadBound;
+    static IFn assoc = new AFn() {
+        @Override
+        public Object invoke(Object m, Object k, Object v) {
+            return RT.assoc(m, k, v);
+        }
+    };
+    static IFn dissoc = new AFn() {
+        @Override
+        public Object invoke(Object c, Object k) {
+            return RT.dissoc(c, k);
+        }
+    };
     public final Symbol sym;
     public final Namespace ns;
+    transient final AtomicBoolean threadBound;
+    volatile Object root;
+    volatile boolean dynamic = false;
+
+    Var(Namespace ns, Symbol sym) {
+        this.ns = ns;
+        this.sym = sym;
+        this.threadBound = new AtomicBoolean(false);
+        this.root = new Unbound(this);
+        setMeta(PersistentHashMap.EMPTY);
+    }
+
+    Var(Namespace ns, Symbol sym, Object root) {
+        this(ns, sym);
+        this.root = root;
+        ++rev;
+    }
 
     /**
      * Used in core.async to capture the bindings.
@@ -68,18 +92,23 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
         dvals.set((Frame) frame);
     }
 
-    public Var setDynamic() {
-        this.dynamic = true;
-        return this;
+    public static Var create() {
+        return new Var(null, null);
     }
 
-    public Var setDynamic(boolean b) {
-        this.dynamic = b;
-        return this;
+    public static Var create(Object root) {
+        return new Var(null, null, root);
     }
 
-    public final boolean isDynamic() {
-        return dynamic;
+    public static Var find(Symbol nsQualifiedSym) {
+        if (nsQualifiedSym.ns == null) {
+            throw new IllegalArgumentException("Symbol must be namespace-qualified");
+        }
+        Namespace ns = Namespace.find(Symbol.intern(nsQualifiedSym.ns));
+        if (ns == null) {
+            throw new IllegalArgumentException("No such namespace: " + nsQualifiedSym.ns);
+        }
+        return ns.findInternedVar(Symbol.intern(nsQualifiedSym.name));
     }
 
     public static Var intern(Namespace ns, Symbol sym, Object root) {
@@ -94,28 +123,13 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
         return dvout;
     }
 
-
-    public String toString() {
-        if (ns != null) {
-            return "#'" + ns.name + "/" + sym;
-        }
-        return "#<Var: " + (sym != null ? sym.toString() : "--unnamed--") + ">";
-    }
-
-    public static Var find(Symbol nsQualifiedSym) {
-        if (nsQualifiedSym.ns == null) {
-            throw new IllegalArgumentException("Symbol must be namespace-qualified");
-        }
-        Namespace ns = Namespace.find(Symbol.intern(nsQualifiedSym.ns));
-        if (ns == null) {
-            throw new IllegalArgumentException("No such namespace: " + nsQualifiedSym.ns);
-        }
-        return ns.findInternedVar(Symbol.intern(nsQualifiedSym.name));
-    }
-
     public static Var intern(Symbol nsName, Symbol sym) {
         Namespace ns = Namespace.findOrCreate(nsName);
         return intern(ns, sym);
+    }
+
+    public static Var intern(Namespace ns, Symbol sym) {
+        return ns.intern(sym);
     }
 
     public static Var internPrivate(String nsName, String sym) {
@@ -125,31 +139,64 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
         return ret;
     }
 
-    public static Var intern(Namespace ns, Symbol sym) {
-        return ns.intern(sym);
+    public static void pushThreadBindings(Associative bindings) {
+        Frame f = dvals.get();
+        Associative bmap = f.bindings;
+        for (ISeq bs = bindings.seq(); bs != null; bs = bs.next()) {
+            IMapEntry e = (IMapEntry) bs.first();
+            Var v = (Var) e.key();
+            if (!v.dynamic) {
+                throw new IllegalStateException(String.format("Can't dynamically bind non-dynamic var: %s/%s", v.ns, v.sym));
+            }
+            v.validate(v.getValidator(), e.val());
+            v.threadBound.set(true);
+            bmap = bmap.assoc(v, new TBox(Thread.currentThread(), e.val()));
+        }
+        dvals.set(new Frame(bmap, f));
     }
 
-
-    public static Var create() {
-        return new Var(null, null);
+    public static void popThreadBindings() {
+        Frame f = dvals.get().prev;
+        if (f == null) {
+            throw new IllegalStateException("Pop without matching push");
+        } else if (f == Frame.TOP) {
+            dvals.remove();
+        } else {
+            dvals.set(f);
+        }
     }
 
-    public static Var create(Object root) {
-        return new Var(null, null, root);
+    public static Associative getThreadBindings() {
+        Frame f = dvals.get();
+        IPersistentMap ret = PersistentHashMap.EMPTY;
+        for (ISeq bs = f.bindings.seq(); bs != null; bs = bs.next()) {
+            IMapEntry e = (IMapEntry) bs.first();
+            Var v = (Var) e.key();
+            TBox b = (TBox) e.val();
+            ret = ret.assoc(v, b.val);
+        }
+        return ret;
     }
 
-    Var(Namespace ns, Symbol sym) {
-        this.ns = ns;
-        this.sym = sym;
-        this.threadBound = new AtomicBoolean(false);
-        this.root = new Unbound(this);
-        setMeta(PersistentHashMap.EMPTY);
+    public final boolean isDynamic() {
+        return dynamic;
     }
 
-    Var(Namespace ns, Symbol sym, Object root) {
-        this(ns, sym);
-        this.root = root;
-        ++rev;
+    public Var setDynamic() {
+        this.dynamic = true;
+        return this;
+    }
+
+    public Var setDynamic(boolean b) {
+        this.dynamic = b;
+        return this;
+    }
+
+    public String toString() {
+        if (ns != null) {
+            return "#'" + ns.name + "/" + sym;
+        }
+        return "#<Var: " + (sym != null ? sym.toString() : "--unnamed--") + ">";
     }
 
     public boolean isBound() {
@@ -277,45 +324,6 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
         ++rev;
         notifyWatches(oldroot, newRoot);
         return newRoot;
-    }
-
-    public static void pushThreadBindings(Associative bindings) {
-        Frame f = dvals.get();
-        Associative bmap = f.bindings;
-        for (ISeq bs = bindings.seq(); bs != null; bs = bs.next()) {
-            IMapEntry e = (IMapEntry) bs.first();
-            Var v = (Var) e.key();
-            if (!v.dynamic) {
-                throw new IllegalStateException(String.format("Can't dynamically bind non-dynamic var: %s/%s", v.ns, v.sym));
-            }
-            v.validate(v.getValidator(), e.val());
-            v.threadBound.set(true);
-            bmap = bmap.assoc(v, new TBox(Thread.currentThread(), e.val()));
-        }
-        dvals.set(new Frame(bmap, f));
-    }
-
-    public static void popThreadBindings() {
-        Frame f = dvals.get().prev;
-        if (f == null) {
-            throw new IllegalStateException("Pop without matching push");
-        } else if (f == Frame.TOP) {
-            dvals.remove();
-        } else {
-            dvals.set(f);
-        }
-    }
-
-    public static Associative getThreadBindings() {
-        Frame f = dvals.get();
-        IPersistentMap ret = PersistentHashMap.EMPTY;
-        for (ISeq bs = f.bindings.seq(); bs != null; bs = bs.next()) {
-            IMapEntry e = (IMapEntry) bs.first();
-            Var v = (Var) e.key();
-            TBox b = (TBox) e.val();
-            ret = ret.assoc(v, b.val);
-        }
-        return ret;
     }
 
     public final TBox getThreadBinding() {
@@ -663,20 +671,6 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
     public Object applyTo(ISeq arglist) {
         return fn().applyTo(arglist);
     }
-
-    static IFn assoc = new AFn() {
-        @Override
-        public Object invoke(Object m, Object k, Object v) {
-            return RT.assoc(m, k, v);
-        }
-    };
-    static IFn dissoc = new AFn() {
-        @Override
-        public Object invoke(Object c, Object k) {
-            return RT.dissoc(c, k);
-        }
-    };
-
 
     private Object writeReplace() throws ObjectStreamException {
         return new Serialized(ns.getName(), sym);
