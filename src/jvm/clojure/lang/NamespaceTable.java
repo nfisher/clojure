@@ -6,9 +6,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NamespaceTable {
     private static final NamespaceTable _instance = new NamespaceTable();
 
-    private final ConcurrentHashMap<Symbol, Namespace> namespaces = new ConcurrentHashMap<Symbol, Namespace>();
+    private final ConcurrentHashMap<Symbol, Namespace> namespaces;
 
-    private NamespaceTable() { }
+    private NamespaceTable() {
+        this.namespaces = new ConcurrentHashMap<Symbol, Namespace>();
+    }
 
     public static NamespaceTable instance() {
         return _instance;
@@ -18,18 +20,18 @@ public class NamespaceTable {
         return RT.seq(instance().values());
     }
 
-    public static Namespace findOrCreate(Symbol name) {
+    public static Namespace findOrCreate(final Symbol name) {
         NamespaceTable namespaces = instance();
         Namespace ns = namespaces.get(name);
         if (ns != null) {
             return ns;
         }
-        Namespace newns = new Namespace(name);
+        final Namespace newns = new Namespace(name);
         ns = namespaces.putIfAbsent(name, newns);
         return ns == null ? newns : ns;
     }
 
-    public static Namespace find(Symbol name) {
+    public static Namespace find(final Symbol name) {
         return instance().get(name);
     }
 
