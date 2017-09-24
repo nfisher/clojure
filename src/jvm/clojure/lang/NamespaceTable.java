@@ -21,7 +21,7 @@ public class NamespaceTable {
     }
 
     public static Namespace findOrCreate(final Symbol name) {
-        NamespaceTable namespaces = instance();
+        final NamespaceTable namespaces = instance();
         Namespace ns = namespaces.get(name);
         if (ns != null) {
             return ns;
