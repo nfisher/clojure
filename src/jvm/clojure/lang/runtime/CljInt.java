@@ -56,4 +56,39 @@ public class CljInt {
     public Number box(final int x) {
         return x;
     }
+
+    public int uncheckedIntCast(final double x) {
+        return (int) x;
+    }
+
+    public int uncheckedIntCast(final char x) {
+        return x;
+    }
+
+    public int uncheckedIntCast(final short x) {
+        return x;
+    }
+
+    public int uncheckedIntCast(final byte x) {
+        return x;
+    }
+
+    public int uncheckedIntCast(final Object x) {
+        if (x instanceof Number) {
+            return ((Number) x).intValue();
+        }
+        return ((Character) x).charValue();
+    }
+
+    public int uncheckedIntCast(final int x) {
+        return x;
+    }
+
+    public int uncheckedIntCast(final long x) {
+        return (int) x;
+    }
+
+    public int uncheckedIntCast(final float x) {
+        return (int) x;
+    }
 }

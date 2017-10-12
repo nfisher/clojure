@@ -10,7 +10,7 @@ import java.util.RandomAccess;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-public class CljSeq {
+public class CljColl {
     static final int CHUNK_SIZE = 32;
 
     public ISeq chunkIteratorSeq(final Iterator iter) {
@@ -473,5 +473,54 @@ public class CljSeq {
         } else {
             return null;
         }
+    }
+
+    public IPersistentMap map(Object[] init) {
+        if (init == null) {
+            return PersistentArrayMap.EMPTY;
+        } else if (init.length <= PersistentArrayMap.HASHTABLE_THRESHOLD) {
+            return PersistentArrayMap.createWithCheck(init);
+        }
+        return PersistentHashMap.createWithCheck(init);
+    }
+
+    public IPersistentMap mapUniqueKeys(Object[] init) {
+        if (init == null) {
+            return PersistentArrayMap.EMPTY;
+        } else if (init.length <= PersistentArrayMap.HASHTABLE_THRESHOLD) {
+            return new PersistentArrayMap(init);
+        }
+        return PersistentHashMap.create(init);
+    }
+
+    public ISeq list(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5) {
+        return RT.listStar(arg1, arg2, arg3, arg4, arg5, null);
+    }
+
+    public ISeq list(Object arg1, Object arg2, Object arg3, Object arg4) {
+        return RT.listStar(arg1, arg2, arg3, arg4, null);
+    }
+
+    public ISeq list(Object arg1, Object arg2, Object arg3) {
+        return RT.listStar(arg1, arg2, arg3, null);
+    }
+
+    public ISeq list(Object arg1, Object arg2) {
+        return RT.listStar(arg1, arg2, null);
+    }
+
+    public ISeq list(Object arg1) {
+        return new PersistentList(arg1);
+    }
+
+    public ISeq list() {
+        return null;
+    }
+
+    public IPersistentMap meta(Object x) {
+        if (x instanceof IMeta) {
+            return ((IMeta) x).meta();
+        }
+        return null;
     }
 }

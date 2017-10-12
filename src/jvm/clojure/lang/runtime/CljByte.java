@@ -61,4 +61,32 @@ public class CljByte {
     public Number box(final byte x) {
         return x;
     }
+
+    public byte uncheckedByteCast(Object x) {
+        return ((Number) x).byteValue();
+    }
+
+    public byte uncheckedByteCast(byte x) {
+        return x;
+    }
+
+    public byte uncheckedByteCast(short x) {
+        return (byte) x;
+    }
+
+    public byte uncheckedByteCast(int x) {
+        return (byte) x;
+    }
+
+    public byte uncheckedByteCast(long x) {
+        return (byte) x;
+    }
+
+    public byte uncheckedByteCast(float x) {
+        return (byte) x;
+    }
+
+    public byte uncheckedByteCast(double x) {
+        return (byte) x;
+    }
 }

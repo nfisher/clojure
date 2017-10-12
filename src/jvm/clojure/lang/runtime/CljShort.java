@@ -57,4 +57,32 @@ public class CljShort {
     public Number box(final short x) {
         return x;
     }
+
+    public short uncheckedShortCast(final double x) {
+        return (short) x;
+    }
+
+    public short uncheckedShortCast(final float x) {
+        return (short) x;
+    }
+
+    public short uncheckedShortCast(final long x) {
+        return (short) x;
+    }
+
+    public short uncheckedShortCast(final int x) {
+        return (short) x;
+    }
+
+    public short uncheckedShortCast(final short x) {
+        return x;
+    }
+
+    public short uncheckedShortCast(final byte x) {
+        return x;
+    }
+
+    public short uncheckedShortCast(final Object x) {
+        return ((Number) x).shortValue();
+    }
 }

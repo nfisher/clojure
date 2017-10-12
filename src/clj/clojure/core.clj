@@ -867,9 +867,9 @@
   "Returns the number of items in the collection. (count nil) returns
   0.  Also works on strings, arrays, and Java Collections and Maps"
   {
-   :inline (fn  [x] `(. clojure.lang.RT (count ~x)))
+   :inline (fn  [x] `(. clojure.lang.RT/COLL (count ~x)))
    :added "1.0"}
-  [coll] (clojure.lang.RT/count coll))
+  [coll] (.count clojure.lang.RT/COLL coll))
 
 (defn int
   "Coerce to int"
@@ -3478,79 +3478,79 @@
   "Coerce to long"
   {:inline (fn  [x] `(. clojure.lang.RT (longCast ~x)))
    :added "1.0"}
-  [^Number x] (clojure.lang.RT/longCast x))
+  [^Number x] (.longCast clojure.lang.RT/LONG x))
 
 (defn float
   "Coerce to float"
-  {:inline (fn  [x] `(. clojure.lang.RT (~(if *unchecked-math* 'uncheckedFloatCast 'floatCast) ~x)))
+  {:inline (fn  [x] `(. clojure.lang.RT/FLOAT (~(if *unchecked-math* 'uncheckedFloatCast 'floatCast) ~x)))
    :added "1.0"}
-  [^Number x] (clojure.lang.RT/floatCast x))
+  [^Number x] (.floatCast clojure.lang.RT/FLOAT x))
 
 (defn double
   "Coerce to double"
-  {:inline (fn  [x] `(. clojure.lang.RT (doubleCast ~x)))
+  {:inline (fn  [x] `(.doubleCast  clojure.lang.RT/DOUBLE ~x))
    :added "1.0"}
-  [^Number x] (clojure.lang.RT/doubleCast x))
+  [^Number x] (.doubleCast clojure.lang.RT/DOUBLE x))
 
 (defn short
   "Coerce to short"
-  {:inline (fn  [x] `(. clojure.lang.RT (~(if *unchecked-math* 'uncheckedShortCast 'shortCast) ~x)))
+  {:inline (fn  [x] `(. clojure.lang.RT/SHORT (~(if *unchecked-math* 'uncheckedShortCast 'shortCast) ~x)))
    :added "1.0"}
-  [^Number x] (clojure.lang.RT/shortCast x))
+  [^Number x] (.shortCast clojure.lang.RT/SHORT x))
 
 (defn byte
   "Coerce to byte"
-  {:inline (fn  [x] `(. clojure.lang.RT (~(if *unchecked-math* 'uncheckedByteCast 'byteCast) ~x)))
+  {:inline (fn  [x] `(. clojure.lang.RT/BYTE (~(if *unchecked-math* 'uncheckedByteCast 'byteCast) ~x)))
    :added "1.0"}
-  [^Number x] (clojure.lang.RT/byteCast x))
+  [^Number x] (.byteCast clojure.lang.RT/BYTE x))
 
 (defn char
   "Coerce to char"
-  {:inline (fn  [x] `(. clojure.lang.RT (~(if *unchecked-math* 'uncheckedCharCast 'charCast) ~x)))
+  {:inline (fn  [x] `(. clojure.lang.RT/CHAR (~(if *unchecked-math* 'uncheckedCharCast 'charCast) ~x)))
    :added "1.1"}
-  [x] (. clojure.lang.RT (charCast x)))
+  [x] (.charCast clojure.lang.RT/CHAR x))
 
 (defn unchecked-byte
   "Coerce to byte. Subject to rounding or truncation."
-  {:inline (fn  [x] `(. clojure.lang.RT (uncheckedByteCast ~x)))
+  {:inline (fn  [x] `(. clojure.lang.RT/BYTE (uncheckedByteCast ~x)))
    :added "1.3"}
-  [^Number x] (clojure.lang.RT/uncheckedByteCast x))
+  [^Number x] (.uncheckedByteCast clojure.lang.RT/BYTE x))
 
 (defn unchecked-short
   "Coerce to short. Subject to rounding or truncation."
-  {:inline (fn  [x] `(. clojure.lang.RT (uncheckedShortCast ~x)))
+  {:inline (fn  [x] `(. clojure.lang.RT/SHORT (uncheckedShortCast ~x)))
    :added "1.3"}
-  [^Number x] (clojure.lang.RT/uncheckedShortCast x))
+  [^Number x] (.uncheckedShortCast clojure.lang.RT/SHORT x))
 
 (defn unchecked-char
   "Coerce to char. Subject to rounding or truncation."
-  {:inline (fn  [x] `(. clojure.lang.RT (uncheckedCharCast ~x)))
+  {:inline (fn  [x] `(. clojure.lang.RT/CHAR (uncheckedCharCast ~x)))
    :added "1.3"}
-  [x] (. clojure.lang.RT (uncheckedCharCast x)))
+  [x] (. clojure.lang.RT/CHAR (uncheckedCharCast x)))
 
 (defn unchecked-int
   "Coerce to int. Subject to rounding or truncation."
-  {:inline (fn  [x] `(. clojure.lang.RT (uncheckedIntCast ~x)))
+  {:inline (fn  [x] `(. clojure.lang.RT/INT (uncheckedIntCast ~x)))
    :added "1.3"}
-  [^Number x] (clojure.lang.RT/uncheckedIntCast x))
+  [^Number x] (.uncheckedIntCast clojure.lang.RT/INT  x))
 
 (defn unchecked-long
   "Coerce to long. Subject to rounding or truncation."
-  {:inline (fn  [x] `(. clojure.lang.RT (uncheckedLongCast ~x)))
+  {:inline (fn  [x] `(. clojure.lang.RT/LONG (uncheckedLongCast ~x)))
    :added "1.3"}
-  [^Number x] (clojure.lang.RT/uncheckedLongCast x))
+  [^Number x] (.uncheckedLongCast clojure.lang.RT/LONG  x))
 
 (defn unchecked-float
   "Coerce to float. Subject to rounding."
-  {:inline (fn  [x] `(. clojure.lang.RT (uncheckedFloatCast ~x)))
+  {:inline (fn  [x] `(. clojure.lang.RT/FLOAT (uncheckedFloatCast ~x)))
    :added "1.3"}
-  [^Number x] (clojure.lang.RT/uncheckedFloatCast x))
+  [^Number x] (.uncheckedFloatCast clojure.lang.RT/FLOAT  x))
 
 (defn unchecked-double
   "Coerce to double. Subject to rounding."
-  {:inline (fn  [x] `(. clojure.lang.RT (uncheckedDoubleCast ~x)))
+  {:inline (fn  [x] `(. clojure.lang.RT/DOUBLE (uncheckedDoubleCast ~x)))
    :added "1.3"}
-  [^Number x] (clojure.lang.RT/uncheckedDoubleCast x))
+  [^Number x] (.uncheckedDoubleCast clojure.lang.RT/DOUBLE  x))
 
 
 (defn number?

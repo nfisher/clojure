@@ -68,4 +68,39 @@ public class CljChar {
     public Character box(final char x) {
         return Character.valueOf(x);
     }
+
+    public char uncheckedCharCast(Object x) {
+        if (x instanceof Character) {
+            return ((Character) x).charValue();
+        }
+        return (char) ((Number) x).longValue();
+    }
+
+    public char uncheckedCharCast(double x) {
+        return (char) x;
+    }
+
+    public char uncheckedCharCast(float x) {
+        return (char) x;
+    }
+
+    public char uncheckedCharCast(long x) {
+        return (char) x;
+    }
+
+    public char uncheckedCharCast(int x) {
+        return (char) x;
+    }
+
+    public char uncheckedCharCast(char x) {
+        return x;
+    }
+
+    public char uncheckedCharCast(short x) {
+        return (char) x;
+    }
+
+    public char uncheckedCharCast(byte x) {
+        return (char) x;
+    }
 }

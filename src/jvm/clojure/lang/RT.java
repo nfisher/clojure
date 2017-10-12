@@ -53,19 +53,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 public class RT {
+    // runtime is currently used as an anchor for refactoring from static methods
+    // to instance methods and then moving to the desired class.
     public static final RT runtime = new RT();
-    public static final CljBoolean cljBoolean = new CljBoolean();
-    public static final CljByte cljByte = new CljByte();
-    public static final CljChar cljChar = new CljChar();
-    public static final CljDouble cljDouble = new CljDouble();
-    public static final CljFloat cljFloat = new CljFloat();
-    public static final CljInt cljInt = new CljInt();
-    public static final CljLong cljLong = new CljLong();
-    public static final CljShort cljShort = new CljShort();
+    public static final CljBoolean BOOLEAN = new CljBoolean();
+    public static final CljByte BYTE = new CljByte();
+    public static final CljChar CHAR = new CljChar();
+    public static final CljDouble DOUBLE = new CljDouble();
+    public static final CljFloat FLOAT = new CljFloat();
+    public static final CljInt INT = new CljInt();
+    public static final CljLong LONG = new CljLong();
+    public static final CljShort SHORT = new CljShort();
 
-    public static final CljSeq cljSeq = new CljSeq();
+    public static final CljColl COLL = new CljColl();
 
-    public static final CljScript cljScript = new CljScript();
+    public static final CljScript SCRIPT = new CljScript();
 
     static final public Boolean T = Boolean.TRUE;//Keyword.intern(Symbol.intern(null, "t"));
     static final public Boolean F = Boolean.FALSE;//Keyword.intern(Symbol.intern(null, "t"));
@@ -348,24 +350,24 @@ public class RT {
     }
 
     public static void loadResourceScript(String name) throws IOException {
-        cljScript.loadResourceScript(name, true);
+        SCRIPT.loadResourceScript(name, true);
     }
 
     public static void maybeLoadResourceScript(String name) throws IOException {
-        cljScript.loadResourceScript(name, false);
+        SCRIPT.loadResourceScript(name, false);
     }
 
     public static void loadResourceScript(String name, boolean failIfNotFound) throws IOException {
-        cljScript.loadResourceScript(name, true);
+        SCRIPT.loadResourceScript(name, true);
     }
 
     public static void loadResourceScript(Class c, String name) throws IOException {
         // class is discarded, not clear what this is for except maybe legacy...
-        cljScript.loadResourceScript(name, true);
+        SCRIPT.loadResourceScript(name, true);
     }
 
     public static void loadResourceScript(Class c, String name, boolean failIfNotFound) throws IOException {
-        cljScript.loadResourceScript(name, failIfNotFound);
+        SCRIPT.loadResourceScript(name, failIfNotFound);
     }
 
     static public void init() {
@@ -373,19 +375,19 @@ public class RT {
     }
 
     static public long lastModified(URL url, String libfile) throws IOException {
-        return cljScript.lastModified(url, libfile);
+        return SCRIPT.lastModified(url, libfile);
     }
 
     static void compile(String cljfile) throws IOException {
-        cljScript.compile(cljfile);
+        SCRIPT.compile(cljfile);
     }
 
     static public void load(String scriptbase) throws IOException, ClassNotFoundException {
-        cljScript.load(scriptbase, true);
+        SCRIPT.load(scriptbase, true);
     }
 
     static public void load(String scriptbase, boolean failIfNotFound) throws IOException, ClassNotFoundException {
-        cljScript.load(scriptbase, failIfNotFound);
+        SCRIPT.load(scriptbase, failIfNotFound);
     }
 
     static void doInit() throws ClassNotFoundException, IOException {
@@ -441,155 +443,148 @@ public class RT {
 ////////////// Collections support /////////////////////////////////
 
     public static ISeq chunkIteratorSeq(final Iterator iter) {
-        return cljSeq.chunkIteratorSeq(iter);
+        return COLL.chunkIteratorSeq(iter);
     }
 
     static public ISeq seq(Object coll) {
-        return cljSeq.seq(coll);
+        return COLL.seq(coll);
     }
 
     // N.B. canSeq must be kept in sync with this!
     static ISeq seqFrom(Object coll) {
-        return cljSeq.seqFrom(coll);
+        return COLL.seqFrom(coll);
     }
 
     static public boolean canSeq(Object coll) {
-        return cljSeq.canSeq(coll);
+        return COLL.canSeq(coll);
     }
 
     static public Iterator iter(Object coll) {
-        return cljSeq.iter(coll);
+        return COLL.iter(coll);
     }
 
     static public Object seqOrElse(Object o) {
-        return cljSeq.seqOrElse(o);
+        return COLL.seqOrElse(o);
     }
 
     static public ISeq keys(Object coll) {
-        return cljSeq.keys(coll);
+        return COLL.keys(coll);
     }
 
     static public ISeq vals(Object coll) {
-        return cljSeq.vals(coll);
+        return COLL.vals(coll);
     }
 
     static public IPersistentMap meta(Object x) {
-        return runtime._meta(x);
-    }
-
-    private IPersistentMap _meta(Object x) {
-        if (x instanceof IMeta) {
-            return ((IMeta) x).meta();
-        }
-        return null;
+        return COLL.meta(x);
     }
 
     public static int count(Object o) {
-        return cljSeq.count(o);
+        return COLL.count(o);
     }
 
     static int countFrom(Object o) {
-        return cljSeq.countFrom(o);
+        return COLL.countFrom(o);
     }
 
     static public IPersistentCollection conj(IPersistentCollection coll, Object x) {
-        return cljSeq.conj(coll, x);
+        return COLL.conj(coll, x);
     }
 
     static public ISeq cons(Object x, Object coll) {
-        return cljSeq.cons(x, coll);
+        return COLL.cons(x, coll);
 
     }
 
     static public Object first(Object x) {
-        return cljSeq.first(x);
+        return COLL.first(x);
     }
 
     static public Object second(Object x) {
-        return cljSeq.second(x);
+        return COLL.second(x);
     }
 
     static public Object third(Object x) {
-        return cljSeq.third(x);
+        return COLL.third(x);
     }
 
     static public Object fourth(Object x) {
-        return cljSeq.fourth(x);
+        return COLL.fourth(x);
     }
 
     static public ISeq next(Object x) {
-        return cljSeq.next(x);
+        return COLL.next(x);
     }
 
     static public ISeq more(Object x) {
-        return cljSeq.more(x);
+        return COLL.more(x);
     }
 
     static public Object peek(Object x) {
-        return cljSeq.peek(x);
+        return COLL.peek(x);
     }
 
     static public Object pop(Object x) {
-        return cljSeq.pop(x);
+        return COLL.pop(x);
     }
 
     static public Object get(Object coll, Object key) {
-        return cljSeq.get(coll, key);
+        return COLL.get(coll, key);
     }
 
     static Object getFrom(Object coll, Object key) {
-        return cljSeq.getFrom(coll, key);
+        return COLL.getFrom(coll, key);
     }
 
     static public Object get(Object coll, Object key, Object notFound) {
-        return cljSeq.get(coll, key, notFound);
+        return COLL.get(coll, key, notFound);
     }
 
     static Object getFrom(Object coll, Object key, Object notFound) {
-        return cljSeq.getFrom(coll, key, notFound);
+        return COLL.getFrom(coll, key, notFound);
     }
 
     static public Associative assoc(Object coll, Object key, Object val) {
-        return cljSeq.assoc(coll, key, val);
+        return COLL.assoc(coll, key, val);
     }
 
     static public Object contains(Object coll, Object key) {
-        return cljSeq.contains(coll, key);
+        return COLL.contains(coll, key);
     }
 
     static public Object find(Object coll, Object key) {
-        return cljSeq.find(coll, key);
+        return COLL.find(coll, key);
     }
 
     //returns tail starting at val of matching key if found, else null
     static public ISeq findKey(Keyword key, ISeq keyvals) {
-        return cljSeq.findKey(key, keyvals);
+        return COLL.findKey(key, keyvals);
     }
 
     //takes a seq of key,val,key,val
 
     static public Object dissoc(Object coll, Object key) {
-        return cljSeq.dissoc(coll, key);
+        return COLL.dissoc(coll, key);
     }
 
     static public Object nth(Object coll, int n) {
-        return cljSeq.nth(coll, n);
+        return COLL.nth(coll, n);
     }
 
     static Object nthFrom(Object coll, int n) {
-        return cljSeq.nthFrom(coll, n);
+        return COLL.nthFrom(coll, n);
     }
 
     static public Object nth(Object coll, int n, Object notFound) {
-        return cljSeq.nth(coll, n, notFound);
+        return COLL.nth(coll, n, notFound);
     }
 
     static Object nthFrom(Object coll, int n, Object notFound) {
-        return cljSeq.nthFrom(coll, n, notFound);
+        return COLL.nthFrom(coll, n, notFound);
     }
 
     static public Object assocN(int n, Object val, Object coll) {
-        return cljSeq.assocN(n, val, coll);
+        return COLL.assocN(n, val, coll);
     }
 
     static boolean hasTag(Object o, Object tag) {
@@ -597,7 +592,7 @@ public class RT {
     }
 
     private boolean _hasTag(Object o, Object tag) {
-        return Util.equals(tag, cljSeq.get(_meta(o), TAG_KEY));
+        return Util.equals(tag, COLL.get(COLL.meta(o), TAG_KEY));
     }
 
     /**
@@ -612,476 +607,463 @@ public class RT {
     }
 
     static public Character box(final char x) {
-        return cljChar.box(x);
+        return CHAR.box(x);
     }
 
     static public Object box(final boolean x) {
-        return cljBoolean.box(x);
+        return BOOLEAN.box(x);
     }
 
     static public Object box(final Boolean x) {
-        return cljBoolean.box(x);// ? T : null;
+        return BOOLEAN.box(x);// ? T : null;
     }
 
     static public Number box(final byte x) {
-        return cljByte.box(x);//Num.from(x);
+        return BYTE.box(x);//Num.from(x);
     }
 
     static public Number box(final short x) {
-        return cljShort.box(x);//Num.from(x);
+        return SHORT.box(x);//Num.from(x);
     }
 
     static public Number box(final int x) {
-        return cljInt.box(x);//Num.from(x);
+        return INT.box(x);//Num.from(x);
     }
 
     static public Number box(final long x) {
-        return cljLong.box(x);//Num.from(x);
+        return LONG.box(x);//Num.from(x);
     }
 
     static public Number box(final float x) {
-        return cljFloat.box(x);//Num.from(x);
+        return FLOAT.box(x);//Num.from(x);
     }
 
     static public Number box(final double x) {
-        return cljDouble.box(x);//Num.from(x);
+        return DOUBLE.box(x);//Num.from(x);
     }
 
     static public char charCast(final Object x) {
-        return cljChar.charCast(x);
+        return CHAR.charCast(x);
     }
 
     static public char charCast(final byte x) {
-        return cljChar.charCast(x);
+        return CHAR.charCast(x);
     }
 
     static public char charCast(final short x) {
-        return cljChar.charCast(x);
+        return CHAR.charCast(x);
     }
 
     static public char charCast(final char x) {
-        return cljChar.charCast(x);
+        return CHAR.charCast(x);
     }
 
     static public char charCast(final int x) {
-        return cljChar.charCast(x);
+        return CHAR.charCast(x);
     }
 
     static public char charCast(final long x) {
-        return cljChar.charCast(x);
+        return CHAR.charCast(x);
     }
 
     static public char charCast(final float x) {
-        return cljChar.charCast(x);
+        return CHAR.charCast(x);
     }
 
     static public char charCast(final double x) {
-        return cljChar.charCast(x);
+        return CHAR.charCast(x);
     }
 
     static public boolean booleanCast(Object x) {
-        return cljBoolean.booleanCast(x);
+        return BOOLEAN.booleanCast(x);
     }
 
-    static public boolean booleanCast(boolean x) {
-        return cljBoolean.booleanCast(x);
+    static public boolean booleanCast(final boolean x) {
+        return BOOLEAN.booleanCast(x);
     }
 
-    static public byte byteCast(Object x) {
-        return cljByte.byteCast(x);
+    static public byte byteCast(final Object x) {
+        return BYTE.byteCast(x);
     }
 
-    static public byte byteCast(byte x) {
-        return cljByte.byteCast(x);
+    static public byte byteCast(final byte x) {
+        return BYTE.byteCast(x);
     }
 
-    static public byte byteCast(short x) {
-        return cljByte.byteCast(x);
+    static public byte byteCast(final short x) {
+        return BYTE.byteCast(x);
     }
 
-    static public byte byteCast(int x) {
-        return cljByte.byteCast(x);
+    static public byte byteCast(final int x) {
+        return BYTE.byteCast(x);
     }
 
-    static public byte byteCast(long x) {
-        return cljByte.byteCast(x);
+    static public byte byteCast(final long x) {
+        return BYTE.byteCast(x);
     }
 
-    static public byte byteCast(float x) {
-        return cljByte.byteCast(x);
+    static public byte byteCast(final float x) {
+        return BYTE.byteCast(x);
     }
 
-    static public byte byteCast(double x) {
-        return cljByte.byteCast(x);
+    static public byte byteCast(final double x) {
+        return BYTE.byteCast(x);
     }
 
-    static public short shortCast(Object x) {
-        return cljShort.shortCast(x);
+    static public short shortCast(final Object x) {
+        return SHORT.shortCast(x);
     }
 
-    static public short shortCast(byte x) {
-        return cljShort.shortCast(x);
+    static public short shortCast(final byte x) {
+        return SHORT.shortCast(x);
     }
 
-    static public short shortCast(short x) {
-        return cljShort.shortCast(x);
+    static public short shortCast(final short x) {
+        return SHORT.shortCast(x);
     }
 
-    static public short shortCast(int x) {
-        return cljShort.shortCast(x);
+    static public short shortCast(final int x) {
+        return SHORT.shortCast(x);
     }
 
-    static public short shortCast(long x) {
-        return cljShort.shortCast(x);
+    static public short shortCast(final long x) {
+        return SHORT.shortCast(x);
     }
 
-    static public short shortCast(float x) {
-        return cljShort.shortCast(x);
+    static public short shortCast(final float x) {
+        return SHORT.shortCast(x);
     }
 
-    static public short shortCast(double x) {
-        return cljShort.shortCast(x);
+    static public short shortCast(final double x) {
+        return SHORT.shortCast(x);
     }
 
-    static public int intCast(Object x) {
-        return cljInt.intCast(x);
+    static public int intCast(final Object x) {
+        return INT.intCast(x);
     }
 
-    static public int intCast(char x) {
-        return cljInt.intCast(x);
+    static public int intCast(final char x) {
+        return INT.intCast(x);
     }
 
-    static public int intCast(byte x) {
-        return cljInt.intCast(x);
+    static public int intCast(final byte x) {
+        return INT.intCast(x);
     }
 
-    static public int intCast(short x) {
-        return cljInt.intCast(x);
+    static public int intCast(final short x) {
+        return INT.intCast(x);
     }
 
-    static public int intCast(int x) {
-        return cljInt.intCast(x);
+    static public int intCast(final int x) {
+        return INT.intCast(x);
     }
 
-    static public int intCast(float x) {
-        return cljInt.intCast(x);
+    static public int intCast(final float x) {
+        return INT.intCast(x);
     }
 
-    static public int intCast(long x) {
-        return cljInt.intCast(x);
+    static public int intCast(final long x) {
+        return INT.intCast(x);
     }
 
-    static public int intCast(double x) {
-        return cljInt.intCast(x);
+    static public int intCast(final double x) {
+        return INT.intCast(x);
     }
 
-    static public long longCast(Object x) {
-        return cljLong.longCast(x);
+    static public long longCast(final Object x) {
+        return LONG.longCast(x);
     }
 
-    static public long longCast(byte x) {
-        return cljLong.longCast(x);
+    static public long longCast(final byte x) {
+        return LONG.longCast(x);
     }
 
-    static public long longCast(short x) {
-        return cljLong.longCast(x);
+    static public long longCast(final short x) {
+        return LONG.longCast(x);
     }
 
-    static public long longCast(int x) {
-        return cljLong.longCast(x);
+    static public long longCast(final int x) {
+        return LONG.longCast(x);
     }
 
-    static public long longCast(float x) {
-        return cljLong.longCast(x);
+    static public long longCast(final float x) {
+        return LONG.longCast(x);
     }
 
-    static public long longCast(long x) {
-        return cljLong.longCast(x);
+    static public long longCast(final long x) {
+        return LONG.longCast(x);
     }
 
-    static public long longCast(double x) {
-        return cljLong.longCast(x);
+    static public long longCast(final double x) {
+        return LONG.longCast(x);
     }
 
-    static public float floatCast(Object x) {
-        return cljFloat.floatCast(x);
+    static public float floatCast(final Object x) {
+        return FLOAT.floatCast(x);
     }
 
-    static public float floatCast(byte x) {
-        return cljFloat.floatCast(x);
+    static public float floatCast(final byte x) {
+        return FLOAT.floatCast(x);
     }
 
-    static public float floatCast(short x) {
-        return cljFloat.floatCast(x);
+    static public float floatCast(final short x) {
+        return FLOAT.floatCast(x);
     }
 
-    static public float floatCast(int x) {
-        return cljFloat.floatCast(x);
+    static public float floatCast(final int x) {
+        return FLOAT.floatCast(x);
     }
 
-    static public float floatCast(float x) {
-        return cljFloat.floatCast(x);
+    static public float floatCast(final float x) {
+        return FLOAT.floatCast(x);
     }
 
-    static public float floatCast(long x) {
-        return cljFloat.floatCast(x);
+    static public float floatCast(final long x) {
+        return FLOAT.floatCast(x);
     }
 
-    static public float floatCast(double x) {
-        return cljFloat.floatCast(x);
+    static public float floatCast(final double x) {
+        return FLOAT.floatCast(x);
     }
 
-    static public double doubleCast(Object x) {
-        return cljDouble.doubleCast(x);
+    static public double doubleCast(final Object x) {
+        return DOUBLE.doubleCast(x);
     }
 
-    static public double doubleCast(byte x) {
-        return cljDouble.doubleCast(x);
+    static public double doubleCast(final byte x) {
+        return DOUBLE.doubleCast(x);
     }
 
-    static public double doubleCast(short x) {
-        return cljDouble.doubleCast(x);
+    static public double doubleCast(final short x) {
+        return DOUBLE.doubleCast(x);
     }
 
-    static public double doubleCast(int x) {
-        return cljDouble.doubleCast(x);
+    static public double doubleCast(final int x) {
+        return DOUBLE.doubleCast(x);
     }
 
-    static public double doubleCast(float x) {
-        return cljDouble.doubleCast(x);
+    static public double doubleCast(final float x) {
+        return DOUBLE.doubleCast(x);
     }
 
-    static public double doubleCast(long x) {
-        return cljDouble.doubleCast(x);
+    static public double doubleCast(final long x) {
+        return DOUBLE.doubleCast(x);
     }
 
-    static public double doubleCast(double x) {
-        return cljDouble.doubleCast(x);
+    static public double doubleCast(final double x) {
+        return DOUBLE.doubleCast(x);
     }
 
-    static public byte uncheckedByteCast(Object x) {
-        return ((Number) x).byteValue();
+    static public byte uncheckedByteCast(final Object x) {
+        return BYTE.uncheckedByteCast(x);
     }
 
-    static public byte uncheckedByteCast(byte x) {
-        return x;
+    static public byte uncheckedByteCast(final byte x) {
+        return BYTE.uncheckedByteCast(x);
     }
 
-    static public byte uncheckedByteCast(short x) {
-        return (byte) x;
+    static public byte uncheckedByteCast(final short x) {
+        return BYTE.uncheckedByteCast(x);
     }
 
-    static public byte uncheckedByteCast(int x) {
-        return (byte) x;
+    static public byte uncheckedByteCast(final int x) {
+        return BYTE.uncheckedByteCast(x);
     }
 
-    static public byte uncheckedByteCast(long x) {
-        return (byte) x;
+    static public byte uncheckedByteCast(final long x) {
+        return BYTE.uncheckedByteCast(x);
     }
 
-    static public byte uncheckedByteCast(float x) {
-        return (byte) x;
+    static public byte uncheckedByteCast(final float x) {
+        return BYTE.uncheckedByteCast(x);
     }
 
-    static public byte uncheckedByteCast(double x) {
-        return (byte) x;
+    static public byte uncheckedByteCast(final double x) {
+        return BYTE.uncheckedByteCast(x);
     }
 
-    static public short uncheckedShortCast(Object x) {
-        return ((Number) x).shortValue();
+    static public short uncheckedShortCast(final Object x) {
+        return SHORT.uncheckedShortCast(x);
     }
 
-    static public short uncheckedShortCast(byte x) {
-        return x;
+    static public short uncheckedShortCast(final byte x) {
+        return SHORT.uncheckedShortCast(x);
     }
 
-    static public short uncheckedShortCast(short x) {
-        return x;
+    static public short uncheckedShortCast(final short x) {
+        return SHORT.uncheckedShortCast(x);
     }
 
-    static public short uncheckedShortCast(int x) {
-        return (short) x;
+    static public short uncheckedShortCast(final int x) {
+        return SHORT.uncheckedShortCast(x);
     }
 
-    static public short uncheckedShortCast(long x) {
-        return (short) x;
+    static public short uncheckedShortCast(final long x) {
+        return SHORT.uncheckedShortCast(x);
     }
 
-    static public short uncheckedShortCast(float x) {
-        return (short) x;
+    static public short uncheckedShortCast(final float x) {
+        return SHORT.uncheckedShortCast(x);
     }
 
-    static public short uncheckedShortCast(double x) {
-        return (short) x;
+    static public short uncheckedShortCast(final double x) {
+        return SHORT.uncheckedShortCast(x);
     }
 
-    static public char uncheckedCharCast(Object x) {
-        if (x instanceof Character) {
-            return ((Character) x).charValue();
-        }
-        return (char) ((Number) x).longValue();
+    static public char uncheckedCharCast(final Object x) {
+        return CHAR.uncheckedCharCast(x);
     }
 
-    static public char uncheckedCharCast(byte x) {
-        return (char) x;
+    static public char uncheckedCharCast(final byte x) {
+        return CHAR.uncheckedCharCast(x);
     }
 
-    static public char uncheckedCharCast(short x) {
-        return (char) x;
+    static public char uncheckedCharCast(final short x) {
+        return CHAR.uncheckedCharCast(x);
     }
 
-    static public char uncheckedCharCast(char x) {
-        return x;
+    static public char uncheckedCharCast(final char x) {
+        return CHAR.uncheckedCharCast(x);
     }
 
-    static public char uncheckedCharCast(int x) {
-        return (char) x;
+    static public char uncheckedCharCast(final int x) {
+        return CHAR.uncheckedCharCast(x);
     }
 
-    static public char uncheckedCharCast(long x) {
-        return (char) x;
+    static public char uncheckedCharCast(final long x) {
+        return CHAR.uncheckedCharCast(x);
     }
 
-    static public char uncheckedCharCast(float x) {
-        return (char) x;
+    static public char uncheckedCharCast(final float x) {
+        return CHAR.uncheckedCharCast(x);
     }
 
-    static public char uncheckedCharCast(double x) {
-        return (char) x;
+    static public char uncheckedCharCast(final double x) {
+        return CHAR.uncheckedCharCast(x);
     }
 
-    static public int uncheckedIntCast(Object x) {
-        if (x instanceof Number)
-            return ((Number) x).intValue();
-        return ((Character) x).charValue();
+    static public int uncheckedIntCast(final Object x) {
+        return INT.uncheckedIntCast(x);
     }
 
-    static public int uncheckedIntCast(byte x) {
-        return x;
+    static public int uncheckedIntCast(final byte x) {
+        return INT.uncheckedIntCast(x);
     }
 
-    static public int uncheckedIntCast(short x) {
-        return x;
+    static public int uncheckedIntCast(final short x) {
+        return INT.uncheckedIntCast(x);
     }
 
-    static public int uncheckedIntCast(char x) {
-        return x;
+    static public int uncheckedIntCast(final char x) {
+        return INT.uncheckedIntCast(x);
     }
 
-    static public int uncheckedIntCast(int x) {
-        return x;
+    static public int uncheckedIntCast(final int x) {
+        return INT.uncheckedIntCast(x);
     }
 
-    static public int uncheckedIntCast(long x) {
-        return (int) x;
+    static public int uncheckedIntCast(final long x) {
+        return INT.uncheckedIntCast(x);
     }
 
-    static public int uncheckedIntCast(float x) {
-        return (int) x;
+    static public int uncheckedIntCast(final float x) {
+        return INT.uncheckedIntCast(x);
     }
 
-    static public int uncheckedIntCast(double x) {
-        return (int) x;
+    static public int uncheckedIntCast(final double x) {
+        return INT.uncheckedIntCast(x);
     }
 
-    static public long uncheckedLongCast(Object x) {
-        return ((Number) x).longValue();
+    static public long uncheckedLongCast(final Object x) {
+        return LONG.uncheckedLongCast(x);
     }
 
-    static public long uncheckedLongCast(byte x) {
-        return x;
+    static public long uncheckedLongCast(final byte x) {
+        return LONG.uncheckedLongCast(x);
     }
 
-    static public long uncheckedLongCast(short x) {
-        return x;
+    static public long uncheckedLongCast(final short x) {
+        return LONG.uncheckedLongCast(x);
     }
 
-    static public long uncheckedLongCast(int x) {
-        return x;
+    static public long uncheckedLongCast(final int x) {
+        return LONG.uncheckedLongCast(x);
     }
 
-    static public long uncheckedLongCast(long x) {
-        return x;
+    static public long uncheckedLongCast(final long x) {
+        return LONG.uncheckedLongCast(x);
     }
 
-    static public long uncheckedLongCast(float x) {
-        return (long) x;
+    static public long uncheckedLongCast(final float x) {
+        return LONG.uncheckedLongCast(x);
     }
 
-    static public long uncheckedLongCast(double x) {
-        return (long) x;
+    static public long uncheckedLongCast(final double x) {
+        return LONG.uncheckedLongCast(x);
     }
 
-    static public float uncheckedFloatCast(Object x) {
-        return ((Number) x).floatValue();
+    static public float uncheckedFloatCast(final Object x) {
+        return FLOAT.uncheckedFloatCast(x);
     }
 
-    static public float uncheckedFloatCast(byte x) {
-        return x;
+    static public float uncheckedFloatCast(final byte x) {
+        return FLOAT.uncheckedFloatCast(x);
     }
 
-    static public float uncheckedFloatCast(short x) {
-        return x;
+    static public float uncheckedFloatCast(final short x) {
+        return FLOAT.uncheckedFloatCast(x);
     }
 
-    static public float uncheckedFloatCast(int x) {
-        return x;
+    static public float uncheckedFloatCast(final int x) {
+        return FLOAT.uncheckedFloatCast(x);
     }
 
-    static public float uncheckedFloatCast(long x) {
-        return x;
+    static public float uncheckedFloatCast(final long x) {
+        return FLOAT.uncheckedFloatCast(x);
     }
 
-    static public float uncheckedFloatCast(float x) {
-        return x;
+    static public float uncheckedFloatCast(final float x) {
+        return FLOAT.uncheckedFloatCast(x);
     }
 
-    static public float uncheckedFloatCast(double x) {
-        return (float) x;
+    static public float uncheckedFloatCast(final double x) {
+        return FLOAT.uncheckedFloatCast(x);
     }
 
-    static public double uncheckedDoubleCast(Object x) {
-        return ((Number) x).doubleValue();
+    static public double uncheckedDoubleCast(final Object x) {
+        return DOUBLE.uncheckedDoubleCast(x);
     }
 
-    static public double uncheckedDoubleCast(byte x) {
-        return x;
+    static public double uncheckedDoubleCast(final byte x) {
+        return DOUBLE.uncheckedDoubleCast(x);
     }
 
-    static public double uncheckedDoubleCast(short x) {
-        return x;
+    static public double uncheckedDoubleCast(final short x) {
+        return DOUBLE.uncheckedDoubleCast(x);
     }
 
-    static public double uncheckedDoubleCast(int x) {
-        return x;
+    static public double uncheckedDoubleCast(final int x) {
+        return DOUBLE.uncheckedDoubleCast(x);
     }
 
-    static public double uncheckedDoubleCast(long x) {
-        return x;
+    static public double uncheckedDoubleCast(final long x) {
+        return DOUBLE.uncheckedDoubleCast(x);
     }
 
-    static public double uncheckedDoubleCast(float x) {
-        return x;
+    static public double uncheckedDoubleCast(final float x) {
+        return DOUBLE.uncheckedDoubleCast(x);
     }
 
-    static public double uncheckedDoubleCast(double x) {
-        return x;
+    static public double uncheckedDoubleCast(final double x) {
+        return DOUBLE.uncheckedDoubleCast(x);
     }
 
     static public IPersistentMap map(Object... init) {
-        if (init == null)
-            return PersistentArrayMap.EMPTY;
-        else if (init.length <= PersistentArrayMap.HASHTABLE_THRESHOLD)
-            return PersistentArrayMap.createWithCheck(init);
-        return PersistentHashMap.createWithCheck(init);
+        return COLL.map(init);
     }
 
     static public IPersistentMap mapUniqueKeys(Object... init) {
-        if (init == null)
-            return PersistentArrayMap.EMPTY;
-        else if (init.length <= PersistentArrayMap.HASHTABLE_THRESHOLD)
-            return new PersistentArrayMap(init);
-        return PersistentHashMap.create(init);
+        return COLL.mapUniqueKeys(init);
     }
 
     static public IPersistentSet set(Object... init) {
@@ -1106,30 +1088,34 @@ public class RT {
 
 
     static public ISeq list() {
-        return null;
+        return COLL.list();
     }
 
     static public ISeq list(Object arg1) {
-        return new PersistentList(arg1);
+        return COLL.list(arg1);
     }
 
     static public ISeq list(Object arg1, Object arg2) {
-        return listStar(arg1, arg2, null);
+        return COLL.list(arg1, arg2);
     }
 
     static public ISeq list(Object arg1, Object arg2, Object arg3) {
-        return listStar(arg1, arg2, arg3, null);
+        return COLL.list(arg1, arg2, arg3);
     }
 
     static public ISeq list(Object arg1, Object arg2, Object arg3, Object arg4) {
-        return listStar(arg1, arg2, arg3, arg4, null);
+        return COLL.list(arg1, arg2, arg3, arg4);
     }
 
     static public ISeq list(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5) {
-        return listStar(arg1, arg2, arg3, arg4, arg5, null);
+        return COLL.list(arg1, arg2, arg3, arg4, arg5);
     }
 
     static public ISeq listStar(Object arg1, ISeq rest) {
+        return runtime._listStar(arg1, rest);
+    }
+
+    public ISeq _listStar(Object arg1, ISeq rest) {
         return (ISeq) cons(arg1, rest);
     }
 
@@ -1231,23 +1217,23 @@ public class RT {
         Object ret = Array.newInstance(type, length(seq));
         if (type == Integer.TYPE) {
             for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, cljInt.intCast(seq.first()));
+                Array.set(ret, i, INT.intCast(seq.first()));
             }
         } else if (type == Byte.TYPE) {
             for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, cljByte.byteCast(seq.first()));
+                Array.set(ret, i, BYTE.byteCast(seq.first()));
             }
         } else if (type == Float.TYPE) {
             for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, cljFloat.floatCast(seq.first()));
+                Array.set(ret, i, FLOAT.floatCast(seq.first()));
             }
         } else if (type == Short.TYPE) {
             for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, cljShort.shortCast(seq.first()));
+                Array.set(ret, i, SHORT.shortCast(seq.first()));
             }
         } else if (type == Character.TYPE) {
             for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, cljChar.charCast(seq.first()));
+                Array.set(ret, i, CHAR.charCast(seq.first()));
             }
         } else {
             for (int i = 0; seq != null; ++i, seq = seq.next()) {
@@ -1277,7 +1263,7 @@ public class RT {
         if (ret == -1) {
             return null;
         }
-        return cljChar.box((char) ret);
+        return CHAR.box((char) ret);
     }
 
 ///////////////////////////////// reader support ////////////////////////////////
@@ -1333,7 +1319,7 @@ public class RT {
     }
 
     static public boolean suppressRead() {
-        return cljBoolean.booleanCast(SUPPRESS_READ.deref());
+        return BOOLEAN.booleanCast(SUPPRESS_READ.deref());
     }
 
     static public String printString(Object x) {
@@ -1357,16 +1343,16 @@ public class RT {
 
     static public void print(Object x, Writer w) throws IOException {
         //call multimethod
-        if (PRINT_INITIALIZED.isBound() && cljBoolean.booleanCast(PRINT_INITIALIZED.deref()))
+        if (PRINT_INITIALIZED.isBound() && BOOLEAN.booleanCast(PRINT_INITIALIZED.deref()))
             PR_ON.invoke(x, w);
 //*
         else {
-            boolean readably = cljBoolean.booleanCast(PRINT_READABLY.deref());
+            boolean readably = BOOLEAN.booleanCast(PRINT_READABLY.deref());
             if (x instanceof Obj) {
                 Obj o = (Obj) x;
                 if (RT.count(o.meta()) > 0 &&
-                        ((readably && cljBoolean.booleanCast(PRINT_META.deref()))
-                                || cljBoolean.booleanCast(PRINT_DUP.deref()))) {
+                        ((readably && BOOLEAN.booleanCast(PRINT_META.deref()))
+                                || BOOLEAN.booleanCast(PRINT_DUP.deref()))) {
                     IPersistentMap meta = o.meta();
                     w.write("#^");
                     if (meta.count() == 1 && meta.containsKey(TAG_KEY))
@@ -1627,7 +1613,6 @@ public class RT {
             public Object run() {
                 try {
                     Var.pushThreadBindings(RT.map(USE_CONTEXT_CLASSLOADER, RT.T));
-//			getRootClassLoader();
                     return new DynamicClassLoader(baseLoader());
                 } finally {
                     Var.popThreadBindings();
@@ -1639,7 +1624,7 @@ public class RT {
     static public ClassLoader baseLoader() {
         if (Compiler.LOADER.isBound())
             return (ClassLoader) Compiler.LOADER.deref();
-        else if (cljBoolean.booleanCast(USE_CONTEXT_CLASSLOADER.deref()))
+        else if (BOOLEAN.booleanCast(USE_CONTEXT_CLASSLOADER.deref()))
             return Thread.currentThread().getContextClassLoader();
         return Compiler.class.getClassLoader();
     }

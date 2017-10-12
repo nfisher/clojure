@@ -67,4 +67,32 @@ public class CljLong {
     public Number box(final long x) {
         return x;
     }
+
+    public long uncheckedLongCast(double x) {
+        return (long) x;
+    }
+
+    public long uncheckedLongCast(final float x) {
+        return (long) x;
+    }
+
+    public long uncheckedLongCast(final long x) {
+        return x;
+    }
+
+    public long uncheckedLongCast(final int x) {
+        return x;
+    }
+
+    public long uncheckedLongCast(final short x) {
+        return x;
+    }
+
+    public long uncheckedLongCast(final byte x) {
+        return x;
+    }
+
+    public long uncheckedLongCast(final Object x) {
+        return ((Number) x).longValue();
+    }
 }

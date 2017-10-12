@@ -46,4 +46,32 @@ public class CljFloat {
     public Number box(final float x) {
         return x;
     }
+
+    public float uncheckedFloatCast(double x) {
+        return (float) x;
+    }
+
+    public float uncheckedFloatCast(float x) {
+        return x;
+    }
+
+    public float uncheckedFloatCast(long x) {
+        return x;
+    }
+
+    public float uncheckedFloatCast(int x) {
+        return x;
+    }
+
+    public float uncheckedFloatCast(short x) {
+        return x;
+    }
+
+    public float uncheckedFloatCast(byte x) {
+        return x;
+    }
+
+    public float uncheckedFloatCast(Object x) {
+        return ((Number) x).floatValue();
+    }
 }

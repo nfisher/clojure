@@ -67,7 +67,7 @@ public class CljScript {
             }
         }
         if (!loaded && cljURL != null) {
-            if (RT.cljBoolean.booleanCast(Compiler.COMPILE_FILES.deref()))
+            if (RT.BOOLEAN.booleanCast(Compiler.COMPILE_FILES.deref()))
                 RT.compile(scriptfile);
             else
                 RT.loadResourceScript(RT.class, scriptfile);
