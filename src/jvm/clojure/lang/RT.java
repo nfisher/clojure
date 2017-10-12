@@ -12,7 +12,15 @@
 
 package clojure.lang;
 
-import java.io.FileNotFoundException;
+import clojure.lang.runtime.CljBoolean;
+import clojure.lang.runtime.CljByte;
+import clojure.lang.runtime.CljChar;
+import clojure.lang.runtime.CljDouble;
+import clojure.lang.runtime.CljFloat;
+import clojure.lang.runtime.CljInt;
+import clojure.lang.runtime.CljLong;
+import clojure.lang.runtime.CljShort;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,10 +36,8 @@ import java.io.Writer;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -42,17 +48,24 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.RandomAccess;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RT {
     public static final RT runtime = new RT();
+    public static final CljBoolean cljBoolean = new CljBoolean();
+    public static final CljByte cljByte = new CljByte();
+    public static final CljChar cljChar = new CljChar();
+    public static final CljDouble cljDouble = new CljDouble();
+    public static final CljFloat cljFloat = new CljFloat();
+    public static final CljInt cljInt = new CljInt();
     public static final CljLong cljLong = new CljLong();
+    public static final CljShort cljShort = new CljShort();
+
+    public static final CljSeq cljSeq = new CljSeq();
+
+    public static final CljScript cljScript = new CljScript();
 
     static final public Boolean T = Boolean.TRUE;//Keyword.intern(Symbol.intern(null, "t"));
     static final public Boolean F = Boolean.FALSE;//Keyword.intern(Symbol.intern(null, "t"));
@@ -219,7 +232,6 @@ public class RT {
             return ns;
         }
     };
-    private static final int CHUNK_SIZE = 32;
     // single instance of UTF-8 Charset, so as to avoid catching UnsupportedCharsetExceptions everywhere
     static public Charset UTF8 = Charset.forName("UTF-8");
     public static boolean checkSpecAsserts = Boolean.getBoolean("clojure.spec.check-asserts");
@@ -336,39 +348,24 @@ public class RT {
     }
 
     public static void loadResourceScript(String name) throws IOException {
-        runtime._loadResourceScript(name, true);
+        cljScript.loadResourceScript(name, true);
     }
 
     public static void maybeLoadResourceScript(String name) throws IOException {
-        runtime._loadResourceScript(name, false);
+        cljScript.loadResourceScript(name, false);
     }
 
     public static void loadResourceScript(String name, boolean failIfNotFound) throws IOException {
-        runtime._loadResourceScript(name, true);
+        cljScript.loadResourceScript(name, true);
     }
 
     public static void loadResourceScript(Class c, String name) throws IOException {
-        // class is discarded
-        runtime._loadResourceScript(name, true);
+        // class is discarded, not clear what this is for except maybe legacy...
+        cljScript.loadResourceScript(name, true);
     }
 
     public static void loadResourceScript(Class c, String name, boolean failIfNotFound) throws IOException {
-        runtime._loadResourceScript(name, failIfNotFound);
-    }
-
-    private void _loadResourceScript(String name, boolean failIfNotFound) throws IOException {
-        int slash = name.lastIndexOf('/');
-        String file = slash >= 0 ? name.substring(slash + 1) : name;
-        InputStream ins = resourceAsStream(baseLoader(), name);
-        if (ins != null) {
-            try {
-                Compiler.load(new InputStreamReader(ins, UTF8), name, file);
-            } finally {
-                ins.close();
-            }
-        } else if (failIfNotFound) {
-            throw new FileNotFoundException("Could not locate Clojure resource on classpath: " + name);
-        }
+        cljScript.loadResourceScript(name, failIfNotFound);
     }
 
     static public void init() {
@@ -376,85 +373,19 @@ public class RT {
     }
 
     static public long lastModified(URL url, String libfile) throws IOException {
-        return runtime._lastModified(url, libfile);
-    }
-
-    private long _lastModified(URL url, String libfile) throws IOException {
-        URLConnection connection = url.openConnection();
-        try {
-            if (url.getProtocol().equals("jar"))
-                return ((JarURLConnection) connection).getJarFile().getEntry(libfile).getTime();
-            else
-                return connection.getLastModified();
-        } finally {
-            InputStream ins = connection.getInputStream();
-            if (ins != null)
-                ins.close();
-        }
+        return cljScript.lastModified(url, libfile);
     }
 
     static void compile(String cljfile) throws IOException {
-        runtime._compile(cljfile);
-    }
-
-    private void _compile(String cljfile) throws IOException {
-        InputStream ins = resourceAsStream(baseLoader(), cljfile);
-        if (ins != null) {
-            try {
-                Compiler.compile(new InputStreamReader(ins, UTF8), cljfile,
-                        cljfile.substring(1 + cljfile.lastIndexOf("/")));
-            } finally {
-                ins.close();
-            }
-
-        } else {
-            throw new FileNotFoundException("Could not locate Clojure resource on classpath: " + cljfile);
-        }
+        cljScript.compile(cljfile);
     }
 
     static public void load(String scriptbase) throws IOException, ClassNotFoundException {
-        runtime._load(scriptbase, true);
+        cljScript.load(scriptbase, true);
     }
 
     static public void load(String scriptbase, boolean failIfNotFound) throws IOException, ClassNotFoundException {
-        runtime._load(scriptbase, failIfNotFound);
-    }
-
-    private void _load(String scriptbase, boolean failIfNotFound) throws IOException {
-        String classfile = scriptbase + LOADER_SUFFIX + ".class";
-        String cljfile = scriptbase + ".clj";
-        String scriptfile = cljfile;
-        URL classURL = getResource(baseLoader(), classfile);
-        URL cljURL = getResource(baseLoader(), scriptfile);
-        if (cljURL == null) {
-            scriptfile = scriptbase + ".cljc";
-            cljURL = getResource(baseLoader(), scriptfile);
-        }
-        boolean loaded = false;
-
-        if ((classURL != null &&
-                (cljURL == null
-                        || lastModified(classURL, classfile) > lastModified(cljURL, scriptfile)))
-                || classURL == null) {
-            try {
-                Var.pushThreadBindings(
-                        RT.mapUniqueKeys(CURRENT_NS, CURRENT_NS.deref(),
-                                WARN_ON_REFLECTION, WARN_ON_REFLECTION.deref()
-                                , RT.UNCHECKED_MATH, RT.UNCHECKED_MATH.deref()));
-                loaded = (loadClassForName(scriptbase.replace('/', '.') + LOADER_SUFFIX) != null);
-            } finally {
-                Var.popThreadBindings();
-            }
-        }
-        if (!loaded && cljURL != null) {
-            if (booleanCast(Compiler.COMPILE_FILES.deref()))
-                compile(scriptfile);
-            else
-                loadResourceScript(RT.class, scriptfile);
-        } else if (!loaded && failIfNotFound) {
-            throw new FileNotFoundException(String.format("Could not locate %s or %s on classpath.%s", classfile, cljfile,
-                    scriptbase.contains("_") ? " Please check that namespaces with dashes use underscores in the Clojure file name." : ""));
-        }
+        cljScript.load(scriptbase, failIfNotFound);
     }
 
     static void doInit() throws ClassNotFoundException, IOException {
@@ -510,154 +441,36 @@ public class RT {
 ////////////// Collections support /////////////////////////////////
 
     public static ISeq chunkIteratorSeq(final Iterator iter) {
-        return runtime._chunkIteratorSeq(iter);
-    }
-
-    private ISeq _chunkIteratorSeq(final Iterator iter) {
-        if (iter.hasNext()) {
-            return new LazySeq(new AFn() {
-                public Object invoke() {
-                    Object[] arr = new Object[CHUNK_SIZE];
-                    int n = 0;
-                    while (iter.hasNext() && n < CHUNK_SIZE)
-                        arr[n++] = iter.next();
-                    return new ChunkedCons(new ArrayChunk(arr, 0, n), chunkIteratorSeq(iter));
-                }
-            });
-        }
-        return null;
+        return cljSeq.chunkIteratorSeq(iter);
     }
 
     static public ISeq seq(Object coll) {
-        return runtime._seq(coll);
-    }
-
-    private ISeq _seq(Object coll) {
-        if (coll instanceof ASeq) {
-            return (ASeq) coll;
-        } else if (coll instanceof LazySeq) {
-            return ((LazySeq) coll).seq();
-        } else {
-            return seqFrom(coll);
-        }
+        return cljSeq.seq(coll);
     }
 
     // N.B. canSeq must be kept in sync with this!
     static ISeq seqFrom(Object coll) {
-        return runtime._seqFrom(coll);
-    }
-
-    private ISeq _seqFrom(Object coll) {
-        if (coll instanceof Seqable) {
-            return ((Seqable) coll).seq();
-        } else if (coll == null) {
-            return null;
-        } else if (coll instanceof Iterable) {
-            return chunkIteratorSeq(((Iterable) coll).iterator());
-        } else if (coll.getClass().isArray()) {
-            return ArraySeq.createFromObject(coll);
-        } else if (coll instanceof CharSequence) {
-            return StringSeq.create((CharSequence) coll);
-        } else if (coll instanceof Map) {
-            return seq(((Map) coll).entrySet());
-        } else {
-            Class c = coll.getClass();
-            Class sc = c.getSuperclass();
-            throw new IllegalArgumentException("Don't know how to create ISeq from: " + c.getName());
-        }
+        return cljSeq.seqFrom(coll);
     }
 
     static public boolean canSeq(Object coll) {
-        return runtime._canSeq(coll);
-    }
-
-    private boolean _canSeq(Object coll) {
-        return coll instanceof ISeq
-                || coll instanceof Seqable
-                || coll == null
-                || coll instanceof Iterable
-                || coll.getClass().isArray()
-                || coll instanceof CharSequence
-                || coll instanceof Map;
+        return cljSeq.canSeq(coll);
     }
 
     static public Iterator iter(Object coll) {
-        return runtime._iter(coll);
-    }
-
-    private Iterator _iter(Object coll) {
-        if (coll instanceof Iterable) {
-            return ((Iterable) coll).iterator();
-        } else if (coll == null) {
-            return new Iterator() {
-                public boolean hasNext() {
-                    return false;
-                }
-
-                public Object next() {
-                    throw new NoSuchElementException();
-                }
-
-                public void remove() {
-                    throw new UnsupportedOperationException();
-                }
-            };
-        } else if (coll instanceof Map) {
-            return ((Map) coll).entrySet().iterator();
-        } else if (coll instanceof String) {
-            final String s = (String) coll;
-            return new Iterator() {
-                int i = 0;
-
-                public boolean hasNext() {
-                    return i < s.length();
-                }
-
-                public Object next() {
-                    return s.charAt(i++);
-                }
-
-                public void remove() {
-                    throw new UnsupportedOperationException();
-                }
-            };
-        } else if (coll.getClass().isArray()) {
-            return ArrayIter.createFromObject(coll);
-        } else {
-            return iter(seq(coll));
-        }
+        return cljSeq.iter(coll);
     }
 
     static public Object seqOrElse(Object o) {
-        return runtime._seqOrElse(o);
-    }
-
-    private Object _seqOrElse(Object o) {
-        return seq(o) == null ? null : o;
+        return cljSeq.seqOrElse(o);
     }
 
     static public ISeq keys(Object coll) {
-        return runtime._keys(coll);
-    }
-
-    private ISeq _keys(Object coll) {
-        if (coll instanceof IPersistentMap) {
-            return APersistentMap.KeySeq.createFromMap((IPersistentMap) coll);
-        } else {
-            return APersistentMap.KeySeq.create(seq(coll));
-        }
+        return cljSeq.keys(coll);
     }
 
     static public ISeq vals(Object coll) {
-        return runtime._vals(coll);
-    }
-
-    private ISeq _vals(Object coll) {
-        if (coll instanceof IPersistentMap) {
-            return APersistentMap.ValSeq.createFromMap((IPersistentMap) coll);
-        } else {
-            return APersistentMap.ValSeq.create(seq(coll));
-        }
+        return cljSeq.vals(coll);
     }
 
     static public IPersistentMap meta(Object x) {
@@ -672,456 +485,111 @@ public class RT {
     }
 
     public static int count(Object o) {
-        return runtime._count(o);
-    }
-
-    private int _count(Object o) {
-        if (o instanceof Counted) {
-            return ((Counted) o).count();
-        }
-        return countFrom(Util.ret1(o, o = null));
+        return cljSeq.count(o);
     }
 
     static int countFrom(Object o) {
-        return runtime._countFrom(o);
-    }
-
-    private int _countFrom(Object o) {
-        if (o == null) {
-            return 0;
-        } else if (o instanceof IPersistentCollection) {
-            ISeq s = seq(o);
-            o = null;
-            int i = 0;
-            for (; s != null; s = s.next()) {
-                if (s instanceof Counted)
-                    return i + s.count();
-                i++;
-            }
-            return i;
-        } else if (o instanceof CharSequence) {
-            return ((CharSequence) o).length();
-        } else if (o instanceof Collection) {
-            return ((Collection) o).size();
-        } else if (o instanceof Map) {
-            return ((Map) o).size();
-        } else if (o instanceof Map.Entry) {
-            return 2;
-        } else if (o.getClass().isArray()) {
-            return Array.getLength(o);
-        }
-
-        throw new UnsupportedOperationException("count not supported on this type: " + o.getClass().getSimpleName());
+        return cljSeq.countFrom(o);
     }
 
     static public IPersistentCollection conj(IPersistentCollection coll, Object x) {
-        return runtime._conj(coll, x);
-    }
-
-    private IPersistentCollection _conj(IPersistentCollection coll, Object x) {
-        if (coll == null) {
-            return new PersistentList(x);
-        }
-        return coll.cons(x);
+        return cljSeq.conj(coll, x);
     }
 
     static public ISeq cons(Object x, Object coll) {
-        return runtime._cons(x, coll);
+        return cljSeq.cons(x, coll);
 
-    }
-
-    private ISeq _cons(Object x, Object coll) {
-        //ISeq y = seq(coll);
-        if (coll == null) {
-            return new PersistentList(x);
-        } else if (coll instanceof ISeq) {
-            return new Cons(x, (ISeq) coll);
-        } else {
-            return new Cons(x, seq(coll));
-        }
     }
 
     static public Object first(Object x) {
-        return runtime._first(x);
-    }
-
-    private Object _first(Object x) {
-        if (x instanceof ISeq) {
-            return ((ISeq) x).first();
-        }
-
-        ISeq seq = seq(x);
-        if (seq == null) {
-            return null;
-        }
-        return seq.first();
+        return cljSeq.first(x);
     }
 
     static public Object second(Object x) {
-        return runtime._second(x);
-    }
-
-    private Object _second(Object x) {
-        return _first(_next(x));
+        return cljSeq.second(x);
     }
 
     static public Object third(Object x) {
-        return runtime._third(x);
-    }
-
-    private Object _third(Object x) {
-        return _first(_next(_next(x)));
+        return cljSeq.third(x);
     }
 
     static public Object fourth(Object x) {
-        return runtime._fourth(x);
-    }
-
-    private Object _fourth(Object x) {
-        return _first(_next(_next(_next(x))));
+        return cljSeq.fourth(x);
     }
 
     static public ISeq next(Object x) {
-        return runtime._next(x);
-    }
-
-    private static ISeq _next(Object x) {
-        if (x instanceof ISeq) {
-            return ((ISeq) x).next();
-        }
-        ISeq seq = seq(x);
-        if (seq == null) {
-            return null;
-        }
-        return seq.next();
+        return cljSeq.next(x);
     }
 
     static public ISeq more(Object x) {
-        return runtime._more(x);
-    }
-
-    private ISeq _more(Object x) {
-        if (x instanceof ISeq) {
-            return ((ISeq) x).more();
-        }
-        ISeq seq = seq(x);
-        if (seq == null) {
-            return PersistentList.EMPTY;
-        }
-        return seq.more();
+        return cljSeq.more(x);
     }
 
     static public Object peek(Object x) {
-        return runtime._peek(x);
+        return cljSeq.peek(x);
     }
-
-    private Object _peek(Object x) {
-        if (x == null) {
-            return null;
-        }
-        return ((IPersistentStack) x).peek();
-    }
-
 
     static public Object pop(Object x) {
-        return runtime._pop(x);
-    }
-
-    private Object _pop(Object x) {
-        if (x == null) {
-            return null;
-        }
-        return ((IPersistentStack) x).pop();
+        return cljSeq.pop(x);
     }
 
     static public Object get(Object coll, Object key) {
-        return runtime._get(coll, key);
-    }
-
-    private Object _get(Object coll, Object key) {
-        if (coll instanceof ILookup) {
-            return ((ILookup) coll).valAt(key);
-        }
-        return getFrom(coll, key);
+        return cljSeq.get(coll, key);
     }
 
     static Object getFrom(Object coll, Object key) {
-        return runtime._getFrom(coll, key);
-    }
-
-    private Object _getFrom(Object coll, Object key) {
-        if (coll == null) {
-            return null;
-        } else if (coll instanceof Map) {
-            Map m = (Map) coll;
-            return m.get(key);
-        } else if (coll instanceof IPersistentSet) {
-            IPersistentSet set = (IPersistentSet) coll;
-            return set.get(key);
-        } else if (key instanceof Number && (coll instanceof String || coll.getClass().isArray())) {
-            int n = ((Number) key).intValue();
-            if (n >= 0 && n < count(coll))
-                return nth(coll, n);
-            return null;
-        }
-
-        return null;
+        return cljSeq.getFrom(coll, key);
     }
 
     static public Object get(Object coll, Object key, Object notFound) {
-        return runtime._get(coll, key, notFound);
-    }
-
-    private Object _get(Object coll, Object key, Object notFound) {
-        if (coll instanceof ILookup) {
-            return ((ILookup) coll).valAt(key, notFound);
-        }
-        return getFrom(coll, key, notFound);
+        return cljSeq.get(coll, key, notFound);
     }
 
     static Object getFrom(Object coll, Object key, Object notFound) {
-        return runtime._getFrom(coll, key, notFound);
-    }
-
-    private Object _getFrom(Object coll, Object key, Object notFound) {
-        if (coll == null) {
-            return notFound;
-        } else if (coll instanceof Map) {
-            Map m = (Map) coll;
-            if (m.containsKey(key))
-                return m.get(key);
-            return notFound;
-        } else if (coll instanceof IPersistentSet) {
-            IPersistentSet set = (IPersistentSet) coll;
-            if (set.contains(key))
-                return set.get(key);
-            return notFound;
-        } else if (key instanceof Number && (coll instanceof String || coll.getClass().isArray())) {
-            int n = ((Number) key).intValue();
-            return n >= 0 && n < count(coll) ? nth(coll, n) : notFound;
-        }
-        return notFound;
+        return cljSeq.getFrom(coll, key, notFound);
     }
 
     static public Associative assoc(Object coll, Object key, Object val) {
-        return runtime._assoc(coll, key, val);
-    }
-
-    private Associative _assoc(Object coll, Object key, Object val) {
-        if (coll == null) {
-            return new PersistentArrayMap(new Object[]{key, val});
-        }
-        return ((Associative) coll).assoc(key, val);
+        return cljSeq.assoc(coll, key, val);
     }
 
     static public Object contains(Object coll, Object key) {
-        return runtime._contains(coll, key);
-    }
-
-    private Object _contains(Object coll, Object key) {
-        if (coll == null) {
-            return F;
-        } else if (coll instanceof Associative) {
-            return ((Associative) coll).containsKey(key) ? T : F;
-        } else if (coll instanceof IPersistentSet) {
-            return ((IPersistentSet) coll).contains(key) ? T : F;
-        } else if (coll instanceof Map) {
-            Map m = (Map) coll;
-            return m.containsKey(key) ? T : F;
-        } else if (coll instanceof Set) {
-            Set s = (Set) coll;
-            return s.contains(key) ? T : F;
-        } else if (key instanceof Number && (coll instanceof String || coll.getClass().isArray())) {
-            int n = ((Number) key).intValue();
-            return n >= 0 && n < count(coll);
-        }
-        throw new IllegalArgumentException("contains? not supported on type: " + coll.getClass().getName());
+        return cljSeq.contains(coll, key);
     }
 
     static public Object find(Object coll, Object key) {
-        return runtime._find(coll, key);
-    }
-
-    private Object _find(Object coll, Object key) {
-        if (coll == null) {
-            return null;
-        } else if (coll instanceof Associative) {
-            return ((Associative) coll).entryAt(key);
-        } else {
-            Map m = (Map) coll;
-            if (m.containsKey(key)) {
-                return MapEntry.create(key, m.get(key));
-            }
-            return null;
-        }
+        return cljSeq.find(coll, key);
     }
 
     //returns tail starting at val of matching key if found, else null
     static public ISeq findKey(Keyword key, ISeq keyvals) {
-        return runtime._findKey(key, keyvals);
+        return cljSeq.findKey(key, keyvals);
     }
 
-    private ISeq _findKey(Keyword key, ISeq keyvals) {
-        while (keyvals != null) {
-            ISeq r = keyvals.next();
-            if (r == null) {
-                throw Util.runtimeException("Malformed keyword argslist");
-            }
-            if (keyvals.first() == key) {
-                return r;
-            }
-            keyvals = r.next();
-        }
-        return null;
-    }
-
-//takes a seq of key,val,key,val
+    //takes a seq of key,val,key,val
 
     static public Object dissoc(Object coll, Object key) {
-        return runtime._dissoc(coll, key);
-    }
-
-    private Object _dissoc(Object coll, Object key) {
-        if (coll == null) {
-            return null;
-        }
-        return ((IPersistentMap) coll).without(key);
+        return cljSeq.dissoc(coll, key);
     }
 
     static public Object nth(Object coll, int n) {
-        return runtime._nth(coll, n);
-    }
-
-    private Object _nth(Object coll, int n) {
-        if (coll instanceof Indexed) {
-            return ((Indexed) coll).nth(n);
-        }
-        return nthFrom(Util.ret1(coll, coll = null), n);
+        return cljSeq.nth(coll, n);
     }
 
     static Object nthFrom(Object coll, int n) {
-        return runtime._nthFrom(coll, n);
-    }
-
-    private Object _nthFrom(Object coll, int n) {
-        if (coll == null) {
-            return null;
-        } else if (coll instanceof CharSequence) {
-            return Character.valueOf(((CharSequence) coll).charAt(n));
-        } else if (coll.getClass().isArray()) {
-            return Reflector.prepRet(coll.getClass().getComponentType(), Array.get(coll, n));
-        } else if (coll instanceof RandomAccess) {
-            return ((List) coll).get(n);
-        } else if (coll instanceof Matcher) {
-            return ((Matcher) coll).group(n);
-        } else if (coll instanceof Map.Entry) {
-            Map.Entry e = (Map.Entry) coll;
-            if (n == 0) {
-                return e.getKey();
-            } else if (n == 1) {
-                return e.getValue();
-            }
-
-            throw new IndexOutOfBoundsException();
-        } else if (coll instanceof Sequential) {
-            ISeq seq = RT.seq(coll);
-            coll = null;
-            for (int i = 0; i <= n && seq != null; ++i, seq = seq.next()) {
-                if (i == n) {
-                    return seq.first();
-                }
-            }
-            throw new IndexOutOfBoundsException();
-        } else {
-            throw new UnsupportedOperationException(
-                    "nth not supported on this type: " + coll.getClass().getSimpleName());
-        }
+        return cljSeq.nthFrom(coll, n);
     }
 
     static public Object nth(Object coll, int n, Object notFound) {
-        return runtime._nth(coll, n, notFound);
-    }
-
-    private Object _nth(Object coll, int n, Object notFound) {
-        if (coll instanceof Indexed) {
-            Indexed v = (Indexed) coll;
-            return v.nth(n, notFound);
-        }
-        return nthFrom(coll, n, notFound);
+        return cljSeq.nth(coll, n, notFound);
     }
 
     static Object nthFrom(Object coll, int n, Object notFound) {
-        return runtime._nthFrom(coll, n, notFound);
-    }
-
-    private Object _nthFrom(Object coll, int n, Object notFound) {
-        if (coll == null) {
-            return notFound;
-        } else if (n < 0) {
-            return notFound;
-        } else if (coll instanceof CharSequence) {
-            CharSequence s = (CharSequence) coll;
-            if (n < s.length()) {
-                return Character.valueOf(s.charAt(n));
-            }
-            return notFound;
-        } else if (coll.getClass().isArray()) {
-            if (n < Array.getLength(coll)) {
-                return Reflector.prepRet(coll.getClass().getComponentType(), Array.get(coll, n));
-            }
-            return notFound;
-        } else if (coll instanceof RandomAccess) {
-            List list = (List) coll;
-            if (n < list.size()) {
-                return list.get(n);
-            }
-            return notFound;
-        } else if (coll instanceof Matcher) {
-            Matcher m = (Matcher) coll;
-            if (n < m.groupCount()) {
-                return m.group(n);
-            }
-            return notFound;
-        } else if (coll instanceof Map.Entry) {
-            Map.Entry e = (Map.Entry) coll;
-            if (n == 0) {
-                return e.getKey();
-            } else if (n == 1) {
-                return e.getValue();
-            }
-            return notFound;
-        } else if (coll instanceof Sequential) {
-            ISeq seq = RT.seq(coll);
-            coll = null;
-            for (int i = 0; i <= n && seq != null; ++i, seq = seq.next()) {
-                if (i == n) {
-                    return seq.first();
-                }
-            }
-            return notFound;
-        } else {
-            throw new UnsupportedOperationException(
-                    "nth not supported on this type: " + coll.getClass().getSimpleName());
-        }
+        return cljSeq.nthFrom(coll, n, notFound);
     }
 
     static public Object assocN(int n, Object val, Object coll) {
-        return runtime._assocN(n, val, coll);
-    }
-
-    private Object _assocN(int n, Object val, Object coll) {
-        if (coll == null) {
-            return null;
-        } else if (coll instanceof IPersistentVector) {
-            return ((IPersistentVector) coll).assocN(n, val);
-        } else if (coll instanceof Object[]) {
-            //hmm... this is not persistent
-            Object[] array = ((Object[]) coll);
-            array[n] = val;
-            return array;
-        } else {
-            return null;
-        }
+        return cljSeq.assocN(n, val, coll);
     }
 
     static boolean hasTag(Object o, Object tag) {
@@ -1129,13 +597,13 @@ public class RT {
     }
 
     private boolean _hasTag(Object o, Object tag) {
-        return Util.equals(tag, _get(_meta(o), TAG_KEY));
+        return Util.equals(tag, cljSeq.get(_meta(o), TAG_KEY));
     }
 
     /**
      * ********************* Boxing/casts ******************************
      */
-    static public Object box(Object x) {
+    static public Object box(final Object x) {
         return runtime._box(x);
     }
 
@@ -1143,431 +611,168 @@ public class RT {
         return x;
     }
 
-    static public Character box(char x) {
-        return runtime._box(x);
+    static public Character box(final char x) {
+        return cljChar.box(x);
     }
 
-    private Character _box(char x) {
-        return Character.valueOf(x);
+    static public Object box(final boolean x) {
+        return cljBoolean.box(x);
     }
 
-    static public Object box(boolean x) {
-        return runtime._box(x);
+    static public Object box(final Boolean x) {
+        return cljBoolean.box(x);// ? T : null;
     }
 
-    private Boolean _box(boolean x) {
-        return x ? T : F;
+    static public Number box(final byte x) {
+        return cljByte.box(x);//Num.from(x);
     }
 
-    static public Object box(Boolean x) {
-        return runtime._box(x);// ? T : null;
+    static public Number box(final short x) {
+        return cljShort.box(x);//Num.from(x);
     }
 
-    private Boolean _box(Boolean x) {
-        return x;
+    static public Number box(final int x) {
+        return cljInt.box(x);//Num.from(x);
     }
 
-    static public Number box(byte x) {
-        return runtime._box(x);//Num.from(x);
+    static public Number box(final long x) {
+        return cljLong.box(x);//Num.from(x);
     }
 
-    private byte _box(byte x) {
-        return x;
+    static public Number box(final float x) {
+        return cljFloat.box(x);//Num.from(x);
     }
 
-    static public Number box(short x) {
-        return runtime._box(x);//Num.from(x);
+    static public Number box(final double x) {
+        return cljDouble.box(x);//Num.from(x);
     }
 
-    private short _box(short x) {
-        return x;
+    static public char charCast(final Object x) {
+        return cljChar.charCast(x);
     }
 
-    static public Number box(int x) {
-        return runtime._box(x);//Num.from(x);
+    static public char charCast(final byte x) {
+        return cljChar.charCast(x);
     }
 
-    private int _box(int x) {
-        return x;
+    static public char charCast(final short x) {
+        return cljChar.charCast(x);
     }
 
-    static public Number box(long x) {
-        return runtime._box(x);//Num.from(x);
+    static public char charCast(final char x) {
+        return cljChar.charCast(x);
     }
 
-    private long _box(long x) {
-        return x;
+    static public char charCast(final int x) {
+        return cljChar.charCast(x);
     }
 
-    static public Number box(float x) {
-        return runtime._box(x);//Num.from(x);
+    static public char charCast(final long x) {
+        return cljChar.charCast(x);
     }
 
-    private float _box(float x) {
-        return x;
+    static public char charCast(final float x) {
+        return cljChar.charCast(x);
     }
 
-    static public Number box(double x) {
-        return runtime._box(x);//Num.from(x);
-    }
-
-    private double _box(double x) {
-        return x;
-    }
-
-    static public char charCast(Object x) {
-        return runtime._charCast(x);
-    }
-
-    private char _charCast(Object x) {
-        if (x instanceof Character) {
-            return ((Character) x).charValue();
-        }
-
-        long n = ((Number) x).longValue();
-        if (n < Character.MIN_VALUE || n > Character.MAX_VALUE) {
-            throw new IllegalArgumentException("Value out of range for char: " + x);
-        }
-
-        return (char) n;
-    }
-
-    static public char charCast(byte x) {
-        return runtime._charCast(x);
-    }
-
-    private char _charCast(byte x) {
-        char i = (char) x;
-        if (i != x) {
-            throw new IllegalArgumentException("Value out of range for char: " + x);
-        }
-        return i;
-    }
-
-    static public char charCast(short x) {
-        return runtime._charCast(x);
-    }
-
-    private char _charCast(short x) {
-        char i = (char) x;
-        if (i != x) {
-            throw new IllegalArgumentException("Value out of range for char: " + x);
-        }
-        return i;
-    }
-
-    static public char charCast(char x) {
-        return runtime._charCast(x);
-    }
-
-    private char _charCast(char x) {
-        return x;
-    }
-
-    static public char charCast(int x) {
-        return runtime._charCast(x);
-    }
-
-    private char _charCast(int x) {
-        char i = (char) x;
-        if (i != x) {
-            throw new IllegalArgumentException("Value out of range for char: " + x);
-        }
-        return i;
-    }
-
-    static public char charCast(long x) {
-        return runtime._charCast(x);
-    }
-
-    private char _charCast(long x) {
-        char i = (char) x;
-        if (i != x) {
-            throw new IllegalArgumentException("Value out of range for char: " + x);
-        }
-        return i;
-    }
-
-    static public char charCast(float x) {
-        return runtime._charCast(x);
-    }
-
-    private char _charCast(float x) {
-        if (x >= Character.MIN_VALUE && x <= Character.MAX_VALUE) {
-            return (char) x;
-        }
-        throw new IllegalArgumentException("Value out of range for char: " + x);
-    }
-
-    static public char charCast(double x) {
-        return runtime._charCast(x);
-    }
-
-    private char _charCast(double x) {
-        if (x >= Character.MIN_VALUE && x <= Character.MAX_VALUE) {
-            return (char) x;
-        }
-        throw new IllegalArgumentException("Value out of range for char: " + x);
+    static public char charCast(final double x) {
+        return cljChar.charCast(x);
     }
 
     static public boolean booleanCast(Object x) {
-        return runtime._booleanCast(x);
-    }
-
-    private boolean _booleanCast(Object x) {
-        if (x instanceof Boolean) {
-            return ((Boolean) x).booleanValue();
-        }
-        return x != null;
+        return cljBoolean.booleanCast(x);
     }
 
     static public boolean booleanCast(boolean x) {
-        return runtime._booleanCast(x);
-    }
-
-    private boolean _booleanCast(boolean x) {
-        return x;
+        return cljBoolean.booleanCast(x);
     }
 
     static public byte byteCast(Object x) {
-        return runtime._byteCast(x);
-    }
-
-    private byte _byteCast(Object x) {
-        if (x instanceof Byte) {
-            return ((Byte) x).byteValue();
-        }
-        long n = longCast(x);
-        if (n < Byte.MIN_VALUE || n > Byte.MAX_VALUE) {
-            throw new IllegalArgumentException("Value out of range for byte: " + x);
-        }
-
-        return (byte) n;
+        return cljByte.byteCast(x);
     }
 
     static public byte byteCast(byte x) {
-        return runtime._byteCast(x);
-    }
-
-    private byte _byteCast(byte x) {
-        return x;
+        return cljByte.byteCast(x);
     }
 
     static public byte byteCast(short x) {
-        return runtime._byteCast(x);
-    }
-
-    private byte _byteCast(short x) {
-        byte i = (byte) x;
-        if (i != x) {
-            throw new IllegalArgumentException("Value out of range for byte: " + x);
-        }
-        return i;
+        return cljByte.byteCast(x);
     }
 
     static public byte byteCast(int x) {
-        return runtime._byteCast(x);
-    }
-
-    private byte _byteCast(int x) {
-        byte i = (byte) x;
-        if (i != x) {
-            throw new IllegalArgumentException("Value out of range for byte: " + x);
-        }
-        return i;
+        return cljByte.byteCast(x);
     }
 
     static public byte byteCast(long x) {
-        return runtime._byteCast(x);
-    }
-
-    private byte _byteCast(long x) {
-        byte i = (byte) x;
-        if (i != x) {
-            throw new IllegalArgumentException("Value out of range for byte: " + x);
-        }
-        return i;
+        return cljByte.byteCast(x);
     }
 
     static public byte byteCast(float x) {
-        return runtime._byteCast(x);
-    }
-
-    private byte _byteCast(float x) {
-        if (x >= Byte.MIN_VALUE && x <= Byte.MAX_VALUE) {
-            return (byte) x;
-        }
-        throw new IllegalArgumentException("Value out of range for byte: " + x);
+        return cljByte.byteCast(x);
     }
 
     static public byte byteCast(double x) {
-        return runtime._byteCast(x);
-    }
-
-    private byte _byteCast(double x) {
-        if (x >= Byte.MIN_VALUE && x <= Byte.MAX_VALUE) {
-            return (byte) x;
-        }
-        throw new IllegalArgumentException("Value out of range for byte: " + x);
+        return cljByte.byteCast(x);
     }
 
     static public short shortCast(Object x) {
-        return runtime._shortCast(x);
-    }
-
-    private short _shortCast(Object x) {
-        if (x instanceof Short) {
-            return ((Short) x).shortValue();
-        }
-        long n = longCast(x);
-        if (n < Short.MIN_VALUE || n > Short.MAX_VALUE) {
-            throw new IllegalArgumentException("Value out of range for short: " + x);
-        }
-
-        return (short) n;
+        return cljShort.shortCast(x);
     }
 
     static public short shortCast(byte x) {
-        return runtime._shortCast(x);
-    }
-
-    private byte _shortCast(byte x) {
-        return x;
+        return cljShort.shortCast(x);
     }
 
     static public short shortCast(short x) {
-        return runtime._shortCast(x);
-    }
-
-    private short _shortCast(short x) {
-        return x;
+        return cljShort.shortCast(x);
     }
 
     static public short shortCast(int x) {
-        return runtime._shortCast(x);
-    }
-
-    private short _shortCast(int x) {
-        short i = (short) x;
-        if (i != x) {
-            throw new IllegalArgumentException("Value out of range for short: " + x);
-        }
-        return i;
+        return cljShort.shortCast(x);
     }
 
     static public short shortCast(long x) {
-        return runtime._shortCast(x);
-    }
-
-    private short _shortCast(long x) {
-        short i = (short) x;
-        if (i != x) {
-            throw new IllegalArgumentException("Value out of range for short: " + x);
-        }
-        return i;
+        return cljShort.shortCast(x);
     }
 
     static public short shortCast(float x) {
-        return runtime._shortCast(x);
-    }
-
-    private short _shortCast(float x) {
-        if (x >= Short.MIN_VALUE && x <= Short.MAX_VALUE) {
-            return (short) x;
-        }
-        throw new IllegalArgumentException("Value out of range for short: " + x);
+        return cljShort.shortCast(x);
     }
 
     static public short shortCast(double x) {
-        return runtime._shortCast(x);
-    }
-
-    private short _shortCast(double x) {
-        if (x >= Short.MIN_VALUE && x <= Short.MAX_VALUE) {
-            return (short) x;
-        }
-        throw new IllegalArgumentException("Value out of range for short: " + x);
+        return cljShort.shortCast(x);
     }
 
     static public int intCast(Object x) {
-        return runtime._intCast(x);
-    }
-
-    private int _intCast(Object x) {
-        if (x instanceof Integer) {
-            return ((Integer) x).intValue();
-        }
-        if (x instanceof Number) {
-            long n = longCast(x);
-            return intCast(n);
-        }
-        return ((Character) x).charValue();
+        return cljInt.intCast(x);
     }
 
     static public int intCast(char x) {
-        return runtime._intCast(x);
-    }
-
-    private char _intCast(char x) {
-        return x;
+        return cljInt.intCast(x);
     }
 
     static public int intCast(byte x) {
-        return runtime._intCast(x);
-    }
-
-    private byte _intCast(byte x) {
-        return x;
+        return cljInt.intCast(x);
     }
 
     static public int intCast(short x) {
-        return runtime._intCast(x);
-    }
-
-    private short _intCast(short x) {
-        return x;
+        return cljInt.intCast(x);
     }
 
     static public int intCast(int x) {
-        return runtime._intCast(x);
-    }
-
-    private int _intCast(int x) {
-        return x;
+        return cljInt.intCast(x);
     }
 
     static public int intCast(float x) {
-        return runtime._intCast(x);
-    }
-
-    private int _intCast(float x) {
-        if (x < Integer.MIN_VALUE || x > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException("Value out of range for int: " + x);
-        }
-        return (int) x;
+        return cljInt.intCast(x);
     }
 
     static public int intCast(long x) {
-        return runtime._intCast(x);
-    }
-
-    private int _intCast(long x) {
-        int i = (int) x;
-        if (i != x) {
-            throw new IllegalArgumentException("Value out of range for int: " + x);
-        }
-        return i;
+        return cljInt.intCast(x);
     }
 
     static public int intCast(double x) {
-        return runtime._intCast(x);
-    }
-
-    private int _intCast(double x) {
-        if (x < Integer.MIN_VALUE || x > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException("Value out of range for int: " + x);
-        }
-        return (int) x;
+        return cljInt.intCast(x);
     }
 
     static public long longCast(Object x) {
@@ -1599,128 +804,59 @@ public class RT {
     }
 
     static public float floatCast(Object x) {
-        return runtime._floatCast(x);
-    }
-
-    private float _floatCast(Object x) {
-        if (x instanceof Float) {
-            return ((Float) x).floatValue();
-        }
-
-        double n = ((Number) x).doubleValue();
-        if (n < -Float.MAX_VALUE || n > Float.MAX_VALUE) {
-            throw new IllegalArgumentException("Value out of range for float: " + x);
-        }
-
-        return (float) n;
+        return cljFloat.floatCast(x);
     }
 
     static public float floatCast(byte x) {
-        return runtime._floatCast(x);
-    }
-
-    private float _floatCast(byte x) {
-        return x;
+        return cljFloat.floatCast(x);
     }
 
     static public float floatCast(short x) {
-        return runtime._floatCast(x);
-    }
-
-    private float _floatCast(short x) {
-        return x;
+        return cljFloat.floatCast(x);
     }
 
     static public float floatCast(int x) {
-        return runtime._floatCast(x);
-    }
-
-    private float _floatCast(int x) {
-        return x;
+        return cljFloat.floatCast(x);
     }
 
     static public float floatCast(float x) {
-        return runtime._floatCast(x);
-    }
-
-    private float _floatCast(float x) {
-        return x;
+        return cljFloat.floatCast(x);
     }
 
     static public float floatCast(long x) {
-        return runtime._floatCast(x);
-    }
-
-    private float _floatCast(long x) {
-        return x;
+        return cljFloat.floatCast(x);
     }
 
     static public float floatCast(double x) {
-        return runtime._floatCast(x);
-    }
-
-    private float _floatCast(double x) {
-        if (x < -Float.MAX_VALUE || x > Float.MAX_VALUE) {
-            throw new IllegalArgumentException("Value out of range for float: " + x);
-        }
-
-        return (float) x;
+        return cljFloat.floatCast(x);
     }
 
     static public double doubleCast(Object x) {
-        return runtime._doubleCast((Number) x);
-    }
-
-    private double _doubleCast(Number x) {
-        return x.doubleValue();
+        return cljDouble.doubleCast(x);
     }
 
     static public double doubleCast(byte x) {
-        return runtime._doubleCast(x);
-    }
-
-    private double _doubleCast(byte x) {
-        return x;
+        return cljDouble.doubleCast(x);
     }
 
     static public double doubleCast(short x) {
-        return runtime._doubleCast(x);
-    }
-
-    private double _doubleCast(short x) {
-        return x;
+        return cljDouble.doubleCast(x);
     }
 
     static public double doubleCast(int x) {
-        return runtime._doubleCast(x);
-    }
-
-    private double _doubleCast(int x) {
-        return x;
+        return cljDouble.doubleCast(x);
     }
 
     static public double doubleCast(float x) {
-        return runtime._doubleCast(x);
-    }
-
-    private double _doubleCast(float x) {
-        return x;
+        return cljDouble.doubleCast(x);
     }
 
     static public double doubleCast(long x) {
-        return runtime._doubleCast(x);
-    }
-
-    private double _doubleCast(long x) {
-        return x;
+        return cljDouble.doubleCast(x);
     }
 
     static public double doubleCast(double x) {
-        return runtime._doubleCast(x);
-    }
-
-    private double _doubleCast(double x) {
-        return x;
+        return cljDouble.doubleCast(x);
     }
 
     static public byte uncheckedByteCast(Object x) {
@@ -1780,8 +916,9 @@ public class RT {
     }
 
     static public char uncheckedCharCast(Object x) {
-        if (x instanceof Character)
+        if (x instanceof Character) {
             return ((Character) x).charValue();
+        }
         return (char) ((Number) x).longValue();
     }
 
@@ -2094,23 +1231,23 @@ public class RT {
         Object ret = Array.newInstance(type, length(seq));
         if (type == Integer.TYPE) {
             for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, intCast(seq.first()));
+                Array.set(ret, i, cljInt.intCast(seq.first()));
             }
         } else if (type == Byte.TYPE) {
             for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, byteCast(seq.first()));
+                Array.set(ret, i, cljByte.byteCast(seq.first()));
             }
         } else if (type == Float.TYPE) {
             for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, floatCast(seq.first()));
+                Array.set(ret, i, cljFloat.floatCast(seq.first()));
             }
         } else if (type == Short.TYPE) {
             for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, shortCast(seq.first()));
+                Array.set(ret, i, cljShort.shortCast(seq.first()));
             }
         } else if (type == Character.TYPE) {
             for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, charCast(seq.first()));
+                Array.set(ret, i, cljChar.charCast(seq.first()));
             }
         } else {
             for (int i = 0; seq != null; ++i, seq = seq.next()) {
@@ -2137,9 +1274,10 @@ public class RT {
     }
 
     static Character readRet(int ret) {
-        if (ret == -1)
+        if (ret == -1) {
             return null;
-        return box((char) ret);
+        }
+        return cljChar.box((char) ret);
     }
 
 ///////////////////////////////// reader support ////////////////////////////////
@@ -2195,7 +1333,7 @@ public class RT {
     }
 
     static public boolean suppressRead() {
-        return booleanCast(SUPPRESS_READ.deref());
+        return cljBoolean.booleanCast(SUPPRESS_READ.deref());
     }
 
     static public String printString(Object x) {
@@ -2219,16 +1357,16 @@ public class RT {
 
     static public void print(Object x, Writer w) throws IOException {
         //call multimethod
-        if (PRINT_INITIALIZED.isBound() && RT.booleanCast(PRINT_INITIALIZED.deref()))
+        if (PRINT_INITIALIZED.isBound() && cljBoolean.booleanCast(PRINT_INITIALIZED.deref()))
             PR_ON.invoke(x, w);
 //*
         else {
-            boolean readably = booleanCast(PRINT_READABLY.deref());
+            boolean readably = cljBoolean.booleanCast(PRINT_READABLY.deref());
             if (x instanceof Obj) {
                 Obj o = (Obj) x;
                 if (RT.count(o.meta()) > 0 &&
-                        ((readably && booleanCast(PRINT_META.deref()))
-                                || booleanCast(PRINT_DUP.deref()))) {
+                        ((readably && cljBoolean.booleanCast(PRINT_META.deref()))
+                                || cljBoolean.booleanCast(PRINT_DUP.deref()))) {
                     IPersistentMap meta = o.meta();
                     w.write("#^");
                     if (meta.count() == 1 && meta.containsKey(TAG_KEY))
@@ -2501,7 +1639,7 @@ public class RT {
     static public ClassLoader baseLoader() {
         if (Compiler.LOADER.isBound())
             return (ClassLoader) Compiler.LOADER.deref();
-        else if (booleanCast(USE_CONTEXT_CLASSLOADER.deref()))
+        else if (cljBoolean.booleanCast(USE_CONTEXT_CLASSLOADER.deref()))
             return Thread.currentThread().getContextClassLoader();
         return Compiler.class.getClassLoader();
     }

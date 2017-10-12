@@ -1,9 +1,12 @@
-package clojure.lang;
+package clojure.lang.runtime;
+
+import clojure.lang.BigInt;
+import clojure.lang.Ratio;
 
 import java.math.BigInteger;
 
-class CljLong {
-    long longCast(Object x) {
+public class CljLong {
+    public long longCast(final Object x) {
         if (x instanceof Integer || x instanceof Long) {
             return ((Number) x).longValue();
         } else if (x instanceof BigInt) {
@@ -31,33 +34,37 @@ class CljLong {
         }
     }
 
-    long longCast(byte x) {
+    public long longCast(final byte x) {
         return x;
     }
 
-    long longCast(short x) {
+    public long longCast(final short x) {
         return x;
     }
 
-    long longCast(int x) {
+    public long longCast(final int x) {
         return x;
     }
 
-    long longCast(float x) {
+    public long longCast(final float x) {
         if (x < Long.MIN_VALUE || x > Long.MAX_VALUE) {
             throw new IllegalArgumentException("Value out of range for long: " + x);
         }
         return (long) x;
     }
 
-    long longCast(long x) {
+    public long longCast(final long x) {
         return x;
     }
 
-    long longCast(double x) {
+    public long longCast(final double x) {
         if (x < Long.MIN_VALUE || x > Long.MAX_VALUE) {
             throw new IllegalArgumentException("Value out of range for long: " + x);
         }
         return (long) x;
+    }
+
+    public Number box(final long x) {
+        return x;
     }
 }
