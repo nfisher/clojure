@@ -1,6 +1,7 @@
 package clojure.lang;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -494,19 +495,19 @@ public class CljColl {
     }
 
     public ISeq list(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5) {
-        return RT.listStar(arg1, arg2, arg3, arg4, arg5, null);
+        return listStar(arg1, arg2, arg3, arg4, arg5, null);
     }
 
     public ISeq list(Object arg1, Object arg2, Object arg3, Object arg4) {
-        return RT.listStar(arg1, arg2, arg3, arg4, null);
+        return listStar(arg1, arg2, arg3, arg4, null);
     }
 
     public ISeq list(Object arg1, Object arg2, Object arg3) {
-        return RT.listStar(arg1, arg2, arg3, null);
+        return listStar(arg1, arg2, arg3, null);
     }
 
     public ISeq list(Object arg1, Object arg2) {
-        return RT.listStar(arg1, arg2, null);
+        return listStar(arg1, arg2, null);
     }
 
     public ISeq list(Object arg1) {
@@ -522,5 +523,173 @@ public class CljColl {
             return ((IMeta) x).meta();
         }
         return null;
+    }
+
+    public PersistentHashSet set(Object[] init) {
+        return PersistentHashSet.createWithCheck(init);
+    }
+
+    public IPersistentVector vector(Object[] init) {
+        return LazilyPersistentVector.createOwning(init);
+    }
+
+    public IPersistentVector subvec(IPersistentVector v, int start, int end) {
+        if (end < start || start < 0 || end > v.count()) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (start == end) {
+            return PersistentVector.EMPTY;
+        }
+        return new APersistentVector.SubVector(null, v, start, end);
+    }
+
+    public ISeq listStar(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, ISeq rest) {
+        return (ISeq) cons(arg1, cons(arg2, cons(arg3, cons(arg4, cons(arg5, rest)))));
+    }
+
+    public ISeq listStar(Object arg1, Object arg2, Object arg3, Object arg4, ISeq rest) {
+        return (ISeq) cons(arg1, cons(arg2, cons(arg3, cons(arg4, rest))));
+    }
+
+    public ISeq listStar(Object arg1, Object arg2, Object arg3, ISeq rest) {
+        return (ISeq) cons(arg1, cons(arg2, cons(arg3, rest)));
+    }
+
+    public ISeq listStar(Object arg1, Object arg2, ISeq rest) {
+        return (ISeq) cons(arg1, cons(arg2, rest));
+    }
+
+    public ISeq listStar(Object arg1, ISeq rest) {
+        return (ISeq) cons(arg1, rest);
+    }
+
+    public ISeq arrayToList(Object[] a) {
+        ISeq ret = null;
+        for (int i = a.length - 1; i >= 0; --i) {
+            ret = (ISeq) RT.cons(a[i], ret);
+        }
+        return ret;
+    }
+
+    public Object[] object_array(Object sizeOrSeq) {
+        if (sizeOrSeq instanceof Number) {
+            return new Object[((Number) sizeOrSeq).intValue()];
+        } else {
+            ISeq s = RT.seq(sizeOrSeq);
+            int size = RT.count(s);
+            Object[] ret = new Object[size];
+            for (int i = 0; i < size && s != null; i++, s = s.next()) {
+                ret[i] = s.first();
+            }
+            return ret;
+        }
+    }
+
+    public Object[] toArray(Object coll) {
+        if (coll == null) {
+            return RT.EMPTY_ARRAY;
+        } else if (coll instanceof Object[]) {
+            return (Object[]) coll;
+        } else if (coll instanceof Collection) {
+            return ((Collection) coll).toArray();
+        } else if (coll instanceof Iterable) {
+            ArrayList ret = new ArrayList();
+            for (Object o : (Iterable) coll) {
+                ret.add(o);
+            }
+            return ret.toArray();
+        } else if (coll instanceof Map) {
+            return ((Map) coll).entrySet().toArray();
+        } else if (coll instanceof String) {
+            char[] chars = ((String) coll).toCharArray();
+            Object[] ret = new Object[chars.length];
+            for (int i = 0; i < chars.length; i++) {
+                ret[i] = chars[i];
+            }
+            return ret;
+        } else if (coll.getClass().isArray()) {
+            ISeq s = (RT.seq(coll));
+            Object[] ret = new Object[RT.count(s)];
+            for (int i = 0; i < ret.length; i++, s = s.next()) {
+                ret[i] = s.first();
+            }
+            return ret;
+        } else {
+            throw Util.runtimeException("Unable to convert: " + coll.getClass() + " to Object[]");
+        }
+    }
+
+    public Object[] seqToArray(ISeq seq) {
+        final int len = RT.length(seq);
+        final Object[] ret = new Object[len];
+        for (int i = 0; seq != null; ++i, seq = seq.next()) {
+            ret[i] = seq.first();
+        }
+        return ret;
+    }
+
+    public Object[] seqToPassedArray(ISeq seq, Object[] passed) {
+        Object[] dest = passed;
+        int len = RT.count(seq);
+        if (len > dest.length) {
+            dest = (Object[]) Array.newInstance(passed.getClass().getComponentType(), len);
+        }
+        for (int i = 0; seq != null; ++i, seq = seq.next())
+            dest[i] = seq.first();
+        if (len < passed.length) {
+            dest[len] = null;
+        }
+        return dest;
+    }
+
+    public Object seqToTypedArray(ISeq seq) {
+        Class type = (seq != null && seq.first() != null) ? seq.first().getClass() : Object.class;
+        return RT.seqToTypedArray(type, seq);
+    }
+
+    public Object seqToTypedArray(Class type, ISeq seq) {
+        Object ret = Array.newInstance(type, RT.length(seq));
+        if (type == Integer.TYPE) {
+            for (int i = 0; seq != null; ++i, seq = seq.next()) {
+                Array.set(ret, i, RT.INT.intCast(seq.first()));
+            }
+        } else if (type == Byte.TYPE) {
+            for (int i = 0; seq != null; ++i, seq = seq.next()) {
+                Array.set(ret, i, RT.BYTE.byteCast(seq.first()));
+            }
+        } else if (type == Float.TYPE) {
+            for (int i = 0; seq != null; ++i, seq = seq.next()) {
+                Array.set(ret, i, RT.FLOAT.floatCast(seq.first()));
+            }
+        } else if (type == Short.TYPE) {
+            for (int i = 0; seq != null; ++i, seq = seq.next()) {
+                Array.set(ret, i, RT.SHORT.shortCast(seq.first()));
+            }
+        } else if (type == Character.TYPE) {
+            for (int i = 0; seq != null; ++i, seq = seq.next()) {
+                Array.set(ret, i, RT.CHAR.charCast(seq.first()));
+            }
+        } else {
+            for (int i = 0; seq != null; ++i, seq = seq.next()) {
+                Array.set(ret, i, seq.first());
+            }
+        }
+        return ret;
+    }
+
+    public int length(ISeq list) {
+        int i = 0;
+        for (ISeq c = list; c != null; c = c.next()) {
+            i++;
+        }
+        return i;
+    }
+
+    public int boundedLength(ISeq list, int limit) {
+        int i = 0;
+        for (ISeq c = list; c != null && i <= limit; c = c.next()) {
+            i++;
+        }
+        return i;
     }
 }

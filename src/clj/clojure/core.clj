@@ -26,7 +26,7 @@
    :added "1.0"
    :static true}
 
- cons (fn* ^:static cons [x seq] (. clojure.lang.RT (cons x seq))))
+ cons (fn* ^:static cons [x seq] (. clojure.lang.RT/COLL (cons x seq))))
 
 ;during bootstrap we don't have destructuring let, loop or fn, will redefine later
 (def
@@ -52,7 +52,7 @@
     argument. If coll is nil, returns nil."
    :added "1.0"
    :static true}
- first (fn ^:static first [coll] (. clojure.lang.RT (first coll))))
+ first (fn ^:static first [coll] (. clojure.lang.RT/COLL (first coll))))
 
 (def
  ^{:arglists '([coll])
@@ -61,7 +61,7 @@
   argument.  If there are no more items, returns nil."
    :added "1.0"
    :static true}  
- next (fn ^:static next [x] (. clojure.lang.RT (next x))))
+ next (fn ^:static next [x] (. clojure.lang.RT/COLL (next x))))
 
 (def
  ^{:arglists '([coll])
@@ -70,7 +70,7 @@
   argument."
    :added "1.0"
    :static true}  
- rest (fn ^:static rest [x] (. clojure.lang.RT (more x))))
+ rest (fn ^:static rest [x] (. clojure.lang.RT/COLL (more x))))
 
 (def
  ^{:arglists '([coll x] [coll x & xs])
@@ -82,11 +82,11 @@
  conj (fn ^:static conj
         ([] [])
         ([coll] coll)
-        ([coll x] (clojure.lang.RT/conj coll x))
+        ([coll x] (.conj clojure.lang.RT/COLL coll x))
         ([coll x & xs]
          (if xs
-           (recur (clojure.lang.RT/conj coll x) (first xs) (next xs))
-           (clojure.lang.RT/conj coll x)))))
+           (recur (.conj clojure.lang.RT/COLL coll x) (first xs) (next xs))
+           (.conj clojure.lang.RT/COLL coll x)))))
 
 (def
  ^{:doc "Same as (first (next x))"
@@ -134,7 +134,7 @@
    :tag clojure.lang.ISeq
    :added "1.0"
    :static true}
- seq (fn ^:static seq ^clojure.lang.ISeq [coll] (. clojure.lang.RT (seq coll))))
+ seq (fn ^:static seq ^clojure.lang.ISeq [coll] (. clojure.lang.RT/COLL (seq coll))))
 
 (def
  ^{:arglists '([^Class c x])
@@ -188,9 +188,9 @@
    :static true}
  assoc
  (fn ^:static assoc
-   ([map key val] (clojure.lang.RT/assoc map key val))
+   ([map key val] (.assoc clojure.lang.RT/COLL map key val))
    ([map key val & kvs]
-    (let [ret (clojure.lang.RT/assoc map key val)]
+    (let [ret (.assoc clojure.lang.RT/COLL map key val)]
       (if kvs
         (if (next kvs)
           (recur ret (first kvs) (second kvs) (nnext kvs))
@@ -230,7 +230,7 @@
            (let [arglist (first fdecl)
                  ;elide implicit macro args
                  arglist (if (clojure.lang.Util/equals '&form (first arglist)) 
-                           (clojure.lang.RT/subvec arglist 2 (clojure.lang.RT/count arglist))
+                           (.subvec clojure.lang.RT/COLL arglist 2 (.count clojure.lang.RT/COLL arglist))
                            arglist)
                  body (next fdecl)]
              (if (map? (first body))
@@ -341,7 +341,7 @@
   {:tag "[Ljava.lang.Object;"
    :added "1.0"
    :static true}
-  [coll] (. clojure.lang.RT (toArray coll)))
+  [coll] (. clojure.lang.RT/COLL (toArray coll)))
 
 (defn cast
   "Throws a ClassCastException if x is not a c, else returns x."
@@ -700,7 +700,7 @@
   (.chunkedNext s))
 
 (defn ^:static chunk-cons [chunk rest]
-  (if (clojure.lang.Numbers/isZero (clojure.lang.RT/count chunk))
+  (if (clojure.lang.Numbers/isZero (.count clojure.lang.RT/COLL chunk))
     rest
     (clojure.lang.ChunkedCons. chunk rest)))
   
@@ -874,20 +874,20 @@
 (defn int
   "Coerce to int"
   {
-   :inline (fn  [x] `(. clojure.lang.RT (~(if *unchecked-math* 'uncheckedIntCast 'intCast) ~x)))
+   :inline (fn  [x] `(. clojure.lang.RT/INT (~(if *unchecked-math* 'uncheckedIntCast 'intCast) ~x)))
    :added "1.0"}
-  [x] (. clojure.lang.RT (intCast x)))
+  [x] (. clojure.lang.RT/INT (intCast x)))
 
 (defn nth
   "Returns the value at the index. get returns nil if index out of
   bounds, nth throws an exception unless not-found is supplied.  nth
   also works for strings, Java arrays, regex Matchers and Lists, and,
   in O(n) time, for sequences."
-  {:inline (fn  [c i & nf] `(. clojure.lang.RT (nth ~c ~i ~@nf)))
+  {:inline (fn  [c i & nf] `(. clojure.lang.RT/COLL (nth ~c ~i ~@nf)))
    :inline-arities #{2 3}
    :added "1.0"}
-  ([coll index] (. clojure.lang.RT (nth coll index)))
-  ([coll index not-found] (. clojure.lang.RT (nth coll index not-found))))
+  ([coll index] (. clojure.lang.RT/COLL (nth coll index)))
+  ([coll index not-found] (. clojure.lang.RT/COLL (nth coll index not-found))))
 
 (defn <
   "Returns non-nil if nums are in monotonically increasing order,
@@ -1380,7 +1380,7 @@
   {:added "1.0"
    :static true}
    [n] (if (integer? n)
-        (zero? (bit-and (clojure.lang.RT/uncheckedLongCast n) 1))
+        (zero? (bit-and (.uncheckedLongCast clojure.lang.RT/LONG n) 1))
         (throw (IllegalArgumentException. (str "Argument must be an integer: " n)))))
 
 (defn odd?
@@ -1459,7 +1459,7 @@
   more efficient than, last. If the collection is empty, returns nil."
   {:added "1.0"
    :static true}
-  [coll] (. clojure.lang.RT (peek coll)))
+  [coll] (. clojure.lang.RT/COLL (peek coll)))
 
 (defn pop
   "For a list or queue, returns a new list/queue without the first
@@ -1468,7 +1468,7 @@
   as next/butlast."
   {:added "1.0"
    :static true}
-  [coll] (. clojure.lang.RT (pop coll)))
+  [coll] (. clojure.lang.RT/COLL (pop coll)))
 
 ;;map stuff
 
@@ -1486,17 +1486,17 @@
   it will not perform a linear search for a value.  See also 'some'."
   {:added "1.0"
    :static true}
-  [coll key] (. clojure.lang.RT (contains coll key)))
+  [coll key] (. clojure.lang.RT/COLL (contains coll key)))
 
 (defn get
   "Returns the value mapped to key, not-found or nil if key not present."
-  {:inline (fn  [m k & nf] `(. clojure.lang.RT (get ~m ~k ~@nf)))
+  {:inline (fn  [m k & nf] `(. clojure.lang.RT/COLL (get ~m ~k ~@nf)))
    :inline-arities #{2 3}
    :added "1.0"}
   ([map key]
-   (. clojure.lang.RT (get map key)))
+   (. clojure.lang.RT/COLL (get map key)))
   ([map key not-found]
-   (. clojure.lang.RT (get map key not-found))))
+   (. clojure.lang.RT/COLL (get map key not-found))))
 
 (defn dissoc
   "dissoc[iate]. Returns a new map of the same (hashed/sorted) type,
@@ -1505,7 +1505,7 @@
    :static true}
   ([map] map)
   ([map key]
-   (. clojure.lang.RT (dissoc map key)))
+   (. clojure.lang.RT/COLL (dissoc map key)))
   ([map key & ks]
    (let [ret (dissoc map key)]
      (if ks
@@ -1532,7 +1532,7 @@
   "Returns the map entry for key, or nil if key not present."
   {:added "1.0"
    :static true}
-  [map key] (. clojure.lang.RT (find map key)))
+  [map key] (. clojure.lang.RT/COLL (find map key)))
 
 (defn select-keys
   "Returns a map containing only those entries in map whose key is in keys"
@@ -1541,7 +1541,7 @@
   [map keyseq]
     (loop [ret {} keys (seq keyseq)]
       (if keys
-        (let [entry (. clojure.lang.RT (find map (first keys)))]
+        (let [entry (. clojure.lang.RT/COLL (find map (first keys)))]
           (recur
            (if entry
              (conj ret entry)
@@ -1553,13 +1553,13 @@
   "Returns a sequence of the map's keys, in the same order as (seq map)."
   {:added "1.0"
    :static true}
-  [map] (. clojure.lang.RT (keys map)))
+  [map] (. clojure.lang.RT/COLL (keys map)))
 
 (defn vals
   "Returns a sequence of the map's values, in the same order as (seq map)."
   {:added "1.0"
    :static true}
-  [map] (. clojure.lang.RT (vals map)))
+  [map] (. clojure.lang.RT/COLL (vals map)))
 
 (defn key
   "Returns the key of the map entry."
@@ -1602,9 +1602,9 @@
 (defn boolean
   "Coerce to boolean"
   {
-   :inline (fn  [x] `(. clojure.lang.RT (booleanCast ~x)))
+   :inline (fn  [x] `(. clojure.lang.RT/BOOLEAN (booleanCast ~x)))
    :added "1.0"}
-  [x] (clojure.lang.RT/booleanCast x))
+  [x] (.booleanCast clojure.lang.RT/BOOLEAN x))
 
 (defn ident?
   "Return true if x is a symbol or keyword"
@@ -2656,14 +2656,14 @@
      (if (seq? coll) coll
          (or (seq coll) ())))
   ([xform coll]
-     (or (clojure.lang.RT/chunkIteratorSeq
-         (clojure.lang.TransformerIterator/create xform (clojure.lang.RT/iter coll)))
+     (or (.chunkIteratorSeq clojure.lang.RT/COLL
+         (clojure.lang.TransformerIterator/create xform (.iter clojure.lang.RT/COLL coll)))
        ()))
   ([xform coll & colls]
-     (or (clojure.lang.RT/chunkIteratorSeq
+     (or (.chunkIteratorSeq clojure.lang.RT/COLL
          (clojure.lang.TransformerIterator/createMulti
            xform
-           (map #(clojure.lang.RT/iter %) (cons coll colls))))
+           (map #(.iter clojure.lang.RT/COLL %) (cons coll colls))))
        ())))
 
 (defn every?
@@ -2715,7 +2715,7 @@
   [bindings & body]
   (let [i (first bindings)
         n (second bindings)]
-    `(let [n# (clojure.lang.RT/longCast ~n)]
+    `(let [n# (.longCast clojure.lang.RT/LONG ~n)]
        (loop [~i 0]
          (when (< ~i n#)
            ~@body
@@ -3446,9 +3446,9 @@
   {:added "1.0"
    :static true}
   ([aseq]
-     (clojure.lang.RT/seqToTypedArray (seq aseq)))
+     (.seqToTypedArray clojure.lang.RT/COLL (seq aseq)))
   ([type aseq]
-     (clojure.lang.RT/seqToTypedArray type (seq aseq))))
+     (.seqToTypedArray clojure.lang.RT/COLL type (seq aseq))))
 
 (defn ^{:private true}
   array [& items]
@@ -3476,7 +3476,7 @@
 
 (defn long
   "Coerce to long"
-  {:inline (fn  [x] `(. clojure.lang.RT (longCast ~x)))
+  {:inline (fn  [x] `(. clojure.lang.RT/LONG (longCast ~x)))
    :added "1.0"}
   [^Number x] (.longCast clojure.lang.RT/LONG x))
 
@@ -3797,7 +3797,7 @@
   ([v start]
    (subvec v start (count v)))
   ([v start end]
-   (. clojure.lang.RT (subvec v start end))))
+   (. clojure.lang.RT/COLL (subvec v start end))))
 
 (defmacro with-open
   "bindings => [name init ...]
@@ -3869,21 +3869,21 @@
 (defn alength
   "Returns the length of the Java array. Works on arrays of all
   types."
-  {:inline (fn [a] `(. clojure.lang.RT (alength ~a)))
+  {:inline (fn [a] `(. clojure.lang.RT/ARRAY (alength ~a)))
    :added "1.0"}
-  [array] (. clojure.lang.RT (alength array)))
+  [array] (. clojure.lang.RT/ARRAY (alength array)))
 
 (defn aclone
   "Returns a clone of the Java array. Works on arrays of known
   types."
-  {:inline (fn [a] `(. clojure.lang.RT (aclone ~a)))
+  {:inline (fn [a] `(. clojure.lang.RT/ARRAY (aclone ~a)))
    :added "1.0"}
-  [array] (. clojure.lang.RT (aclone array)))
+  [array] (. clojure.lang.RT/ARRAY (aclone array)))
 
 (defn aget
   "Returns the value at the index/indices. Works on Java arrays of all
   types."
-  {:inline (fn [a i] `(. clojure.lang.RT (aget ~a (int ~i))))
+  {:inline (fn [a i] `(. clojure.lang.RT/ARRAY (aget ~a (int ~i))))
    :inline-arities #{2}
    :added "1.0"}
   ([array idx]
@@ -3894,7 +3894,7 @@
 (defn aset
   "Sets the value at the index/indices. Works on Java arrays of
   reference types. Returns val."
-  {:inline (fn [a i v] `(. clojure.lang.RT (aset ~a (int ~i) ~v)))
+  {:inline (fn [a i v] `(. clojure.lang.RT/ARRAY (aset ~a (int ~i) ~v)))
    :inline-arities #{3}
    :added "1.0"}
   ([array idx val]
@@ -5265,10 +5265,10 @@
 
 (defn object-array
   "Creates an array of objects"
-  {:inline (fn [arg] `(. clojure.lang.RT object_array ~arg))
+  {:inline (fn [arg] `(.object_array  clojure.lang.RT/COLL ~arg))
    :inline-arities #{1}
    :added "1.2"}
-  ([size-or-seq] (. clojure.lang.RT object_array size-or-seq)))
+  ([size-or-seq] (.object_array clojure.lang.RT/COLL size-or-seq)))
 
 (defn int-array
   "Creates an array of ints"
@@ -5667,7 +5667,7 @@
   {:added "1.0"
    :static true}
   [iter]
-  (clojure.lang.RT/chunkIteratorSeq iter))
+  (.chunkIteratorSeq  clojure.lang.RT/COLL iter))
 
 (defn enumeration-seq
   "Returns a seq on a java.util.Enumeration"
@@ -6146,7 +6146,7 @@
 (defn seqable?
   "Return true if the seq function is supported for x"
   {:added "1.9"}
-  [x] (clojure.lang.RT/canSeq x))
+  [x] (.canSeq clojure.lang.RT/COLL x))
 
 (defn ifn?
   "Returns true if x implements IFn. Note that many data structures
@@ -6989,7 +6989,7 @@
                        :qualifier   (if (= qualifier "SNAPSHOT") nil qualifier)}]
   (def ^:dynamic *clojure-version*
     (if (.contains version-string "SNAPSHOT")
-      (clojure.lang.RT/assoc clojure-version :interim true)
+      (.assoc clojure.lang.RT/COLL clojure-version :interim true)
       clojure-version)))
 
 (add-doc-and-meta *clojure-version*
@@ -7199,7 +7199,7 @@
   [^java.util.Collection coll]
   (let [al (java.util.ArrayList. coll)]
     (java.util.Collections/shuffle al)
-    (clojure.lang.RT/vector (.toArray al))))
+    (.vector clojure.lang.RT/COLL (.toArray al))))
 
 (defn map-indexed
   "Returns a lazy sequence consisting of the result of applying f to 0
@@ -7603,7 +7603,7 @@
 (deftype Eduction [xform coll]
    Iterable
    (iterator [_]
-     (clojure.lang.TransformerIterator/create xform (clojure.lang.RT/iter coll)))
+     (clojure.lang.TransformerIterator/create xform (.iter clojure.lang.RT/COLL coll)))
 
    clojure.lang.IReduceInit
    (reduce [_ f init]

@@ -12,6 +12,7 @@
 
 package clojure.lang;
 
+import clojure.lang.runtime.CljArray;
 import clojure.lang.runtime.CljBoolean;
 import clojure.lang.runtime.CljByte;
 import clojure.lang.runtime.CljChar;
@@ -33,7 +34,6 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -41,21 +41,20 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 public class RT {
+    public static final CljArray ARRAY = new CljArray();
     // runtime is currently used as an anchor for refactoring from static methods
-    // to instance methods and then moving to the desired class.
     public static final RT runtime = new RT();
+    // to instance methods and then moving to the desired class.
+    public static final CljColl COLL = new CljColl();
     public static final CljBoolean BOOLEAN = new CljBoolean();
     public static final CljByte BYTE = new CljByte();
     public static final CljChar CHAR = new CljChar();
@@ -65,7 +64,6 @@ public class RT {
     public static final CljLong LONG = new CljLong();
     public static final CljShort SHORT = new CljShort();
 
-    public static final CljColl COLL = new CljColl();
 
     public static final CljScript SCRIPT = new CljScript();
 
@@ -1067,19 +1065,15 @@ public class RT {
     }
 
     static public IPersistentSet set(Object... init) {
-        return PersistentHashSet.createWithCheck(init);
+        return COLL.set(init);
     }
 
     static public IPersistentVector vector(Object... init) {
-        return LazilyPersistentVector.createOwning(init);
+        return COLL.vector(init);
     }
 
     static public IPersistentVector subvec(IPersistentVector v, int start, int end) {
-        if (end < start || start < 0 || end > v.count())
-            throw new IndexOutOfBoundsException();
-        if (start == end)
-            return PersistentVector.EMPTY;
-        return new APersistentVector.SubVector(null, v, start, end);
+        return COLL.subvec(v, start, end);
     }
 
     /**
@@ -1112,152 +1106,63 @@ public class RT {
     }
 
     static public ISeq listStar(Object arg1, ISeq rest) {
-        return runtime._listStar(arg1, rest);
-    }
-
-    public ISeq _listStar(Object arg1, ISeq rest) {
-        return (ISeq) cons(arg1, rest);
+        return COLL.listStar(arg1, rest);
     }
 
     static public ISeq listStar(Object arg1, Object arg2, ISeq rest) {
-        return (ISeq) cons(arg1, cons(arg2, rest));
+        return COLL.listStar(arg1, arg2, rest);
     }
 
     static public ISeq listStar(Object arg1, Object arg2, Object arg3, ISeq rest) {
-        return (ISeq) cons(arg1, cons(arg2, cons(arg3, rest)));
+        return COLL.listStar(arg1, arg2, arg3, rest);
     }
 
     static public ISeq listStar(Object arg1, Object arg2, Object arg3, Object arg4, ISeq rest) {
-        return (ISeq) cons(arg1, cons(arg2, cons(arg3, cons(arg4, rest))));
+        return COLL.listStar(arg1, arg2, arg3, arg4, rest);
     }
 
     static public ISeq listStar(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, ISeq rest) {
-        return (ISeq) cons(arg1, cons(arg2, cons(arg3, cons(arg4, cons(arg5, rest)))));
+        return COLL.listStar(arg1, arg2, arg3, arg4, arg5, rest);
     }
 
     static public ISeq arrayToList(Object[] a) {
-        ISeq ret = null;
-        for (int i = a.length - 1; i >= 0; --i)
-            ret = (ISeq) cons(a[i], ret);
-        return ret;
+        return COLL.arrayToList(a);
     }
 
     static public Object[] object_array(Object sizeOrSeq) {
-        if (sizeOrSeq instanceof Number)
-            return new Object[((Number) sizeOrSeq).intValue()];
-        else {
-            ISeq s = RT.seq(sizeOrSeq);
-            int size = RT.count(s);
-            Object[] ret = new Object[size];
-            for (int i = 0; i < size && s != null; i++, s = s.next())
-                ret[i] = s.first();
-            return ret;
-        }
+        return COLL.object_array(sizeOrSeq);
     }
 
     static public Object[] toArray(Object coll) {
-        if (coll == null)
-            return EMPTY_ARRAY;
-        else if (coll instanceof Object[])
-            return (Object[]) coll;
-        else if (coll instanceof Collection)
-            return ((Collection) coll).toArray();
-        else if (coll instanceof Iterable) {
-            ArrayList ret = new ArrayList();
-            for (Object o : (Iterable) coll)
-                ret.add(o);
-            return ret.toArray();
-        } else if (coll instanceof Map)
-            return ((Map) coll).entrySet().toArray();
-        else if (coll instanceof String) {
-            char[] chars = ((String) coll).toCharArray();
-            Object[] ret = new Object[chars.length];
-            for (int i = 0; i < chars.length; i++)
-                ret[i] = chars[i];
-            return ret;
-        } else if (coll.getClass().isArray()) {
-            ISeq s = (seq(coll));
-            Object[] ret = new Object[count(s)];
-            for (int i = 0; i < ret.length; i++, s = s.next())
-                ret[i] = s.first();
-            return ret;
-        } else
-            throw Util.runtimeException("Unable to convert: " + coll.getClass() + " to Object[]");
+        return COLL.toArray(coll);
     }
 
     static public Object[] seqToArray(ISeq seq) {
-        int len = length(seq);
-        Object[] ret = new Object[len];
-        for (int i = 0; seq != null; ++i, seq = seq.next())
-            ret[i] = seq.first();
-        return ret;
+        return COLL.seqToArray(seq);
     }
 
     // supports java Collection.toArray(T[])
     static public Object[] seqToPassedArray(ISeq seq, Object[] passed) {
-        Object[] dest = passed;
-        int len = count(seq);
-        if (len > dest.length) {
-            dest = (Object[]) Array.newInstance(passed.getClass().getComponentType(), len);
-        }
-        for (int i = 0; seq != null; ++i, seq = seq.next())
-            dest[i] = seq.first();
-        if (len < passed.length) {
-            dest[len] = null;
-        }
-        return dest;
+        return COLL.seqToPassedArray(seq, passed);
     }
 
     static public Object seqToTypedArray(ISeq seq) {
-        Class type = (seq != null && seq.first() != null) ? seq.first().getClass() : Object.class;
-        return seqToTypedArray(type, seq);
+        return COLL.seqToTypedArray(seq);
     }
 
     static public Object seqToTypedArray(Class type, ISeq seq) {
-        Object ret = Array.newInstance(type, length(seq));
-        if (type == Integer.TYPE) {
-            for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, INT.intCast(seq.first()));
-            }
-        } else if (type == Byte.TYPE) {
-            for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, BYTE.byteCast(seq.first()));
-            }
-        } else if (type == Float.TYPE) {
-            for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, FLOAT.floatCast(seq.first()));
-            }
-        } else if (type == Short.TYPE) {
-            for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, SHORT.shortCast(seq.first()));
-            }
-        } else if (type == Character.TYPE) {
-            for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, CHAR.charCast(seq.first()));
-            }
-        } else {
-            for (int i = 0; seq != null; ++i, seq = seq.next()) {
-                Array.set(ret, i, seq.first());
-            }
-        }
-        return ret;
+        return COLL.seqToTypedArray(type, seq);
     }
 
     static public int length(ISeq list) {
-        int i = 0;
-        for (ISeq c = list; c != null; c = c.next()) {
-            i++;
-        }
-        return i;
+        return COLL.length(list);
     }
 
     static public int boundedLength(ISeq list, int limit) {
-        int i = 0;
-        for (ISeq c = list; c != null && i <= limit; c = c.next()) {
-            i++;
-        }
-        return i;
+        return COLL.boundedLength(list, limit);
     }
+
+///////////////////////////////// reader support ////////////////////////////////
 
     static Character readRet(int ret) {
         if (ret == -1) {
@@ -1265,8 +1170,6 @@ public class RT {
         }
         return CHAR.box((char) ret);
     }
-
-///////////////////////////////// reader support ////////////////////////////////
 
     static public Character readChar(Reader r) throws IOException {
         int ret = r.read();
@@ -1488,16 +1391,18 @@ public class RT {
     private static void printInnerSeq(ISeq x, Writer w) throws IOException {
         for (ISeq s = x; s != null; s = s.next()) {
             print(s.first(), w);
-            if (s.next() != null)
+            if (s.next() != null) {
                 w.write(' ');
+            }
         }
     }
 
     static public void formatAesthetic(Writer w, Object obj) throws IOException {
-        if (obj == null)
+        if (obj == null) {
             w.write("null");
-        else
+        } else {
             w.write(obj.toString());
+        }
     }
 
     static public void formatStandard(Writer w, Object obj) throws IOException {
@@ -1602,8 +1507,9 @@ public class RT {
 
     static public Object[] setValues(Object... vals) {
         //ThreadLocalData.setValues(vals);
-        if (vals.length > 0)
+        if (vals.length > 0) {
             return vals;//[0];
+        }
         return null;
     }
 ///////////////////////////////// values //////////////////////////
@@ -1646,7 +1552,6 @@ public class RT {
     }
 
     static public Class classForName(String name, boolean load, ClassLoader loader) {
-
         try {
             Class c = null;
             if (!(loader instanceof DynamicClassLoader))
@@ -1671,165 +1576,157 @@ public class RT {
         try {
             classForNameNonLoading(name);
         } catch (Exception e) {
-            if (e instanceof ClassNotFoundException)
+            if (e instanceof ClassNotFoundException) {
                 return null;
-            else
+            } else {
                 throw Util.sneakyThrow(e);
+            }
         }
         return classForName(name);
     }
 
     static public float aget(float[] xs, int i) {
-        return xs[i];
+        return ARRAY.aget(xs, i);
     }
 
     static public float aset(float[] xs, int i, float v) {
-        xs[i] = v;
-        return v;
+        return ARRAY.aset(xs, i, v);
     }
 
     static public int alength(float[] xs) {
-        return xs.length;
+        return ARRAY.alength(xs);
     }
 
     static public float[] aclone(float[] xs) {
-        return xs.clone();
+        return ARRAY.aclone(xs);
     }
 
     static public double aget(double[] xs, int i) {
-        return xs[i];
+        return ARRAY.aget(xs, i);
     }
 
     static public double aset(double[] xs, int i, double v) {
-        xs[i] = v;
-        return v;
+        return ARRAY.aset(xs, i, v);
     }
 
     static public int alength(double[] xs) {
-        return xs.length;
+        return ARRAY.alength(xs);
     }
 
     static public double[] aclone(double[] xs) {
-        return xs.clone();
+        return ARRAY.aclone(xs);
     }
 
     static public int aget(int[] xs, int i) {
-        return xs[i];
+        return ARRAY.aget(xs, i);
     }
 
     static public int aset(int[] xs, int i, int v) {
-        xs[i] = v;
-        return v;
+        return ARRAY.aset(xs, i, v);
     }
 
     static public int alength(int[] xs) {
-        return xs.length;
+        return ARRAY.alength(xs);
     }
 
     static public int[] aclone(int[] xs) {
-        return xs.clone();
+        return ARRAY.aclone(xs);
     }
 
     static public long aget(long[] xs, int i) {
-        return xs[i];
+        return ARRAY.aget(xs, i);
     }
 
     static public long aset(long[] xs, int i, long v) {
-        xs[i] = v;
-        return v;
+        return ARRAY.aset(xs, i, v);
     }
 
-    static public int alength(long[] xs) {
-        return xs.length;
+    public int alength(long[] xs) {
+        return ARRAY.alength(xs);
     }
 
     static public long[] aclone(long[] xs) {
-        return xs.clone();
+        return ARRAY.aclone(xs);
     }
 
     static public char aget(char[] xs, int i) {
-        return xs[i];
+        return ARRAY.aget(xs, i);
     }
 
     static public char aset(char[] xs, int i, char v) {
-        xs[i] = v;
-        return v;
+        return ARRAY.aset(xs, i, v);
     }
 
     static public int alength(char[] xs) {
-        return xs.length;
+        return ARRAY.alength(xs);
     }
 
     static public char[] aclone(char[] xs) {
-        return xs.clone();
+        return ARRAY.aclone(xs);
     }
 
     static public byte aget(byte[] xs, int i) {
-        return xs[i];
+        return ARRAY.aget(xs, i);
     }
 
     static public byte aset(byte[] xs, int i, byte v) {
-        xs[i] = v;
-        return v;
+        return ARRAY.aset(xs, i, v);
     }
 
     static public int alength(byte[] xs) {
-        return xs.length;
+        return ARRAY.alength(xs);
     }
 
     static public byte[] aclone(byte[] xs) {
-        return xs.clone();
+        return ARRAY.aclone(xs);
     }
 
     static public short aget(short[] xs, int i) {
-        return xs[i];
+        return ARRAY.aget(xs, i);
     }
 
     static public short aset(short[] xs, int i, short v) {
-        xs[i] = v;
-        return v;
+        return ARRAY.aset(xs, i, v);
     }
 
     static public int alength(short[] xs) {
-        return xs.length;
+        return ARRAY.alength(xs);
     }
 
     static public short[] aclone(short[] xs) {
-        return xs.clone();
+        return ARRAY.aclone(xs);
     }
 
     static public boolean aget(boolean[] xs, int i) {
-        return xs[i];
+        return ARRAY.aget(xs, i);
     }
 
     static public boolean aset(boolean[] xs, int i, boolean v) {
-        xs[i] = v;
-        return v;
+        return ARRAY.aset(xs, i, v);
     }
 
     static public int alength(boolean[] xs) {
-        return xs.length;
+        return ARRAY.alength(xs);
     }
 
     static public boolean[] aclone(boolean[] xs) {
-        return xs.clone();
+        return ARRAY.aclone(xs);
     }
 
     static public Object aget(Object[] xs, int i) {
-        return xs[i];
+        return ARRAY.aget(xs, i);
     }
 
     static public Object aset(Object[] xs, int i, Object v) {
-        xs[i] = v;
-        return v;
+        return ARRAY.aset(xs, i, v);
     }
 
     static public int alength(Object[] xs) {
-        return xs.length;
+        return ARRAY.alength(xs);
     }
 
     static public Object[] aclone(Object[] xs) {
-        return xs.clone();
+        return ARRAY.aclone(xs);
     }
 
     private static final class DefaultComparator implements Comparator, Serializable {
