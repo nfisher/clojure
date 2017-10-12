@@ -27,7 +27,7 @@ public class CljDouble {
     }
 
     public double doubleCast(final Object x) {
-        return ((Number)x).doubleValue();
+        return ((Number) x).doubleValue();
     }
 
     public Number box(final double x) {

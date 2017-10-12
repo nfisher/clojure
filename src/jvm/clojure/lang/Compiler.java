@@ -5263,7 +5263,7 @@ public class Compiler implements Opcodes {
                 emitKeywordCallsites(clinitgen);
 
       		/*
-      		for(int i=0;i<varCallsites.count();i++)
+              for(int i=0;i<varCallsites.count();i++)
       			{
       			Label skipLabel = clinitgen.newLabel();
       			Label endLabel = clinitgen.newLabel();
