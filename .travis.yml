@@ -5,6 +5,5 @@ script:
 jdk:
   - oraclejdk8
   - oraclejdk9
-  - openjdk9
   - openjdk8
   - openjdk7
