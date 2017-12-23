@@ -13,27 +13,90 @@ package clojure;
 import clojure.lang.Symbol;
 import clojure.lang.Var;
 import clojure.lang.RT;
+import tracing.Event;
+import tracing.Tracer;
+
+import java.io.IOException;
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+
+import static tracing.Event.finished;
+import static tracing.Event.started;
+import static tracing.Event.uptime;
+import static tracing.JsonKeyPair.jsonPair;
 
 public class main{
+    final static private Symbol CLOJURE_MAIN = Symbol.intern("clojure.main");
+    final static private Var REQUIRE = RT.var("clojure.core", "require");
+    final static private Var LEGACY_REPL = RT.var("clojure.main", "legacy-repl");
+    final static private Var LEGACY_SCRIPT = RT.var("clojure.main", "legacy-script");
+    final static private Var MAIN = RT.var("clojure.main", "main");
 
-final static private Symbol CLOJURE_MAIN = Symbol.intern("clojure.main");
-final static private Var REQUIRE = RT.var("clojure.core", "require");
-final static private Var LEGACY_REPL = RT.var("clojure.main", "legacy-repl");
-final static private Var LEGACY_SCRIPT = RT.var("clojure.main", "legacy-script");
-final static private Var MAIN = RT.var("clojure.main", "main");
+    public static void legacy_repl(String[] args) {
+        REQUIRE.invoke(CLOJURE_MAIN);
+        LEGACY_REPL.invoke(RT.seq(args));
+    }
 
-public static void legacy_repl(String[] args) {
-    REQUIRE.invoke(CLOJURE_MAIN);
-    LEGACY_REPL.invoke(RT.seq(args));
-}
+    public static void legacy_script(String[] args) {
+        REQUIRE.invoke(CLOJURE_MAIN);
+        LEGACY_SCRIPT.invoke(RT.seq(args));
+    }
 
-public static void legacy_script(String[] args) {
-    REQUIRE.invoke(CLOJURE_MAIN);
-    LEGACY_SCRIPT.invoke(RT.seq(args));
-}
+    public static void main(String[] args) {
+        final Tracer tracer = Tracer.instance();
+        tracer.trace(started().toString());
 
-public static void main(String[] args) {
-    REQUIRE.invoke(CLOJURE_MAIN);
-    MAIN.applyTo(RT.seq(args));
-}
+        try {
+            tracer.start("trace");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        REQUIRE.invoke(CLOJURE_MAIN);
+        MAIN.applyTo(RT.seq(args));
+        tracer.trace(finished().toString());
+        exit(tracer);
+        tracer.close();
+    }
+
+    static void exit(final Tracer tracer) {
+        tracer.trace(started().toString());
+        final Runtime runtime = Runtime.getRuntime();
+
+        final long freeMemory = runtime.freeMemory();
+        final long maxMemory = runtime.maxMemory();
+        final long totalMemory = runtime.totalMemory();
+        final long processors = runtime.availableProcessors();
+
+        long garbageCollections = 0;
+        long garbageCollectionTime = 0;
+
+
+        for (GarbageCollectorMXBean gc : ManagementFactory.getGarbageCollectorMXBeans()) {
+            final long count = gc.getCollectionCount();
+
+            if (count >= 0) {
+                garbageCollections += count;
+            }
+
+            final long time = gc.getCollectionTime();
+
+            if (time >= 0) {
+                garbageCollectionTime += time;
+            }
+        }
+
+        tracer.trace(uptime().toString());
+        tracer.trace(finished().addRaw("args",
+                jsonPair()
+                        .add("rc", 1)
+                        .add("numGC", garbageCollections)
+                        .add("inGC", garbageCollectionTime)
+                        .add("freeMemory", freeMemory)
+                        .add("maxMemory", maxMemory)
+                        .add("totalMemory", totalMemory)
+                        .add("processors", processors)
+                        .add("missedTraces", tracer.getMissedTraceCount())
+                        .toMapString())
+                .toString());
+    }
 }

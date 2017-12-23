@@ -12,6 +12,8 @@
 
 package clojure.lang;
 
+import tracing.Tracer;
+
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.lang.ref.Reference;
@@ -20,10 +22,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 
+import static tracing.Event.finished;
+import static tracing.Event.started;
+
 
 public class Keyword implements IFn, Comparable, Named, Serializable, IHashEq {
-
-private static ConcurrentHashMap<Symbol, Reference<Keyword>> table = new ConcurrentHashMap();
+	private static ConcurrentHashMap<Symbol, Reference<Keyword>> table = new ConcurrentHashMap();
 static final ReferenceQueue rq = new ReferenceQueue();
 public final Symbol sym;
 final int hasheq;
@@ -32,22 +36,24 @@ transient String _str;
 public static Keyword intern(Symbol sym){
 	Keyword k = null;
 	Reference<Keyword> existingRef = table.get(sym);
-	if(existingRef == null)
-		{
+	if(existingRef == null) {
 		Util.clearCache(rq, table);
 		if(sym.meta() != null)
 			sym = (Symbol) sym.withMeta(null);
 		k = new Keyword(sym);
 		existingRef = table.putIfAbsent(sym, new WeakReference<Keyword>(k, rq));
-		}
-	if(existingRef == null)
+	}
+	if(existingRef == null) {
 		return k;
+	}
 	Keyword existingk = existingRef.get();
-	if(existingk != null)
+	if(existingk != null) {
 		return existingk;
+	}
 	//entry died in the interim, do over
 	table.remove(sym, existingRef);
-	return intern(sym);
+	k = intern(sym);
+	return k;
 }
 
 public static Keyword intern(String ns, String name){

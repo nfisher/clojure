@@ -12,12 +12,12 @@
 
 package clojure.lang;
 
-import java.io.Serializable;
 import java.io.ObjectStreamException;
+import java.io.Serializable;
 
 
 public class Symbol extends AFn implements IObj, Comparable, Named, Serializable, IHashEq{
-final String ns;
+	final String ns;
 final String name;
 private int _hasheq;
 final IPersistentMap _meta;
@@ -57,10 +57,15 @@ static public Symbol intern(String ns, String name){
 
 static public Symbol intern(String nsname){
 	int i = nsname.indexOf('/');
-	if(i == -1 || nsname.equals("/"))
-		return new Symbol(null, nsname);
-	else
-		return new Symbol(nsname.substring(0, i), nsname.substring(i + 1));
+	Symbol symbol;
+
+	if(i == -1 || nsname.equals("/")) {
+		symbol = new Symbol(null, nsname);
+	} else {
+		symbol = new Symbol(nsname.substring(0, i), nsname.substring(i + 1));
+	}
+
+	return symbol;
 }
 
 private Symbol(String ns_interned, String name_interned){
