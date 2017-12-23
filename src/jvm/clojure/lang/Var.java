@@ -396,18 +396,27 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
 	}
 
 	public Object invoke(Object arg1) {
-		return fn().invoke(Util.ret1(arg1,arg1=null));
+		tracer.trace(started().toString());
+		final Object o = fn().invoke(Util.ret1(arg1,arg1=null));
+		tracer.trace(finished().toString());
+		return o;
 	}
 
 	public Object invoke(Object arg1, Object arg2) {
-		return fn().invoke(Util.ret1(arg1,arg1=null),
+		tracer.trace(started().toString());
+		final Object o = fn().invoke(Util.ret1(arg1,arg1=null),
 				Util.ret1(arg2,arg2=null));
+		tracer.trace(finished().toString());
+		return o;
 	}
 
 	public Object invoke(Object arg1, Object arg2, Object arg3) {
-		return fn().invoke(Util.ret1(arg1,arg1=null),
+		tracer.trace(started().toString());
+		final Object o = fn().invoke(Util.ret1(arg1,arg1=null),
 				Util.ret1(arg2,arg2=null),
 				Util.ret1(arg3,arg3=null));
+		tracer.trace(finished().toString());
+		return o;
 	}
 
 	public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4) {
