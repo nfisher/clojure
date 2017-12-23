@@ -13,7 +13,6 @@ package clojure;
 import clojure.lang.Symbol;
 import clojure.lang.Var;
 import clojure.lang.RT;
-import tracing.Event;
 import tracing.Tracer;
 
 import java.io.IOException;
@@ -26,18 +25,20 @@ import static tracing.Event.uptime;
 import static tracing.JsonKeyPair.jsonPair;
 
 public class main{
-    final static private Symbol CLOJURE_MAIN = Symbol.intern("clojure.main");
-    final static private Var REQUIRE = RT.var("clojure.core", "require");
-    final static private Var LEGACY_REPL = RT.var("clojure.main", "legacy-repl");
-    final static private Var LEGACY_SCRIPT = RT.var("clojure.main", "legacy-script");
-    final static private Var MAIN = RT.var("clojure.main", "main");
 
     public static void legacy_repl(String[] args) {
+        final Var REQUIRE = RT.var("clojure.core", "require");
+        final Var LEGACY_REPL = RT.var("clojure.main", "legacy-repl");
+        final Symbol CLOJURE_MAIN = Symbol.intern("clojure.main");
+
         REQUIRE.invoke(CLOJURE_MAIN);
         LEGACY_REPL.invoke(RT.seq(args));
     }
 
     public static void legacy_script(String[] args) {
+        final Var REQUIRE = RT.var("clojure.core", "require");
+        final Var LEGACY_SCRIPT = RT.var("clojure.main", "legacy-script");
+        final Symbol CLOJURE_MAIN = Symbol.intern("clojure.main");
         REQUIRE.invoke(CLOJURE_MAIN);
         LEGACY_SCRIPT.invoke(RT.seq(args));
     }
@@ -46,14 +47,21 @@ public class main{
         final Tracer tracer = Tracer.instance();
         tracer.trace(started().toString());
 
+        final Var REQUIRE = RT.var("clojure.core", "require");
+        final Var MAIN = RT.var("clojure.main", "main");
+        final Symbol CLOJURE_MAIN = Symbol.intern("clojure.main");
+
         try {
             tracer.start("trace");
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
         REQUIRE.invoke(CLOJURE_MAIN);
         MAIN.applyTo(RT.seq(args));
         tracer.trace(finished().toString());
+        tracer.trace(uptime().toString());
         exit(tracer);
         tracer.close();
     }
@@ -85,7 +93,6 @@ public class main{
             }
         }
 
-        tracer.trace(uptime().toString());
         tracer.trace(finished().addRaw("args",
                 jsonPair()
                         .add("rc", 1)
