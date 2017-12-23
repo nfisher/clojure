@@ -456,8 +456,14 @@ public class RT{
 		String cljfile = scriptbase + ".clj";
 		String scriptfile = cljfile;
 		tracer.trace(started("getResource").toString());
+
+		tracer.trace(started("getResource("+scriptbase+".class)").toString());
 		URL classURL = getResource(baseLoader(),classfile);
+		tracer.trace(finished("getResource("+scriptbase+".class)").toString());
+
+		tracer.trace(started("getResource("+scriptfile+")").toString());
 		URL cljURL = getResource(baseLoader(), scriptfile);
+		tracer.trace(finished("getResource("+scriptfile+")").toString());
 		if(cljURL == null) {
 			scriptfile = scriptbase + ".cljc";
 			cljURL = getResource(baseLoader(), scriptfile);
