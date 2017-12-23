@@ -47,21 +47,22 @@ public class main{
         final Tracer tracer = Tracer.instance();
         tracer.trace(started().toString());
 
-        final Var REQUIRE = RT.var("clojure.core", "require");
-        final Var MAIN = RT.var("clojure.main", "main");
-        final Symbol CLOJURE_MAIN = Symbol.intern("clojure.main");
-
         try {
             tracer.start("trace");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        final Var REQUIRE = RT.var("clojure.core", "require");
+        final Var MAIN = RT.var("clojure.main", "main");
+        final Symbol CLOJURE_MAIN = Symbol.intern("clojure.main");
 
         REQUIRE.invoke(CLOJURE_MAIN);
         MAIN.applyTo(RT.seq(args));
-        tracer.trace(finished().toString());
+
         tracer.trace(uptime().toString());
+        // putting this before exit makes it easier to find in the graph
+        tracer.trace(finished().toString());
         exit(tracer);
         tracer.close();
     }

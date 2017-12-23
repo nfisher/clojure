@@ -3,7 +3,6 @@ package tracing;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -18,7 +17,7 @@ public class Tracer {
      *
      */
     private Tracer() {
-        q = new LinkedBlockingQueue<String>(8 * 1024);
+        q = new LinkedBlockingQueue<String>(1024);
     }
 
     /** create returns a singleton Tracer instance if it cannot access the target directory it returns null.
