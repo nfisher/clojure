@@ -10,17 +10,19 @@ public class Tracer {
     private final LinkedBlockingQueue<String> q;
     private Beaker beaker;
     private Thread thread;
-    private final AtomicInteger missedTraceCount = new AtomicInteger(0);
+    private final AtomicInteger missedTraceCount;
     private static final Tracer instance = new Tracer();
 
     /** Tracer initialises the directory, queue, and writer thread.
      *
      */
     private Tracer() {
-        q = new LinkedBlockingQueue<String>(1024);
+        q = new LinkedBlockingQueue<String>(256);
+        missedTraceCount = new AtomicInteger(0);
     }
 
-    /** create returns a singleton Tracer instance if it cannot access the target directory it returns null.
+    /** create returns a singleton Tracer instance if it cannot access the
+     *  target directory it returns null.
      *
      * @return
      */
@@ -54,6 +56,10 @@ public class Tracer {
      */
     public int getMissedTraceCount() {
         return missedTraceCount.get();
+    }
+
+    public int maxDepth() {
+        return beaker.maxDepth();
     }
 
     /** close inserts the close signal and busy-waits on the queue to empty.

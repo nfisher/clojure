@@ -104,6 +104,7 @@ public class main{
                         .add("totalMemory", totalMemory)
                         .add("processors", processors)
                         .add("missedTraces", tracer.getMissedTraceCount())
+                        .add("maxDepth", tracer.maxDepth())
                         .toMapString())
                 .toString());
     }

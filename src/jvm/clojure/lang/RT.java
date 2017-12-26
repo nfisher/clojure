@@ -527,6 +527,7 @@ public class RT{
 			Var start_servers = var("clojure.core.server", "start-servers");
 			start_servers.invoke(System.getProperties());
 			tracer.trace(finished("server").toString());
+			*/
 		} finally {
 			Var.popThreadBindings();
 		}
