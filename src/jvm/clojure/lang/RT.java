@@ -52,8 +52,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static tracing.Event.finished;
-import static tracing.Event.started;
+import static tracing.Event.duration;
+import static tracing.Event.startTime;
 
 public class RT{
 	private static final Tracer tracer = Tracer.instance();
@@ -330,7 +330,7 @@ public class RT{
 	static volatile boolean CHECK_SPECS = false;
 
 	static {
-		tracer.trace(started("RT static").toString());
+		long staticStart = startTime();
 		try {
 			Keyword arglistskw = Keyword.intern(null, "arglists");
 			Symbol namesym = Symbol.intern("name");
@@ -365,7 +365,7 @@ public class RT{
 
 			CHECK_SPECS = RT.instrumentMacros;
 		} finally {
-			tracer.trace(finished("RT static").toString());
+			tracer.trace(duration("RT static", staticStart).toString());
 		}
 	}
 
@@ -452,23 +452,17 @@ public class RT{
 	}
 
 	static public void load(String scriptbase, boolean failIfNotFound) throws IOException, ClassNotFoundException{
+		final long startTime = startTime();
 		String classfile = scriptbase + LOADER_SUFFIX + ".class";
 		String cljfile = scriptbase + ".clj";
 		String scriptfile = cljfile;
-		tracer.trace(started("getResource").toString());
 
-		tracer.trace(started("getResource("+scriptbase+".class)").toString());
 		URL classURL = getResource(baseLoader(),classfile);
-		tracer.trace(finished("getResource("+scriptbase+".class)").toString());
-
-		tracer.trace(started("getResource("+scriptfile+")").toString());
 		URL cljURL = getResource(baseLoader(), scriptfile);
-		tracer.trace(finished("getResource("+scriptfile+")").toString());
 		if(cljURL == null) {
 			scriptfile = scriptbase + ".cljc";
 			cljURL = getResource(baseLoader(), scriptfile);
 		}
-		tracer.trace(finished("getResource").toString());
 		boolean loaded = false;
 
 		if((classURL != null &&
@@ -495,14 +489,13 @@ public class RT{
 			throw new FileNotFoundException(String.format("Could not locate %s or %s on classpath.%s", classfile, cljfile,
 					scriptbase.contains("_") ? " Please check that namespaces with dashes use underscores in the Clojure file name." : ""));
 		}
+		tracer.trace(duration("load(" + cljfile + ")", startTime + 1).toString());
 	}
 
 	static void doInit() throws ClassNotFoundException, IOException{
-		tracer.trace(started().toString());
+		final long startTime = startTime();
 
-		tracer.trace(started("clojure/core").toString());
 		load("clojure/core");
-		tracer.trace(finished("clojure/core").toString());
 
 		Var.pushThreadBindings(
 				RT.mapUniqueKeys(CURRENT_NS, CURRENT_NS.deref(),
@@ -520,17 +513,15 @@ public class RT{
 			maybeLoadResourceScript("user.clj");
 
 			// start socket servers
-			tracer.trace(started("server").toString());
 			Var require = var("clojure.core", "require");
 			Symbol SERVER = Symbol.intern("clojure.core.server");
 			require.invoke(SERVER);
 			Var start_servers = var("clojure.core.server", "start-servers");
 			start_servers.invoke(System.getProperties());
-			tracer.trace(finished("server").toString());
 		} finally {
 			Var.popThreadBindings();
 		}
-		tracer.trace(finished().toString());
+		tracer.trace(duration("clojure.lang.RT doInit", startTime).toString());
 	}
 
 	static public int nextID(){
@@ -2258,8 +2249,8 @@ public class RT{
 	}
 
 	static public Class loadClassForName(String name) {
+	    final long startTime = startTime();
 	    final String s = "loadClassForName("+name+")";
-	    tracer.trace(started(s).toString());
 		try
 		{
 			classForNameNonLoading(name);
@@ -2272,7 +2263,7 @@ public class RT{
 				throw Util.sneakyThrow(e);
 		}
 		final Class c = classForName(name);
-		tracer.trace(finished(s).toString());
+		tracer.trace(duration(s, startTime).toString());
 		return c;
 	}
 

@@ -1,141 +1,152 @@
 /**
- *   Copyright (c) Rich Hickey. All rights reserved.
- *   The use and distribution terms for this software are covered by the
- *   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
- *   which can be found in the file epl-v10.html at the root of this distribution.
- *   By using this software in any fashion, you are agreeing to be bound by
- * 	 the terms of this license.
- *   You must not remove this notice, or any other, from this software.
+ * Copyright (c) Rich Hickey. All rights reserved.
+ * The use and distribution terms for this software are covered by the
+ * Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
+ * which can be found in the file epl-v10.html at the root of this distribution.
+ * By using this software in any fashion, you are agreeing to be bound by
+ * the terms of this license.
+ * You must not remove this notice, or any other, from this software.
  **/
 
 /* rich Mar 25, 2006 11:42:47 AM */
 
 package clojure.lang;
 
+import tracing.Tracer;
+
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 
+import static tracing.Event.duration;
+import static tracing.Event.startTime;
 
-public class Symbol extends AFn implements IObj, Comparable, Named, Serializable, IHashEq{
-	final String ns;
-final String name;
-private int _hasheq;
-final IPersistentMap _meta;
-transient String _str;
 
-public String toString(){
-	if(_str == null){
-		if(ns != null)
-			_str = (ns + "/" + name);
-		else
-			_str = name;
-	}
-	return _str;
-}
+public class Symbol extends AFn implements IObj, Comparable, Named, Serializable, IHashEq {
+    private static final Tracer tracer = Tracer.instance();
+    final String ns;
+    final String name;
+    private int _hasheq;
+    final IPersistentMap _meta;
+    transient String _str;
 
-public String getNamespace(){
-	return ns;
-}
+    public String toString() {
+        if (_str == null) {
+            if (ns != null)
+                _str = (ns + "/" + name);
+            else
+                _str = name;
+        }
+        return _str;
+    }
 
-public String getName(){
-	return name;
-}
+    public String getNamespace() {
+        return ns;
+    }
 
-// the create thunks preserve binary compatibility with code compiled
+    public String getName() {
+        return name;
+    }
+
+    // the create thunks preserve binary compatibility with code compiled
 // against earlier version of Clojure and can be removed (at some point).
-static public Symbol create(String ns, String name) {
-    return Symbol.intern(ns, name);
-}
+    static public Symbol create(String ns, String name) {
+        return Symbol.intern(ns, name);
+    }
 
-static public Symbol create(String nsname) {
-    return Symbol.intern(nsname);
-}
-    
-static public Symbol intern(String ns, String name){
-	return new Symbol(ns, name);
-}
+    static public Symbol create(String nsname) {
+        return Symbol.intern(nsname);
+    }
 
-static public Symbol intern(String nsname){
-	int i = nsname.indexOf('/');
-	Symbol symbol;
+    static public Symbol intern(String ns, String name) {
+        final long startTime = startTime();
+        Symbol s = new Symbol(ns, name);
+        tracer.trace(duration("`" + s, startTime).toString());
+        return s;
+    }
 
-	if(i == -1 || nsname.equals("/")) {
-		symbol = new Symbol(null, nsname);
-	} else {
-		symbol = new Symbol(nsname.substring(0, i), nsname.substring(i + 1));
-	}
+    static public Symbol intern(String nsname) {
+        final long startTime = startTime();
+        int i = nsname.indexOf('/');
+        Symbol symbol;
 
-	return symbol;
-}
+        if (i == -1 || nsname.equals("/")) {
+            symbol = new Symbol(null, nsname);
+        } else {
+            symbol = new Symbol(nsname.substring(0, i), nsname.substring(i + 1));
+        }
 
-private Symbol(String ns_interned, String name_interned){
-	this.name = name_interned;
-	this.ns = ns_interned;
-	this._meta = null;
-}
+        tracer.trace(duration("`" + symbol, startTime).toString());
 
-public boolean equals(Object o){
-	if(this == o)
-		return true;
-	if(!(o instanceof Symbol))
-		return false;
+        return symbol;
+    }
 
-	Symbol symbol = (Symbol) o;
+    private Symbol(String ns_interned, String name_interned) {
+        this.name = name_interned;
+        this.ns = ns_interned;
+        this._meta = null;
+    }
 
-	return Util.equals(ns,symbol.ns) && name.equals(symbol.name);
-}
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Symbol))
+            return false;
 
-public int hashCode(){
-	return Util.hashCombine(name.hashCode(), Util.hash(ns));
-}
+        Symbol symbol = (Symbol) o;
 
-public int hasheq() {
-	if(_hasheq == 0){
-		_hasheq = Util.hashCombine(Murmur3.hashUnencodedChars(name), Util.hash(ns));
-	}
-	return _hasheq;
-}
+        return Util.equals(ns, symbol.ns) && name.equals(symbol.name);
+    }
 
-public IObj withMeta(IPersistentMap meta){
-	return new Symbol(meta, ns, name);
-}
+    public int hashCode() {
+        return Util.hashCombine(name.hashCode(), Util.hash(ns));
+    }
 
-private Symbol(IPersistentMap meta, String ns, String name){
-	this.name = name;
-	this.ns = ns;
-	this._meta = meta;
-}
+    public int hasheq() {
+        if (_hasheq == 0) {
+            _hasheq = Util.hashCombine(Murmur3.hashUnencodedChars(name), Util.hash(ns));
+        }
+        return _hasheq;
+    }
 
-public int compareTo(Object o){
-	Symbol s = (Symbol) o;
-	if(this.equals(o))
-		return 0;
-	if(this.ns == null && s.ns != null)
-		return -1;
-	if(this.ns != null)
-		{
-		if(s.ns == null)
-			return 1;
-		int nsc = this.ns.compareTo(s.ns);
-		if(nsc != 0)
-			return nsc;
-		}
-	return this.name.compareTo(s.name);
-}
+    public IObj withMeta(IPersistentMap meta) {
+        return new Symbol(meta, ns, name);
+    }
 
-private Object readResolve() throws ObjectStreamException{
-	return intern(ns, name);
-}
+    private Symbol(IPersistentMap meta, String ns, String name) {
+        this.name = name;
+        this.ns = ns;
+        this._meta = meta;
+    }
 
-public Object invoke(Object obj) {
-	return RT.get(obj, this);
-}
+    public int compareTo(Object o) {
+        Symbol s = (Symbol) o;
+        if (this.equals(o))
+            return 0;
+        if (this.ns == null && s.ns != null)
+            return -1;
+        if (this.ns != null) {
+            if (s.ns == null)
+                return 1;
+            int nsc = this.ns.compareTo(s.ns);
+            if (nsc != 0)
+                return nsc;
+        }
+        return this.name.compareTo(s.name);
+    }
 
-public Object invoke(Object obj, Object notFound) {
-	return RT.get(obj, this, notFound);
-}
+    private Object readResolve() throws ObjectStreamException {
+        return intern(ns, name);
+    }
 
-public IPersistentMap meta(){
-	return _meta;
-}
+    public Object invoke(Object obj) {
+        return RT.get(obj, this);
+    }
+
+    public Object invoke(Object obj, Object notFound) {
+        return RT.get(obj, this, notFound);
+    }
+
+    public IPersistentMap meta() {
+        return _meta;
+    }
 }

@@ -21,41 +21,29 @@ public class Event {
     private static final String TIMESTAMP = "ts";
     private static final String NAME = "name";
 
-    public static JsonKeyPair started() {
-        return jsonPair()
-                .add(TIMESTAMP, System.currentTimeMillis() * 1000)
-                .add(NAME, getName())
-                .add(EVENT_TYPE, BEGIN)
-                .add(THREAD_ID, Thread.currentThread().getId())
-                .add(PROCESS_ID, 0);
+    public static long startTime() {
+        return System.currentTimeMillis();
     }
 
-    public static JsonKeyPair started(final String name) {
-        return jsonPair()
-                .add(TIMESTAMP, System.currentTimeMillis() * 1000)
-                .add(NAME, name)
-                .add(EVENT_TYPE, BEGIN)
-                .add(THREAD_ID, Thread.currentThread().getId())
-                .add(PROCESS_ID, 0);
-    }
-
-
-    public static JsonKeyPair finished(final String name) {
-        return jsonPair()
-                .add(NAME, name)
-                .add(TIMESTAMP, System.currentTimeMillis() * 1000)
-                .add(EVENT_TYPE, END)
-                .add(THREAD_ID, Thread.currentThread().getId())
-                .add(PROCESS_ID, 0);
-    }
-
-
-    public static JsonKeyPair finished() {
+    public static JsonKeyPair duration(final long startTime) {
+        final long finished = System.currentTimeMillis();
         return jsonPair()
                 .add(NAME, getName())
-                .add(TIMESTAMP, System.currentTimeMillis() * 1000)
-                .add(EVENT_TYPE, END)
+                .add(TIMESTAMP, startTime * 1000)
+                .add(EVENT_TYPE, COMPLETE)
                 .add(THREAD_ID, Thread.currentThread().getId())
+                .add(DURATION, (finished - startTime) * 1000)
+                .add(PROCESS_ID, 0);
+    }
+
+    public static JsonKeyPair duration(final String name, final long startTime) {
+        final long finished = System.currentTimeMillis();
+        return jsonPair()
+                .add(NAME, name)
+                .add(TIMESTAMP, startTime * 1000)
+                .add(EVENT_TYPE, COMPLETE)
+                .add(THREAD_ID, Thread.currentThread().getId())
+                .add(DURATION, (finished - startTime) * 1000)
                 .add(PROCESS_ID, 0);
     }
 

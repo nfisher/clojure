@@ -18,8 +18,8 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static tracing.Event.finished;
-import static tracing.Event.started;
+import static tracing.Event.duration;
+import static tracing.Event.startTime;
 
 
 public final class Var extends ARef implements IFn, IRef, Settable, Serializable{
@@ -124,11 +124,10 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
 	}
 
 	public static Var intern(Namespace ns, Symbol sym, Object root){
-		final String fq = ns + "/" + sym;
+		final long startTime = startTime();
 
-		tracer.trace(started(fq).toString());
 		Var v = intern(ns, sym, root, true);
-		tracer.trace(finished(fq).toString());
+		tracer.trace(duration(ns + "/" + sym, startTime).toString());
 
 		return v;
 	}
@@ -140,6 +139,25 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
 		return dvout;
 	}
 
+	public static Var intern(Symbol nsName, Symbol sym){
+		Namespace ns = Namespace.findOrCreate(nsName);
+		return intern(ns, sym);
+	}
+
+	public static Var intern(Namespace ns, Symbol sym){
+		final long startTime = startTime();
+		Var v = ns.intern(sym);
+		tracer.trace(duration(ns + "/" + sym, startTime).toString());
+
+		return v;
+	}
+
+	public static Var internPrivate(String nsName, String sym){
+		Namespace ns = Namespace.findOrCreate(Symbol.intern(nsName));
+		Var ret = intern(ns, Symbol.intern(sym));
+		ret.setMeta(privateMeta);
+		return ret;
+	}
 
 	public String toString(){
 		if(ns != null)
@@ -154,28 +172,6 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
 		if(ns == null)
 			throw new IllegalArgumentException("No such namespace: " + nsQualifiedSym.ns);
 		return ns.findInternedVar(Symbol.intern(nsQualifiedSym.name));
-	}
-
-	public static Var intern(Symbol nsName, Symbol sym){
-		Namespace ns = Namespace.findOrCreate(nsName);
-		return intern(ns, sym);
-	}
-
-	public static Var internPrivate(String nsName, String sym){
-		Namespace ns = Namespace.findOrCreate(Symbol.intern(nsName));
-		Var ret = intern(ns, Symbol.intern(sym));
-		ret.setMeta(privateMeta);
-		return ret;
-	}
-
-	public static Var intern(Namespace ns, Symbol sym){
-		final String fq = ns + "/" + sym;
-
-		tracer.trace(started(fq).toString());
-		Var v = ns.intern(sym);
-		tracer.trace(finished(fq).toString());
-
-		return v;
 	}
 
 
@@ -396,26 +392,26 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
 	}
 
 	public Object invoke(Object arg1) {
-		tracer.trace(started().toString());
+	    final long startTime = startTime();
 		final Object o = fn().invoke(Util.ret1(arg1,arg1=null));
-		tracer.trace(finished().toString());
+		tracer.trace(duration("invoke1", startTime).toString());
 		return o;
 	}
 
 	public Object invoke(Object arg1, Object arg2) {
-		tracer.trace(started().toString());
+		final long startTime = startTime();
 		final Object o = fn().invoke(Util.ret1(arg1,arg1=null),
 				Util.ret1(arg2,arg2=null));
-		tracer.trace(finished().toString());
+		tracer.trace(duration("invoke2", startTime).toString());
 		return o;
 	}
 
 	public Object invoke(Object arg1, Object arg2, Object arg3) {
-		tracer.trace(started().toString());
+		final long startTime = startTime();
 		final Object o = fn().invoke(Util.ret1(arg1,arg1=null),
 				Util.ret1(arg2,arg2=null),
 				Util.ret1(arg3,arg3=null));
-		tracer.trace(finished().toString());
+		tracer.trace(duration("invoke3", startTime).toString());
 		return o;
 	}
 

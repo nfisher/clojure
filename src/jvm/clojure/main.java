@@ -10,17 +10,17 @@
 
 package clojure;
 
+import clojure.lang.RT;
 import clojure.lang.Symbol;
 import clojure.lang.Var;
-import clojure.lang.RT;
 import tracing.Tracer;
 
 import java.io.IOException;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 
-import static tracing.Event.finished;
-import static tracing.Event.started;
+import static tracing.Event.duration;
+import static tracing.Event.startTime;
 import static tracing.Event.uptime;
 import static tracing.JsonKeyPair.jsonPair;
 
@@ -45,7 +45,7 @@ public class main{
 
     public static void main(String[] args) {
         final Tracer tracer = Tracer.instance();
-        tracer.trace(started().toString());
+        final long startTime = startTime();
 
         try {
             tracer.start("trace");
@@ -60,15 +60,18 @@ public class main{
         REQUIRE.invoke(CLOJURE_MAIN);
         MAIN.applyTo(RT.seq(args));
 
-        tracer.trace(uptime().toString());
         // putting this before exit makes it easier to find in the graph
-        tracer.trace(finished().toString());
+        tracer.trace(duration(startTime).toString());
+
+        tracer.trace(uptime().toString());
+
         exit(tracer);
         tracer.close();
     }
 
     static void exit(final Tracer tracer) {
-        tracer.trace(started().toString());
+        final long startTime = startTime();
+
         final Runtime runtime = Runtime.getRuntime();
 
         final long freeMemory = runtime.freeMemory();
@@ -94,7 +97,7 @@ public class main{
             }
         }
 
-        tracer.trace(finished().addRaw("args",
+        tracer.trace(duration(startTime).addRaw("args",
                 jsonPair()
                         .add("rc", 1)
                         .add("numGC", garbageCollections)
