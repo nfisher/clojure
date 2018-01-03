@@ -180,7 +180,13 @@ Var(Namespace ns, Symbol sym){
 Var(Namespace ns, Symbol sym, Object root){
 	this(ns, sym);
 	this.root = root;
-	++rev;
+	incRev();
+}
+
+private void incRev() {
+    synchronized (Var.class) {
+        ++rev;
+    }
 }
 
 public boolean isBound(){
@@ -274,7 +280,7 @@ synchronized public void bindRoot(Object root){
 	validate(getValidator(), root);
 	Object oldroot = this.root;
 	this.root = root;
-	++rev;
+	incRev();
         alterMeta(dissoc, RT.list(macroKey));
     notifyWatches(oldroot,this.root);
 }
@@ -283,13 +289,13 @@ synchronized void swapRoot(Object root){
 	validate(getValidator(), root);
 	Object oldroot = this.root;
 	this.root = root;
-	++rev;
+	incRev();
     notifyWatches(oldroot,root);
 }
 
-synchronized public void unbindRoot(){
+synchronized public void unbindRoot() {
 	this.root = new Unbound(this);
-	++rev;
+	incRev();
 }
 
 synchronized public void commuteRoot(IFn fn) {
@@ -297,7 +303,7 @@ synchronized public void commuteRoot(IFn fn) {
 	validate(getValidator(), newRoot);
 	Object oldroot = root;
 	this.root = newRoot;
-	++rev;
+	incRev();
     notifyWatches(oldroot,newRoot);
 }
 
@@ -306,7 +312,7 @@ synchronized public Object alterRoot(IFn fn, ISeq args) {
 	validate(getValidator(), newRoot);
 	Object oldroot = root;
 	this.root = newRoot;
-	++rev;
+	incRev();
     notifyWatches(oldroot,newRoot);
 	return newRoot;
 }
