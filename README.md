@@ -13,9 +13,9 @@ You must not remove this notice, or any other, from this software.
 
 ### Useful Links
 
-Docs: https://clojure.org
-Feedback: http://groups.google.com/group/clojure
-Getting Started: https://clojure.org/guides/getting_started
+- [Clojure.org](https://clojure.org)
+- [Google Group](http://groups.google.com/group/clojure)
+- [Getting Started](https://clojure.org/guides/getting_started)
 
 ## Build
 
