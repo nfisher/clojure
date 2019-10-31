@@ -1,3 +1,5 @@
+![Clojure Logo](https://clojure.org/images/clojure-logo-120b.png)
+
 Clojure
 =======
 
