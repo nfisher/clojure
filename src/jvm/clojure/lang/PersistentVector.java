@@ -20,10 +20,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PersistentVector extends APersistentVector
     implements IObj, IEditableCollection, IReduce, IKVReduce {
 
-  public static final PersistentVector EMPTY =
-      new PersistentVector(0, 5, EMPTY_NODE, new Object[] {});
   static final AtomicReference<Thread> NOEDIT = new AtomicReference<Thread>(null);
   public static final Node EMPTY_NODE = new Node(NOEDIT, new Object[32]);
+  public static final PersistentVector EMPTY =
+      new PersistentVector(0, 5, EMPTY_NODE, new Object[] {});
+
+
   private static final IFn TRANSIENT_VECTOR_CONJ =
       new AFn() {
         public Object invoke(Object coll, Object val) {

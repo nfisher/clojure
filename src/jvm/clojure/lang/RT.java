@@ -169,7 +169,7 @@ public class RT {
   // boolean
   public static final Var UNCHECKED_MATH =
       Var.intern(
-              Namespace.findOrCreate(Symbol.intern("clojure.core")),
+              CLOJURE_NS,
               Symbol.intern("*unchecked-math*"),
               Boolean.FALSE)
           .setDynamic();
