@@ -3,6 +3,4 @@ install: bash antsetup.sh
 script:
   - ant build test
 jdk:
-  - oraclejdk8
-  - oraclejdk9
   - openjdk8

@@ -1,6 +1,8 @@
 Clojure
 =======
 
+[![Build Status](https://travis-ci.org/nfisher/clojure.svg?branch=master)](https://travis-ci.org/nfisher/clojure)
+
 Copyright (c) Rich Hickey. All rights reserved.
 
 The use and distribution terms for this software are covered by the
