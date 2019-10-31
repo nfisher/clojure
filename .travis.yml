@@ -1,6 +1,5 @@
 language: java
-install: bash antsetup.sh
 script:
-  - ant build test
+  - ./go.sh
 jdk:
   - openjdk8
