@@ -37,20 +37,6 @@ static final public String LOADER_SUFFIX = "__init";
 
 //simple-symbol->class
 final static public IPersistentMap DEFAULT_IMPORTS = map(
-//												  Symbol.intern("RT"), "clojure.lang.RT",
-//                                                  Symbol.intern("Num"), "clojure.lang.Num",
-//                                                  Symbol.intern("Symbol"), "clojure.lang.Symbol",
-//                                                  Symbol.intern("Keyword"), "clojure.lang.Keyword",
-//                                                  Symbol.intern("Var"), "clojure.lang.Var",
-//                                                  Symbol.intern("Ref"), "clojure.lang.Ref",
-//                                                  Symbol.intern("IFn"), "clojure.lang.IFn",
-//                                                  Symbol.intern("IObj"), "clojure.lang.IObj",
-//                                                  Symbol.intern("ISeq"), "clojure.lang.ISeq",
-//                                                  Symbol.intern("IPersistentCollection"),
-//                                                  "clojure.lang.IPersistentCollection",
-//                                                  Symbol.intern("IPersistentMap"), "clojure.lang.IPersistentMap",
-//                                                  Symbol.intern("IPersistentList"), "clojure.lang.IPersistentList",
-//                                                  Symbol.intern("IPersistentVector"), "clojure.lang.IPersistentVector",
 Symbol.intern("Boolean"), Boolean.class,
 Symbol.intern("Byte"), Byte.class,
 Symbol.intern("Character"), Character.class,
@@ -147,23 +133,6 @@ Symbol.intern("Thread$State"), Thread.State.class,
 Symbol.intern("Deprecated"), Deprecated.class,
 Symbol.intern("Override"), Override.class,
 Symbol.intern("SuppressWarnings"), SuppressWarnings.class
-
-//                                                  Symbol.intern("Collection"), "java.util.Collection",
-//                                                  Symbol.intern("Comparator"), "java.util.Comparator",
-//                                                  Symbol.intern("Enumeration"), "java.util.Enumeration",
-//                                                  Symbol.intern("EventListener"), "java.util.EventListener",
-//                                                  Symbol.intern("Formattable"), "java.util.Formattable",
-//                                                  Symbol.intern("Iterator"), "java.util.Iterator",
-//                                                  Symbol.intern("List"), "java.util.List",
-//                                                  Symbol.intern("ListIterator"), "java.util.ListIterator",
-//                                                  Symbol.intern("Map"), "java.util.Map",
-//                                                  Symbol.intern("Map$Entry"), "java.util.Map$Entry",
-//                                                  Symbol.intern("Observer"), "java.util.Observer",
-//                                                  Symbol.intern("Queue"), "java.util.Queue",
-//                                                  Symbol.intern("RandomAccess"), "java.util.RandomAccess",
-//                                                  Symbol.intern("Set"), "java.util.Set",
-//                                                  Symbol.intern("SortedMap"), "java.util.SortedMap",
-//                                                  Symbol.intern("SortedSet"), "java.util.SortedSet"
 );
 
 // single instance of UTF-8 Charset, so as to avoid catching UnsupportedCharsetExceptions everywhere
@@ -725,23 +694,6 @@ static public ISeq more(Object x){
 		return PersistentList.EMPTY;
 	return seq.more();
 }
-
-//static public Seqable more(Object x){
-//    Seqable ret = null;
-//	if(x instanceof ISeq)
-//		ret = ((ISeq) x).more();
-//    else
-//        {
-//	    ISeq seq = seq(x);
-//	    if(seq == null)
-//		    ret = PersistentList.EMPTY;
-//	    else
-//            ret = seq.more();
-//        }
-//    if(ret == null)
-//        ret = PersistentList.EMPTY;
-//    return ret;
-//}
 
 static public Object peek(Object x){
 	if(x == null)
