@@ -7,6 +7,8 @@
  */
 package clojure.lang;
 
+import clojure.lang.core.Vars;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -29,7 +31,7 @@ public class Compile {
 
   public static void main(String[] args) throws IOException, ClassNotFoundException {
     RT.init();
-    OutputStreamWriter out = (OutputStreamWriter) RT.OUT.deref();
+    OutputStreamWriter out = (OutputStreamWriter) Vars.OUT.deref();
     PrintWriter err = RT.errPrintWriter();
     String path = System.getProperty(PATH_PROP);
     int count = args.length;

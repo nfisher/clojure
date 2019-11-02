@@ -10,6 +10,8 @@
 
 package clojure.lang;
 
+import clojure.lang.core.Vars;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
@@ -4115,7 +4117,7 @@ public enum Category {
   }
 
   static final class BigDecimalOps extends OpsP {
-    static final Var MATH_CONTEXT = RT.MATH_CONTEXT;
+    static final Var MATH_CONTEXT = Vars.MATH_CONTEXT;
 
     public Ops combine(Ops y) {
       return y.opsWith(this);

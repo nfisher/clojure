@@ -15,6 +15,8 @@ package clojure.lang;
 import clojure.asm.*;
 import clojure.asm.commons.GeneratorAdapter;
 import clojure.asm.commons.Method;
+import clojure.lang.core.Keywords;
+import clojure.lang.core.Vars;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -188,7 +190,7 @@ public class Compiler implements Opcodes {
   static final Symbol DO = Symbol.intern("do");
   static final Symbol FN = Symbol.intern("fn*");
   static final Symbol FNONCE =
-      (Symbol) Symbol.intern("fn*").withMeta(RT.map(Keyword.intern(null, "once"), RT.T));
+      (Symbol) Symbol.intern("fn*").withMeta(RT.map(Keyword.intern(null, "once"), Vars.T));
   static final Symbol QUOTE = Symbol.intern("quote");
   static final Symbol THE_VAR = Symbol.intern("var");
   static final Symbol DOT = Symbol.intern(".");
@@ -317,13 +319,14 @@ public class Compiler implements Opcodes {
   private static final Type KEYWORD_TYPE = Type.getType(Keyword.class);
   private static final Type VAR_TYPE = Type.getType(Var.class);
   private static final Type SYMBOL_TYPE = Type.getType(Symbol.class);
-  // private static final Type NUM_TYPE = Type.getType(Num.class);
+
   private static final Type IFN_TYPE = Type.getType(IFn.class);
   private static final Type AFUNCTION_TYPE = Type.getType(AFunction.class);
   private static final Type RT_TYPE = Type.getType(RT.class);
+  private static final Type CORE_VARS_TYPE = Type.getType(Vars.class);
   private static final Type NUMBERS_TYPE = Type.getType(Numbers.class);
   private static final Type[][] ARG_TYPES;
-  // private static final Type[] EXCEPTION_TYPES = {Type.getType(Exception.class)};
+
   private static final Type[] EXCEPTION_TYPES = {};
   private static final Object MACRO_CHECK_LOCK = new Object();
   private static final Object OPTS_COND_ALLOWED =
@@ -703,7 +706,7 @@ public class Compiler implements Opcodes {
     Symbol tag = tagOf(src);
     if (tag != null && dst instanceof IObj) {
       IPersistentMap meta = RT.meta(dst);
-      return ((IObj) dst).withMeta((IPersistentMap) RT.assoc(meta, RT.TAG_KEY, tag));
+      return ((IObj) dst).withMeta((IPersistentMap) RT.assoc(meta, Keywords.TAG_KEY, tag));
     }
     return dst;
   }
@@ -792,7 +795,7 @@ public class Compiler implements Opcodes {
             Symbol meth = Symbol.intern(sname.substring(1));
             Object target = RT.second(form);
             if (HostExpr.maybeClass(target, false) != null) {
-              target = ((IObj) RT.list(IDENTITY, target)).withMeta(RT.map(RT.TAG_KEY, CLASS));
+              target = ((IObj) RT.list(IDENTITY, target)).withMeta(RT.map(Keywords.TAG_KEY, CLASS));
             }
             return preserveTag(form, RT.listStar(DOT, target, meth, form.next().next()));
           } else if (namesStaticMember(sym)) {
@@ -832,10 +835,10 @@ public class Compiler implements Opcodes {
   private static Expr analyzeSeq(C context, ISeq form, String name) {
     Object line = lineDeref();
     Object column = columnDeref();
-    if (RT.meta(form) != null && RT.meta(form).containsKey(RT.LINE_KEY))
-      line = RT.meta(form).valAt(RT.LINE_KEY);
-    if (RT.meta(form) != null && RT.meta(form).containsKey(RT.COLUMN_KEY))
-      column = RT.meta(form).valAt(RT.COLUMN_KEY);
+    if (RT.meta(form) != null && RT.meta(form).containsKey(Keywords.LINE_KEY))
+      line = RT.meta(form).valAt(Keywords.LINE_KEY);
+    if (RT.meta(form) != null && RT.meta(form).containsKey(Keywords.COLUMN_KEY))
+      column = RT.meta(form).valAt(Keywords.COLUMN_KEY);
     Var.pushThreadBindings(RT.map(LINE, line, COLUMN, column));
     Object op = null;
     try {
@@ -878,11 +881,11 @@ public class Compiler implements Opcodes {
     }
     try {
       IPersistentMap meta = RT.meta(form);
-      Object line = (meta != null ? meta.valAt(RT.LINE_KEY, LINE.deref()) : LINE.deref());
-      Object column = (meta != null ? meta.valAt(RT.COLUMN_KEY, COLUMN.deref()) : COLUMN.deref());
+      Object line = (meta != null ? meta.valAt(Keywords.LINE_KEY, LINE.deref()) : LINE.deref());
+      Object column = (meta != null ? meta.valAt(Keywords.COLUMN_KEY, COLUMN.deref()) : COLUMN.deref());
       IPersistentMap bindings = RT.mapUniqueKeys(LINE, line, COLUMN, column);
       if (meta != null) {
-        Object eval_file = meta.valAt(RT.EVAL_FILE_KEY);
+        Object eval_file = meta.valAt(Keywords.EVAL_FILE_KEY);
         if (eval_file != null) {
           bindings = bindings.assoc(SOURCE_PATH, eval_file);
           try {
@@ -1089,7 +1092,7 @@ public class Compiler implements Opcodes {
     if (o instanceof Var) {
       Var v = (Var) o;
       if (isMacro(v) != null) throw Util.runtimeException("Can't take value of a macro: " + v);
-      if (RT.booleanCast(RT.get(v.meta(), RT.CONST_KEY)))
+      if (RT.booleanCast(RT.get(v.meta(), Keywords.CONST_KEY)))
         return analyze(C.EXPRESSION, RT.list(QUOTE, v.get()));
       registerVar(v);
       return new VarExpr(v, tag);
@@ -1149,13 +1152,13 @@ public class Compiler implements Opcodes {
       return v;
     } else if (sym.name.indexOf('.') > 0 || sym.name.charAt(0) == '[') {
       return RT.classForName(sym.name);
-    } else if (sym.equals(NS)) return RT.NS_VAR;
-    else if (sym.equals(IN_NS)) return RT.IN_NS_VAR;
+    } else if (sym.equals(NS)) return Vars.NS_VAR;
+    else if (sym.equals(IN_NS)) return Vars.IN_NS_VAR;
     else {
       if (Util.equals(sym, COMPILE_STUB_SYM.get())) return COMPILE_STUB_CLASS.get();
       Object o = n.getMapping(sym);
       if (o == null) {
-        if (RT.booleanCast(RT.ALLOW_UNRESOLVED_VARS.deref())) {
+        if (RT.booleanCast(Vars.ALLOW_UNRESOLVED_VARS.deref())) {
           return sym;
         } else {
           throw Util.runtimeException("Unable to resolve symbol: " + sym + " in this context");
@@ -1179,8 +1182,8 @@ public class Compiler implements Opcodes {
         if (e instanceof ClassNotFoundException) return null;
         else return Util.sneakyThrow(e);
       }
-    } else if (sym.equals(NS)) return RT.NS_VAR;
-    else if (sym.equals(IN_NS)) return RT.IN_NS_VAR;
+    } else if (sym.equals(NS)) return Vars.NS_VAR;
+    else if (sym.equals(IN_NS)) return Vars.IN_NS_VAR;
     else {
       Object o = n.getMapping(sym);
       return o;
@@ -1198,8 +1201,8 @@ public class Compiler implements Opcodes {
       Symbol name = Symbol.intern(sym.name);
       if (internNew && ns == currentNS()) var = currentNS().intern(name);
       else var = ns.findInternedVar(name);
-    } else if (sym.equals(NS)) var = RT.NS_VAR;
-    else if (sym.equals(IN_NS)) var = RT.IN_NS_VAR;
+    } else if (sym.equals(NS)) var = Vars.NS_VAR;
+    else if (sym.equals(IN_NS)) var = Vars.IN_NS_VAR;
     else {
       // is it mapped?
       Object o = currentNS().getMapping(sym);
@@ -1287,7 +1290,7 @@ public class Compiler implements Opcodes {
   }
 
   static Namespace currentNS() {
-    return (Namespace) RT.CURRENT_NS.deref();
+    return (Namespace) Vars.CURRENT_NS.deref();
   }
 
   static void closeOver(LocalBinding b, ObjMethod method) {
@@ -1318,7 +1321,7 @@ public class Compiler implements Opcodes {
   }
 
   private static Symbol tagOf(Object o) {
-    Object tag = RT.get(RT.meta(o), RT.TAG_KEY);
+    Object tag = RT.get(RT.meta(o), Keywords.TAG_KEY);
     if (tag instanceof Symbol) return (Symbol) tag;
     else if (tag instanceof String) return Symbol.intern(null, (String) tag);
     return null;
@@ -1380,9 +1383,9 @@ public class Compiler implements Opcodes {
             NEXT_LOCAL_NUM,
             0,
             RT.READEVAL,
-            RT.T,
-            RT.CURRENT_NS,
-            RT.CURRENT_NS.deref(),
+            Vars.T,
+            Vars.CURRENT_NS,
+            Vars.CURRENT_NS.deref(),
             LINE_BEFORE,
             pushbackReader.getLineNumber(),
             COLUMN_BEFORE,
@@ -1391,12 +1394,12 @@ public class Compiler implements Opcodes {
             pushbackReader.getLineNumber(),
             COLUMN_AFTER,
             pushbackReader.getColumnNumber(),
-            RT.UNCHECKED_MATH,
-            RT.UNCHECKED_MATH.deref(),
-            RT.WARN_ON_REFLECTION,
-            RT.WARN_ON_REFLECTION.deref(),
-            RT.DATA_READERS,
-            RT.DATA_READERS.deref()));
+            Vars.UNCHECKED_MATH,
+            Vars.UNCHECKED_MATH.deref(),
+            Vars.WARN_ON_REFLECTION,
+            Vars.WARN_ON_REFLECTION.deref(),
+            Vars.DATA_READERS,
+            Vars.DATA_READERS.deref()));
 
     Object readerOpts = readerOpts(sourceName);
     try {
@@ -1456,10 +1459,10 @@ public class Compiler implements Opcodes {
         RT.map(
             Var.intern(Symbol.intern("clojure.core"), Symbol.intern("*ns*")).setDynamic(),
             null,
-            RT.FN_LOADER_VAR,
+            Vars.FN_LOADER_VAR,
             loader,
             RT.READEVAL,
-            RT.T));
+            Vars.T));
   }
 
   public static ILookupThunk getLookupThunk(Object target, Keyword k) {
@@ -1469,10 +1472,10 @@ public class Compiler implements Opcodes {
   static void compile1(GeneratorAdapter gen, ObjExpr objx, Object form) {
     Object line = lineDeref();
     Object column = columnDeref();
-    if (RT.meta(form) != null && RT.meta(form).containsKey(RT.LINE_KEY))
-      line = RT.meta(form).valAt(RT.LINE_KEY);
-    if (RT.meta(form) != null && RT.meta(form).containsKey(RT.COLUMN_KEY))
-      column = RT.meta(form).valAt(RT.COLUMN_KEY);
+    if (RT.meta(form) != null && RT.meta(form).containsKey(Keywords.LINE_KEY))
+      line = RT.meta(form).valAt(Keywords.LINE_KEY);
+    if (RT.meta(form) != null && RT.meta(form).containsKey(Keywords.COLUMN_KEY))
+      column = RT.meta(form).valAt(Keywords.COLUMN_KEY);
     Var.pushThreadBindings(RT.map(LINE, line, COLUMN, column, LOADER, RT.makeClassLoader()));
     try {
       form = macroexpand(form);
@@ -1518,9 +1521,9 @@ public class Compiler implements Opcodes {
             NEXT_LOCAL_NUM,
             0,
             RT.READEVAL,
-            RT.T,
-            RT.CURRENT_NS,
-            RT.CURRENT_NS.deref(),
+            Vars.T,
+            Vars.CURRENT_NS,
+            Vars.CURRENT_NS.deref(),
             LINE_BEFORE,
             pushbackReader.getLineNumber(),
             COLUMN_BEFORE,
@@ -1537,12 +1540,12 @@ public class Compiler implements Opcodes {
             PersistentHashMap.EMPTY,
             VARS,
             PersistentHashMap.EMPTY,
-            RT.UNCHECKED_MATH,
-            RT.UNCHECKED_MATH.deref(),
-            RT.WARN_ON_REFLECTION,
-            RT.WARN_ON_REFLECTION.deref(),
-            RT.DATA_READERS,
-            RT.DATA_READERS.deref()
+            Vars.UNCHECKED_MATH,
+            Vars.UNCHECKED_MATH.deref(),
+            Vars.WARN_ON_REFLECTION,
+            Vars.WARN_ON_REFLECTION.deref(),
+            Vars.DATA_READERS,
+            Vars.DATA_READERS.deref()
             //    ,LOADER, RT.makeClassLoader()
             ));
 
@@ -1603,7 +1606,7 @@ public class Compiler implements Opcodes {
                 cv);
         clinitgen.visitCode();
         try {
-          Var.pushThreadBindings(RT.map(RT.PRINT_DUP, RT.T));
+          Var.pushThreadBindings(RT.map(Vars.PRINT_DUP, Vars.T));
 
           for (int i = n * INITS_PER; i < objx.constants.count() && i < (n + 1) * INITS_PER; i++) {
             if (objx.usedConstants.contains(i)) {
@@ -1843,10 +1846,10 @@ public class Compiler implements Opcodes {
     private boolean includesExplicitMetadata(MapExpr expr) {
       for (int i = 0; i < expr.keyvals.count(); i += 2) {
         Keyword k = ((KeywordExpr) expr.keyvals.nth(i)).k;
-        if ((k != RT.FILE_KEY)
-            && (k != RT.DECLARED_KEY)
-            && (k != RT.LINE_KEY)
-            && (k != RT.COLUMN_KEY)) return true;
+        if ((k != Keywords.FILE_KEY)
+            && (k != Keywords.DECLARED_KEY)
+            && (k != Keywords.LINE_KEY)
+            && (k != Keywords.COLUMN_KEY)) return true;
       }
       return false;
     }
@@ -1970,10 +1973,10 @@ public class Compiler implements Opcodes {
         source_path = source_path == null ? "NO_SOURCE_FILE" : source_path;
         mm =
             (IPersistentMap)
-                RT.assoc(mm, RT.LINE_KEY, LINE.get())
-                    .assoc(RT.COLUMN_KEY, COLUMN.get())
-                    .assoc(RT.FILE_KEY, source_path);
-        if (docstring != null) mm = (IPersistentMap) RT.assoc(mm, RT.DOC_KEY, docstring);
+                RT.assoc(mm, Keywords.LINE_KEY, LINE.get())
+                    .assoc(Keywords.COLUMN_KEY, COLUMN.get())
+                    .assoc(Keywords.FILE_KEY, source_path);
+        if (docstring != null) mm = (IPersistentMap) RT.assoc(mm, Keywords.DOC_KEY, docstring);
         //			mm = mm.without(RT.DOC_KEY)
         //					.without(Keyword.intern(null, "arglists"))
         //					.without(RT.FILE_KEY)
@@ -2156,13 +2159,13 @@ public class Compiler implements Opcodes {
     }
 
     public Object eval() {
-      Namespace ns = (Namespace) RT.CURRENT_NS.deref();
+      Namespace ns = (Namespace) Vars.CURRENT_NS.deref();
       ns.importClass(RT.classForNameNonLoading(c));
       return null;
     }
 
     public void emit(C context, ObjExpr objx, GeneratorAdapter gen) {
-      gen.getStatic(RT_TYPE, "CURRENT_NS", VAR_TYPE);
+      gen.getStatic(CORE_VARS_TYPE, "CURRENT_NS", VAR_TYPE);
       gen.invokeVirtual(VAR_TYPE, derefMethod);
       gen.checkCast(NS_TYPE);
       gen.push(c);
@@ -2284,7 +2287,7 @@ public class Compiler implements Opcodes {
           //				System.out.println("NOT fnexpr for defn var: " + var + "init: " + init.getClass());
           Method m = null;
           gen.checkCast(NUMBER_TYPE);
-          if (RT.booleanCast(RT.UNCHECKED_MATH.deref())) {
+          if (RT.booleanCast(Vars.UNCHECKED_MATH.deref())) {
             if (paramType == int.class) m = Method.getMethod("int uncheckedIntCast(Object)");
             else if (paramType == float.class)
               m = Method.getMethod("float uncheckedFloatCast(Object)");
@@ -2490,7 +2493,7 @@ public class Compiler implements Opcodes {
       this.column = column;
       this.tag = tag;
       this.requireField = requireField;
-      if (field == null && RT.booleanCast(RT.WARN_ON_REFLECTION.deref())) {
+      if (field == null && RT.booleanCast(Vars.WARN_ON_REFLECTION.deref())) {
         if (targetClass == null) {
           RT.errPrintWriter()
               .format(
@@ -2690,7 +2693,7 @@ public class Compiler implements Opcodes {
           } else if (primc == long.class && parameterTypes[i] == int.class) {
             final MaybePrimitiveExpr pe = (MaybePrimitiveExpr) e;
             pe.emitUnboxed(C.EXPRESSION, objx, gen);
-            if (RT.booleanCast(RT.UNCHECKED_MATH.deref()))
+            if (RT.booleanCast(Vars.UNCHECKED_MATH.deref()))
               gen.invokeStatic(RT_TYPE, Method.getMethod("int uncheckedIntCast(long)"));
             else gen.invokeStatic(RT_TYPE, Method.getMethod("int intCast(long)"));
           } else if (primc == float.class && parameterTypes[i] == double.class) {
@@ -2747,7 +2750,7 @@ public class Compiler implements Opcodes {
         List methods = Reflector.getMethods(target.getJavaClass(), args.count(), methodName, false);
         if (methods.isEmpty()) {
           method = null;
-          if (RT.booleanCast(RT.WARN_ON_REFLECTION.deref())) {
+          if (RT.booleanCast(Vars.WARN_ON_REFLECTION.deref())) {
             RT.errPrintWriter()
                 .format(
                     "Reflection warning, %s:%d:%d - call to method %s on %s can't be resolved (no such method).\n",
@@ -2772,7 +2775,7 @@ public class Compiler implements Opcodes {
             m = Reflector.getAsMethodOfPublicBase(m.getDeclaringClass(), m);
           }
           method = m;
-          if (method == null && RT.booleanCast(RT.WARN_ON_REFLECTION.deref())) {
+          if (method == null && RT.booleanCast(Vars.WARN_ON_REFLECTION.deref())) {
             RT.errPrintWriter()
                 .format(
                     "Reflection warning, %s:%d:%d - call to method %s on %s can't be resolved (argument types: %s).\n",
@@ -2786,7 +2789,7 @@ public class Compiler implements Opcodes {
         }
       } else {
         method = null;
-        if (RT.booleanCast(RT.WARN_ON_REFLECTION.deref())) {
+        if (RT.booleanCast(Vars.WARN_ON_REFLECTION.deref())) {
           RT.errPrintWriter()
               .format(
                   "Reflection warning, %s:%d:%d - call to method %s can't be resolved (target class is unknown).\n",
@@ -2940,7 +2943,7 @@ public class Compiler implements Opcodes {
         methodidx = getMatchingParams(methodName, params, args, rets);
       }
       method = (java.lang.reflect.Method) (methodidx >= 0 ? methods.get(methodidx) : null);
-      if (method == null && RT.booleanCast(RT.WARN_ON_REFLECTION.deref())) {
+      if (method == null && RT.booleanCast(Vars.WARN_ON_REFLECTION.deref())) {
         RT.errPrintWriter()
             .format(
                 "Reflection warning, %s:%d:%d - call to static method %s on %s can't be resolved (argument types: %s).\n",
@@ -2952,7 +2955,7 @@ public class Compiler implements Opcodes {
                 getTypeStringForArgs(args));
       }
       if (method != null
-          && warnOnBoxedKeyword.equals(RT.UNCHECKED_MATH.deref())
+          && warnOnBoxedKeyword.equals(Vars.UNCHECKED_MATH.deref())
           && isBoxedMath(method)) {
         RT.errPrintWriter()
             .format(
@@ -3257,7 +3260,7 @@ public class Compiler implements Opcodes {
     }
 
     Object val() {
-      return val ? RT.T : RT.F;
+      return val ? Vars.T : Vars.F;
     }
 
     public void emit(C context, ObjExpr objx, GeneratorAdapter gen) {
@@ -3516,7 +3519,7 @@ public class Compiler implements Opcodes {
                   RT.map(
                       LOCAL_ENV, LOCAL_ENV.deref(),
                       NEXT_LOCAL_NUM, NEXT_LOCAL_NUM.deref(),
-                      IN_CATCH_FINALLY, RT.T);
+                      IN_CATCH_FINALLY, Vars.T);
               try {
                 Var.pushThreadBindings(dynamicBindings);
                 LocalBinding lb =
@@ -3537,7 +3540,7 @@ public class Compiler implements Opcodes {
               if (fs.next() != null)
                 throw Util.runtimeException("finally clause must be last in try expression");
               try {
-                Var.pushThreadBindings(RT.map(IN_CATCH_FINALLY, RT.T));
+                Var.pushThreadBindings(RT.map(IN_CATCH_FINALLY, Vars.T));
                 finallyExpr = (new BodyExpr.Parser()).parse(C.STATEMENT, RT.next(f));
               } finally {
                 Var.popThreadBindings();
@@ -3625,7 +3628,7 @@ public class Compiler implements Opcodes {
       }
 
       this.ctor = ctoridx >= 0 ? (Constructor) ctors.get(ctoridx) : null;
-      if (ctor == null && RT.booleanCast(RT.WARN_ON_REFLECTION.deref())) {
+      if (ctor == null && RT.booleanCast(Vars.WARN_ON_REFLECTION.deref())) {
         RT.errPrintWriter()
             .format(
                 "Reflection warning, %s:%d:%d - call to %s ctor can't be resolved.\n",
@@ -4213,8 +4216,8 @@ public class Compiler implements Opcodes {
     }
 
     public Object eval() {
-      if (c.isInstance(expr.eval())) return RT.T;
-      return RT.F;
+      if (c.isInstance(expr.eval())) return Vars.T;
+      return Vars.F;
     }
 
     public boolean canEmitPrimitive() {
@@ -4500,7 +4503,7 @@ public class Compiler implements Opcodes {
           Object arglists = RT.get(RT.meta(v), arglistsKey);
           int arity = RT.count(form.next());
           Object sigtag = sigTag(arity, v);
-          Object vtag = RT.get(RT.meta(v), RT.TAG_KEY);
+          Object vtag = RT.get(RT.meta(v), Keywords.TAG_KEY);
           Expr ret =
               StaticInvokeExpr.parse(
                   v,
@@ -4530,7 +4533,7 @@ public class Compiler implements Opcodes {
                           RT.listStar(
                               Symbol.intern(".invokePrim"),
                               ((Symbol) form.first())
-                                  .withMeta(RT.map(RT.TAG_KEY, Symbol.intern(primc))),
+                                  .withMeta(RT.map(Keywords.TAG_KEY, Symbol.intern(primc))),
                               form.next()))
                       .withMeta((IPersistentMap) RT.conj(RT.meta(v), RT.meta(form))));
             break;
@@ -4830,7 +4833,7 @@ public class Compiler implements Opcodes {
       IPersistentMap fmeta = RT.meta(origForm);
       if (fmeta != null)
         fmeta =
-            fmeta.without(RT.LINE_KEY).without(RT.COLUMN_KEY).without(RT.FILE_KEY).without(retkey);
+            fmeta.without(Keywords.LINE_KEY).without(Keywords.COLUMN_KEY).without(Keywords.FILE_KEY).without(retkey);
 
       fn.hasMeta = RT.count(fmeta) > 0;
 
@@ -5587,7 +5590,7 @@ public class Compiler implements Opcodes {
 
     void emitConstants(GeneratorAdapter clinitgen) {
       try {
-        Var.pushThreadBindings(RT.map(RT.PRINT_DUP, RT.T));
+        Var.pushThreadBindings(RT.map(Vars.PRINT_DUP, Vars.T));
 
         for (int i = 0; i < constants.count(); i++) {
           if (usedConstants.contains(i)) {
@@ -5943,7 +5946,7 @@ public class Compiler implements Opcodes {
                 CLEAR_SITES,
                 PersistentHashMap.EMPTY,
                 METHOD_RETURN_CONTEXT,
-                RT.T));
+                Vars.T));
 
         method.prim = primInterface(parms);
         if (method.prim != null) method.prim = method.prim.replace('.', '/');
@@ -6920,7 +6923,7 @@ public class Compiler implements Opcodes {
         IPersistentMap backupMethodIndexLocals = method.indexlocals;
         IPersistentVector recurMismatches = PersistentVector.EMPTY;
         for (int i = 0; i < bindings.count() / 2; i++) {
-          recurMismatches = recurMismatches.cons(RT.F);
+          recurMismatches = recurMismatches.cons(Vars.F);
         }
 
         // may repeat once for each binding with a mismatch, return breaks
@@ -6952,7 +6955,7 @@ public class Compiler implements Opcodes {
                 if (recurMismatches != null && RT.booleanCast(recurMismatches.nth(i / 2))) {
                   init =
                       new StaticMethodExpr("", 0, 0, null, RT.class, "box", RT.vector(init), false);
-                  if (RT.booleanCast(RT.WARN_ON_REFLECTION.deref()))
+                  if (RT.booleanCast(Vars.WARN_ON_REFLECTION.deref()))
                     RT.errPrintWriter().println("Auto-boxing loop arg: " + sym);
                 } else if (maybePrimitiveType(init) == int.class)
                   init =
@@ -7002,7 +7005,7 @@ public class Compiler implements Opcodes {
                 for (int i = 0; i < loopLocals.count(); i++) {
                   LocalBinding lb = (LocalBinding) loopLocals.nth(i);
                   if (lb.recurMistmatch) {
-                    recurMismatches = (IPersistentVector) recurMismatches.assoc(i, RT.T);
+                    recurMismatches = (IPersistentVector) recurMismatches.assoc(i, Vars.T);
                     moreMismatches = true;
                   }
                 }
@@ -7146,7 +7149,7 @@ public class Compiler implements Opcodes {
             }
             if (mismatch) {
               lb.recurMistmatch = true;
-              if (RT.booleanCast(RT.WARN_ON_REFLECTION.deref()))
+              if (RT.booleanCast(Vars.WARN_ON_REFLECTION.deref()))
                 RT.errPrintWriter()
                     .println(
                         source
@@ -7711,7 +7714,7 @@ public class Compiler implements Opcodes {
                 null,
                 tagname,
                 classname,
-                (Symbol) RT.get(opts, RT.TAG_KEY),
+                (Symbol) RT.get(opts, Keywords.TAG_KEY),
                 rform,
                 frm,
                 opts);
@@ -7810,7 +7813,7 @@ public class Compiler implements Opcodes {
                 CLEAR_SITES,
                 PersistentHashMap.EMPTY,
                 METHOD_RETURN_CONTEXT,
-                RT.T));
+                Vars.T));
 
         // register 'this' as local 0
         if (thisName != null)
@@ -8079,7 +8082,7 @@ public class Compiler implements Opcodes {
       Collection<Expr> returns = new ArrayList(thens.values());
       returns.add(defaultExpr);
       this.returnType = maybeJavaClass(returns);
-      if (RT.count(skipCheck) > 0 && RT.booleanCast(RT.WARN_ON_REFLECTION.deref())) {
+      if (RT.count(skipCheck) > 0 && RT.booleanCast(Vars.WARN_ON_REFLECTION.deref())) {
         RT.errPrintWriter()
             .format(
                 "Performance warning, %s:%d:%d - hash collision of some case test constants; if selected, those entries will be tested sequentially.\n",
@@ -8153,7 +8156,7 @@ public class Compiler implements Opcodes {
         if (testType == intKey)
           emitThenForInts(
               objx, gen, primExprType, tests.get(i), thens.get(i), defaultLabel, emitUnboxed);
-        else if (RT.contains(skipCheck, i) == RT.T) emitExpr(objx, gen, thens.get(i), emitUnboxed);
+        else if (RT.contains(skipCheck, i) == Vars.T) emitExpr(objx, gen, thens.get(i), emitUnboxed);
         else emitThenForHashes(objx, gen, tests.get(i), thens.get(i), defaultLabel, emitUnboxed);
         gen.goTo(endLabel);
       }
@@ -8180,7 +8183,7 @@ public class Compiler implements Opcodes {
     private void emitExprForInts(
         ObjExpr objx, GeneratorAdapter gen, Type exprType, Label defaultLabel) {
       if (exprType == null) {
-        if (RT.booleanCast(RT.WARN_ON_REFLECTION.deref())) {
+        if (RT.booleanCast(Vars.WARN_ON_REFLECTION.deref())) {
           RT.errPrintWriter()
               .format(
                   "Performance warning, %s:%d:%d - case has int tests, but tested expression is not primitive.\n",

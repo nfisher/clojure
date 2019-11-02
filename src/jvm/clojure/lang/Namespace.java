@@ -10,6 +10,8 @@
 
 package clojure.lang;
 
+import clojure.lang.core.Vars;
+
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,7 +48,7 @@ public class Namespace extends AReference implements Serializable {
   }
 
   public static Namespace remove(Symbol name) {
-    if (name.equals(RT.CLOJURE_NS.name))
+    if (name.equals(Vars.CLOJURE_NS.name))
       throw new IllegalArgumentException("Cannot remove clojure namespace");
     return namespaces.remove(name);
   }
@@ -94,8 +96,8 @@ public class Namespace extends AReference implements Serializable {
   private void warnOrFailOnReplace(Symbol sym, Object o, Object v) {
     if (o instanceof Var) {
       Namespace ns = ((Var) o).ns;
-      if (ns == this || (v instanceof Var && ((Var) v).ns == RT.CLOJURE_NS)) return;
-      if (ns != RT.CLOJURE_NS)
+      if (ns == this || (v instanceof Var && ((Var) v).ns == Vars.CLOJURE_NS)) return;
+      if (ns != Vars.CLOJURE_NS)
         throw new IllegalStateException(
             sym + " already refers to: " + o + " in namespace: " + name);
     }

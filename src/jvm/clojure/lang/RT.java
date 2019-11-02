@@ -10,6 +10,9 @@
 
 package clojure.lang;
 
+import clojure.lang.core.Keywords;
+import clojure.lang.core.Vars;
+
 import java.io.*;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -29,8 +32,6 @@ import java.util.regex.Pattern;
 
 public class RT {
 
-  public static final Boolean T = Boolean.TRUE; // Keyword.intern(Symbol.intern(null, "t"));
-  public static final Boolean F = Boolean.FALSE; // Keyword.intern(Symbol.intern(null, "t"));
   public static final String LOADER_SUFFIX = "__init";
 
   // simple-symbol->class
@@ -133,89 +134,21 @@ public class RT {
           Symbol.intern("Override"), Override.class,
           Symbol.intern("SuppressWarnings"), SuppressWarnings.class);
   public static final Object REQUIRE_LOCK = new Object();
-  public static final Namespace CLOJURE_NS = Namespace.findOrCreate(Symbol.intern("clojure.core"));
-  // static final Namespace USER_NS = Namespace.findOrCreate(Symbol.intern("user"));
-  public static final Var OUT =
-      Var.intern(CLOJURE_NS, Symbol.intern("*out*"), new OutputStreamWriter(System.out))
-          .setDynamic();
-  public static final Var IN =
-      Var.intern(
-              CLOJURE_NS,
-              Symbol.intern("*in*"),
-              new LineNumberingPushbackReader(new InputStreamReader(System.in)))
-          .setDynamic();
-  public static final Var ERR =
-      Var.intern(
-              CLOJURE_NS,
-              Symbol.intern("*err*"),
-              new PrintWriter(new OutputStreamWriter(System.err), true))
-          .setDynamic();
-  public static final Var AGENT =
-      Var.intern(CLOJURE_NS, Symbol.intern("*agent*"), null).setDynamic();
-  public static final Var DATA_READERS =
-      Var.intern(CLOJURE_NS, Symbol.intern("*data-readers*"), RT.map()).setDynamic();
-  public static final Var DEFAULT_DATA_READER_FN =
-      Var.intern(CLOJURE_NS, Symbol.intern("*default-data-reader-fn*"), RT.map()).setDynamic();
-  public static final Var DEFAULT_DATA_READERS =
-      Var.intern(CLOJURE_NS, Symbol.intern("default-data-readers"), RT.map());
-  public static final Var SUPPRESS_READ =
-      Var.intern(CLOJURE_NS, Symbol.intern("*suppress-read*"), null).setDynamic();
-  public static final Var ASSERT =
-      Var.intern(CLOJURE_NS, Symbol.intern("*assert*"), T).setDynamic();
-  public static final Var MATH_CONTEXT =
-      Var.intern(CLOJURE_NS, Symbol.intern("*math-context*"), null).setDynamic();
-  public static final Var USE_CONTEXT_CLASSLOADER =
-      Var.intern(CLOJURE_NS, Symbol.intern("*use-context-classloader*"), T).setDynamic();
-  // boolean
-  public static final Var UNCHECKED_MATH =
-      Var.intern(
-              CLOJURE_NS,
-              Symbol.intern("*unchecked-math*"),
-              Boolean.FALSE)
-          .setDynamic();
-  // symbol
-  public static final Var CURRENT_NS =
-      Var.intern(CLOJURE_NS, Symbol.intern("*ns*"), CLOJURE_NS).setDynamic();
+
   public static final Object[] EMPTY_ARRAY = new Object[] {};
   public static final Comparator DEFAULT_COMPARATOR = new DefaultComparator();
-  static final Keyword TAG_KEY = Keyword.intern(null, "tag");
-  static final Keyword CONST_KEY = Keyword.intern(null, "const");
   static final Symbol LOAD_FILE = Symbol.intern("load-file");
   static final Symbol IN_NAMESPACE = Symbol.intern("in-ns");
   static final Symbol NAMESPACE = Symbol.intern("ns");
   static final Symbol IDENTICAL = Symbol.intern("identical?");
-  static final Var CMD_LINE_ARGS =
-      Var.intern(CLOJURE_NS, Symbol.intern("*command-line-args*"), null).setDynamic();
-  static final Var FLUSH_ON_NEWLINE =
-      Var.intern(CLOJURE_NS, Symbol.intern("*flush-on-newline*"), T).setDynamic();
-  static final Var PRINT_META =
-      Var.intern(CLOJURE_NS, Symbol.intern("*print-meta*"), F).setDynamic();
 
-  // final static public Var CURRENT_MODULE = Var.intern(Symbol.intern("clojure.core",
-  // "current-module"),
-  //                                                    Module.findOrCreateModule("clojure/user"));
-  static final Var PRINT_READABLY =
-      Var.intern(CLOJURE_NS, Symbol.intern("*print-readably*"), T).setDynamic();
-  static final Var PRINT_DUP = Var.intern(CLOJURE_NS, Symbol.intern("*print-dup*"), F).setDynamic();
-  static final Var WARN_ON_REFLECTION =
-      Var.intern(CLOJURE_NS, Symbol.intern("*warn-on-reflection*"), F).setDynamic();
-  static final Var ALLOW_UNRESOLVED_VARS =
-      Var.intern(CLOJURE_NS, Symbol.intern("*allow-unresolved-vars*"), F).setDynamic();
-  static final Var READER_RESOLVER =
-      Var.intern(CLOJURE_NS, Symbol.intern("*reader-resolver*"), null).setDynamic();
-  static final Var IN_NS_VAR = Var.intern(CLOJURE_NS, Symbol.intern("in-ns"), F);
-  static final Var NS_VAR = Var.intern(CLOJURE_NS, Symbol.intern("ns"), F);
-  static final Var FN_LOADER_VAR =
-      Var.intern(CLOJURE_NS, Symbol.intern("*fn-loader*"), null).setDynamic();
-  static final Var PRINT_INITIALIZED = Var.intern(CLOJURE_NS, Symbol.intern("print-initialized"));
-  static final Var PR_ON = Var.intern(CLOJURE_NS, Symbol.intern("pr-on"));
   // final static Var IMPORTS = Var.intern(CLOJURE_NS, Symbol.intern("*imports*"), DEFAULT_IMPORTS);
   static final IFn inNamespace =
       new AFn() {
         public Object invoke(Object arg1) {
           Symbol nsname = (Symbol) arg1;
           Namespace ns = Namespace.findOrCreate(nsname);
-          CURRENT_NS.set(ns);
+          Vars.CURRENT_NS.set(ns);
           return ns;
         }
       };
@@ -224,7 +157,7 @@ public class RT {
         public Object invoke(Object __form, Object __env, Object arg1) {
           Symbol nsname = (Symbol) arg1;
           Namespace ns = Namespace.findOrCreate(nsname);
-          CURRENT_NS.set(ns);
+          Vars.CURRENT_NS.set(ns);
           return ns;
         }
       };
@@ -236,13 +169,7 @@ public class RT {
   public static boolean instrumentMacros = !Boolean.getBoolean("clojure.spec.skip-macros");
   static Object readeval = readTrueFalseUnknown(System.getProperty("clojure.read.eval", "true"));
   public static final Var READEVAL =
-      Var.intern(CLOJURE_NS, Symbol.intern("*read-eval*"), readeval).setDynamic();
-  static Keyword EVAL_FILE_KEY = Keyword.intern("clojure.core", "eval-file");
-  static Keyword LINE_KEY = Keyword.intern(null, "line");
-  static Keyword COLUMN_KEY = Keyword.intern(null, "column");
-  static Keyword FILE_KEY = Keyword.intern(null, "file");
-  static Keyword DECLARED_KEY = Keyword.intern(null, "declared");
-  static Keyword DOC_KEY = Keyword.intern(null, "doc");
+      Var.intern(Vars.CLOJURE_NS, Symbol.intern("*read-eval*"), readeval).setDynamic();
   static AtomicInteger id = new AtomicInteger(1);
   static volatile boolean CHECK_SPECS = false;
   private static boolean INIT = false; // init guard
@@ -250,24 +177,24 @@ public class RT {
   static {
     Keyword arglistskw = Keyword.intern(null, "arglists");
     Symbol namesym = Symbol.intern("name");
-    OUT.setTag(Symbol.intern("java.io.Writer"));
-    CURRENT_NS.setTag(Symbol.intern("clojure.lang.Namespace"));
-    AGENT.setMeta(map(DOC_KEY, "The agent currently running an action on this thread, else nil"));
-    AGENT.setTag(Symbol.intern("clojure.lang.Agent"));
-    MATH_CONTEXT.setTag(Symbol.intern("java.math.MathContext"));
-    Var nv = Var.intern(CLOJURE_NS, NAMESPACE, bootNamespace);
+    Vars.OUT.setTag(Symbol.intern("java.io.Writer"));
+    Vars.CURRENT_NS.setTag(Symbol.intern("clojure.lang.Namespace"));
+    Vars.AGENT.setMeta(map(Keywords.DOC_KEY, "The agent currently running an action on this thread, else nil"));
+    Vars.AGENT.setTag(Symbol.intern("clojure.lang.Agent"));
+    Vars.MATH_CONTEXT.setTag(Symbol.intern("java.math.MathContext"));
+    Var nv = Var.intern(Vars.CLOJURE_NS, NAMESPACE, bootNamespace);
     nv.setMacro();
     Var v;
-    v = Var.intern(CLOJURE_NS, IN_NAMESPACE, inNamespace);
+    v = Var.intern(Vars.CLOJURE_NS, IN_NAMESPACE, inNamespace);
     v.setMeta(
         map(
-            DOC_KEY,
+            Keywords.DOC_KEY,
             "Sets *ns* to the namespace named by the symbol, creating it if needed.",
             arglistskw,
             list(vector(namesym))));
     v =
         Var.intern(
-            CLOJURE_NS,
+            Vars.CLOJURE_NS,
             LOAD_FILE,
             new AFn() {
               public Object invoke(Object arg1) {
@@ -280,7 +207,7 @@ public class RT {
             });
     v.setMeta(
         map(
-            DOC_KEY,
+            Keywords.DOC_KEY,
             "Sequentially read and evaluate the set of forms contained in the file.",
             arglistskw,
             list(vector(namesym))));
@@ -303,7 +230,7 @@ public class RT {
     List<String> arglist = Arrays.asList(args);
     int split = arglist.indexOf("--");
     if (split >= 0) {
-      CMD_LINE_ARGS.bindRoot(RT.seq(arglist.subList(split + 1, args.length)));
+      Vars.CMD_LINE_ARGS.bindRoot(RT.seq(arglist.subList(split + 1, args.length)));
       return arglist.subList(0, split);
     }
     return arglist;
@@ -311,7 +238,7 @@ public class RT {
 
   // duck typing stderr plays nice with e.g. swank
   public static PrintWriter errPrintWriter() {
-    Writer w = (Writer) ERR.deref();
+    Writer w = (Writer) Vars.ERR.deref();
     if (w instanceof PrintWriter) {
       return (PrintWriter) w;
     } else {
@@ -423,12 +350,12 @@ public class RT {
       try {
         Var.pushThreadBindings(
             RT.mapUniqueKeys(
-                CURRENT_NS,
-                CURRENT_NS.deref(),
-                WARN_ON_REFLECTION,
-                WARN_ON_REFLECTION.deref(),
-                RT.UNCHECKED_MATH,
-                RT.UNCHECKED_MATH.deref()));
+                Vars.CURRENT_NS,
+                Vars.CURRENT_NS.deref(),
+                Vars.WARN_ON_REFLECTION,
+                Vars.WARN_ON_REFLECTION.deref(),
+                Vars.UNCHECKED_MATH,
+                Vars.UNCHECKED_MATH.deref()));
         loaded = (loadClassForName(scriptbase.replace('/', '.') + LOADER_SUFFIX) != null);
       } finally {
         Var.popThreadBindings();
@@ -462,12 +389,12 @@ public class RT {
 
     Var.pushThreadBindings(
         RT.mapUniqueKeys(
-            CURRENT_NS,
-            CURRENT_NS.deref(),
-            WARN_ON_REFLECTION,
-            WARN_ON_REFLECTION.deref(),
-            RT.UNCHECKED_MATH,
-            RT.UNCHECKED_MATH.deref()));
+            Vars.CURRENT_NS,
+            Vars.CURRENT_NS.deref(),
+            Vars.WARN_ON_REFLECTION,
+            Vars.WARN_ON_REFLECTION.deref(),
+            Vars.UNCHECKED_MATH,
+            Vars.UNCHECKED_MATH.deref()));
     try {
       Symbol USER = Symbol.intern("user");
       Symbol CLOJURE = Symbol.intern("clojure.core");
@@ -747,21 +674,21 @@ public class RT {
   }
 
   public static Object contains(Object coll, Object key) {
-    if (coll == null) return F;
-    else if (coll instanceof Associative) return ((Associative) coll).containsKey(key) ? T : F;
-    else if (coll instanceof IPersistentSet) return ((IPersistentSet) coll).contains(key) ? T : F;
+    if (coll == null) return Vars.F;
+    else if (coll instanceof Associative) return ((Associative) coll).containsKey(key) ? Vars.T : Vars.F;
+    else if (coll instanceof IPersistentSet) return ((IPersistentSet) coll).contains(key) ? Vars.T : Vars.F;
     else if (coll instanceof Map) {
       Map m = (Map) coll;
-      return m.containsKey(key) ? T : F;
+      return m.containsKey(key) ? Vars.T : Vars.F;
     } else if (coll instanceof Set) {
       Set s = (Set) coll;
-      return s.contains(key) ? T : F;
+      return s.contains(key) ? Vars.T : Vars.F;
     } else if (key instanceof Number && (coll instanceof String || coll.getClass().isArray())) {
       int n = ((Number) key).intValue();
       return n >= 0 && n < count(coll);
-    } else if (coll instanceof ITransientSet) return ((ITransientSet) coll).contains(key) ? T : F;
+    } else if (coll instanceof ITransientSet) return ((ITransientSet) coll).contains(key) ? Vars.T : Vars.F;
     else if (coll instanceof ITransientAssociative2)
-      return (((ITransientAssociative2) coll).containsKey(key)) ? T : F;
+      return (((ITransientAssociative2) coll).containsKey(key)) ? Vars.T : Vars.F;
     throw new IllegalArgumentException(
         "contains? not supported on type: " + coll.getClass().getName());
   }
@@ -883,7 +810,7 @@ public class RT {
   }
 
   static boolean hasTag(Object o, Object tag) {
-    return Util.equals(tag, RT.get(RT.meta(o), TAG_KEY));
+    return Util.equals(tag, RT.get(RT.meta(o), Keywords.TAG_KEY));
   }
 
   /** ********************* Boxing/casts ****************************** */
@@ -896,7 +823,7 @@ public class RT {
   }
 
   public static Object box(boolean x) {
-    return x ? T : F;
+    return x ? Vars.T : Vars.F;
   }
 
   public static Object box(Boolean x) {
@@ -1664,7 +1591,7 @@ public class RT {
   }
 
   public static boolean suppressRead() {
-    return booleanCast(SUPPRESS_READ.deref());
+    return booleanCast(Vars.SUPPRESS_READ.deref());
   }
 
   public static String printString(Object x) {
@@ -1688,18 +1615,18 @@ public class RT {
 
   public static void print(Object x, Writer w) throws IOException {
     // call multimethod
-    if (PRINT_INITIALIZED.isBound() && RT.booleanCast(PRINT_INITIALIZED.deref()))
-      PR_ON.invoke(x, w);
+    if (Vars.PRINT_INITIALIZED.isBound() && RT.booleanCast(Vars.PRINT_INITIALIZED.deref()))
+      Vars.PR_ON.invoke(x, w);
     // *
     else {
-      boolean readably = booleanCast(PRINT_READABLY.deref());
+      boolean readably = booleanCast(Vars.PRINT_READABLY.deref());
       if (x instanceof Obj) {
         Obj o = (Obj) x;
         if (RT.count(o.meta()) > 0
-            && ((readably && booleanCast(PRINT_META.deref())) || booleanCast(PRINT_DUP.deref()))) {
+            && ((readably && booleanCast(Vars.PRINT_META.deref())) || booleanCast(Vars.PRINT_DUP.deref()))) {
           IPersistentMap meta = o.meta();
           w.write("#^");
-          if (meta.count() == 1 && meta.containsKey(TAG_KEY)) print(meta.valAt(TAG_KEY), w);
+          if (meta.count() == 1 && meta.containsKey(Keywords.TAG_KEY)) print(meta.valAt(Keywords.TAG_KEY), w);
           else print(meta, w);
           w.write(' ');
         }
@@ -1867,7 +1794,7 @@ public class RT {
   public static Object format(Object o, String s, Object... args) throws IOException {
     Writer w;
     if (o == null) w = new StringWriter();
-    else if (Util.equals(o, T)) w = (Writer) OUT.deref();
+    else if (Util.equals(o, Vars.T)) w = (Writer) Vars.OUT.deref();
     else w = (Writer) o;
     doFormat(w, s, ArraySeq.create(args));
     if (o == null) return w.toString();
@@ -1936,7 +1863,7 @@ public class RT {
             new PrivilegedAction() {
               public Object run() {
                 try {
-                  Var.pushThreadBindings(RT.map(USE_CONTEXT_CLASSLOADER, RT.T));
+                  Var.pushThreadBindings(RT.map(Vars.USE_CONTEXT_CLASSLOADER, Vars.T));
                   //			getRootClassLoader();
                   return new DynamicClassLoader(baseLoader());
                 } finally {
@@ -1948,7 +1875,7 @@ public class RT {
 
   public static ClassLoader baseLoader() {
     if (Compiler.LOADER.isBound()) return (ClassLoader) Compiler.LOADER.deref();
-    else if (booleanCast(USE_CONTEXT_CLASSLOADER.deref()))
+    else if (booleanCast(Vars.USE_CONTEXT_CLASSLOADER.deref()))
       return Thread.currentThread().getContextClassLoader();
     return Compiler.class.getClassLoader();
   }

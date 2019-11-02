@@ -10,6 +10,9 @@
 
 package clojure.lang;
 
+import clojure.lang.core.Keywords;
+import clojure.lang.core.Vars;
+
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -239,7 +242,7 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
   // }
 
   public void setMacro() {
-    alterMeta(assoc, RT.list(macroKey, RT.T));
+    alterMeta(assoc, RT.list(macroKey, Vars.T));
   }
 
   public boolean isMacro() {
@@ -255,11 +258,11 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
   }
 
   public Object getTag() {
-    return meta().valAt(RT.TAG_KEY);
+    return meta().valAt(Keywords.TAG_KEY);
   }
 
   public void setTag(Symbol tag) {
-    alterMeta(assoc, RT.list(RT.TAG_KEY, tag));
+    alterMeta(assoc, RT.list(Keywords.TAG_KEY, tag));
   }
 
   public final boolean hasRoot() {

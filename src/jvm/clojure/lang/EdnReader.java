@@ -7,6 +7,9 @@
  */
 package clojure.lang;
 
+import clojure.lang.core.Keywords;
+import clojure.lang.core.Vars;
+
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
@@ -215,9 +218,9 @@ public class EdnReader {
     if (s.equals("nil")) {
       return null;
     } else if (s.equals("true")) {
-      return RT.T;
+      return Vars.T;
     } else if (s.equals("false")) {
-      return RT.F;
+      return Vars.F;
     }
 
     Object ret = null;
@@ -521,15 +524,15 @@ public class EdnReader {
         column = ((LineNumberingPushbackReader) r).getColumnNumber() - 1;
       }
       Object meta = read(r, true, null, true, opts);
-      if (meta instanceof Symbol || meta instanceof String) meta = RT.map(RT.TAG_KEY, meta);
-      else if (meta instanceof Keyword) meta = RT.map(meta, RT.T);
+      if (meta instanceof Symbol || meta instanceof String) meta = RT.map(Keywords.TAG_KEY, meta);
+      else if (meta instanceof Keyword) meta = RT.map(meta, Vars.T);
       else if (!(meta instanceof IPersistentMap))
         throw new IllegalArgumentException("Metadata must be Symbol,Keyword,String or Map");
 
       Object o = read(r, true, null, true, opts);
       if (o instanceof IMeta) {
         if (line != -1 && o instanceof ISeq) {
-          meta = ((IPersistentMap) meta).assoc(RT.LINE_KEY, line).assoc(RT.COLUMN_KEY, column);
+          meta = ((IPersistentMap) meta).assoc(Keywords.LINE_KEY, line).assoc(Keywords.COLUMN_KEY, column);
         }
         if (o instanceof IReference) {
           ((IReference) o).resetMeta((IPersistentMap) meta);
@@ -669,7 +672,7 @@ public class EdnReader {
 
       ILookup readers = (ILookup) RT.get(opts, READERS);
       IFn dataReader = (IFn) RT.get(readers, tag);
-      if (dataReader == null) dataReader = (IFn) RT.get(RT.DEFAULT_DATA_READERS.deref(), tag);
+      if (dataReader == null) dataReader = (IFn) RT.get(Vars.DEFAULT_DATA_READERS.deref(), tag);
       if (dataReader == null) {
         IFn defaultReader = (IFn) RT.get(opts, DEFAULT);
         if (defaultReader != null) return defaultReader.invoke(tag, o);

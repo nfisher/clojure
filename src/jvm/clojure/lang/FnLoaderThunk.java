@@ -10,6 +10,8 @@
 
 package clojure.lang;
 
+import clojure.lang.core.Vars;
+
 public class FnLoaderThunk extends RestFn {
 
   final Var v;
@@ -19,7 +21,7 @@ public class FnLoaderThunk extends RestFn {
 
   public FnLoaderThunk(Var v, String fnClassName) {
     this.v = v;
-    this.loader = (ClassLoader) RT.FN_LOADER_VAR.get();
+    this.loader = (ClassLoader) Vars.FN_LOADER_VAR.get();
     this.fnClassName = fnClassName;
     fn = null;
   }

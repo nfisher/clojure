@@ -7,6 +7,9 @@
  */
 package clojure.lang;
 
+import clojure.lang.core.Keywords;
+import clojure.lang.core.Vars;
+
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
@@ -161,7 +164,7 @@ public class LispReader {
         isRecursive,
         opts,
         null,
-        (Resolver) RT.READER_RESOLVER.deref());
+        (Resolver) Vars.READER_RESOLVER.deref());
   }
 
   private static Object read(
@@ -180,7 +183,7 @@ public class LispReader {
         isRecursive,
         opts,
         ensurePending(pendingForms),
-        (Resolver) RT.READER_RESOLVER.deref());
+        (Resolver) Vars.READER_RESOLVER.deref());
   }
 
   private static Object ensurePending(Object pendingForms) {
@@ -339,9 +342,9 @@ public class LispReader {
     if (s.equals("nil")) {
       return null;
     } else if (s.equals("true")) {
-      return RT.T;
+      return Vars.T;
     } else if (s.equals("false")) {
-      return RT.F;
+      return Vars.F;
     }
     Object ret = null;
 
@@ -468,7 +471,7 @@ public class LispReader {
             : -1;
 
     ArrayList a = new ArrayList();
-    Resolver resolver = (Resolver) RT.READER_RESOLVER.deref();
+    Resolver resolver = (Resolver) Vars.READER_RESOLVER.deref();
 
     for (; ; ) {
 
@@ -677,7 +680,7 @@ public class LispReader {
       // Resolve autoresolved ns
       String ns;
       if (auto) {
-        Resolver resolver = (Resolver) RT.READER_RESOLVER.deref();
+        Resolver resolver = (Resolver) Vars.READER_RESOLVER.deref();
         if (sym == null) {
           if (resolver != null) ns = resolver.currentNS().name;
           else ns = Compiler.currentNS().getName().getName();
@@ -886,16 +889,16 @@ public class LispReader {
       }
       pendingForms = ensurePending(pendingForms);
       Object meta = read(r, true, null, true, opts, pendingForms);
-      if (meta instanceof Symbol || meta instanceof String) meta = RT.map(RT.TAG_KEY, meta);
-      else if (meta instanceof Keyword) meta = RT.map(meta, RT.T);
+      if (meta instanceof Symbol || meta instanceof String) meta = RT.map(Keywords.TAG_KEY, meta);
+      else if (meta instanceof Keyword) meta = RT.map(meta, Vars.T);
       else if (!(meta instanceof IPersistentMap))
         throw new IllegalArgumentException("Metadata must be Symbol,Keyword,String or Map");
 
       Object o = read(r, true, null, true, opts, pendingForms);
       if (o instanceof IMeta) {
         if (line != -1 && o instanceof ISeq) {
-          meta = RT.assoc(meta, RT.LINE_KEY, RT.get(meta, RT.LINE_KEY, line));
-          meta = RT.assoc(meta, RT.COLUMN_KEY, RT.get(meta, RT.COLUMN_KEY, column));
+          meta = RT.assoc(meta, Keywords.LINE_KEY, RT.get(meta, Keywords.LINE_KEY, line));
+          meta = RT.assoc(meta, Keywords.COLUMN_KEY, RT.get(meta, Keywords.COLUMN_KEY, column));
         }
         if (o instanceof IReference) {
           ((IReference) o).resetMeta((IPersistentMap) meta);
@@ -948,7 +951,7 @@ public class LispReader {
       Object ret;
       if (Compiler.isSpecial(form)) ret = RT.list(Compiler.QUOTE, form);
       else if (form instanceof Symbol) {
-        Resolver resolver = (Resolver) RT.READER_RESOLVER.deref();
+        Resolver resolver = (Resolver) Vars.READER_RESOLVER.deref();
         Symbol sym = (Symbol) form;
         if (sym.ns == null && sym.name.endsWith("#")) {
           IPersistentMap gmap = (IPersistentMap) GENSYM_ENV.deref();
@@ -1034,7 +1037,7 @@ public class LispReader {
 
       if (form instanceof IObj && RT.meta(form) != null) {
         // filter line and column numbers
-        IPersistentMap newMeta = ((IObj) form).meta().without(RT.LINE_KEY).without(RT.COLUMN_KEY);
+        IPersistentMap newMeta = ((IObj) form).meta().without(Keywords.LINE_KEY).without(Keywords.COLUMN_KEY);
         if (newMeta.count() > 0) return RT.list(WITH_META, ret, syntaxQuote(((IObj) form).meta()));
       }
       return ret;
@@ -1144,8 +1147,8 @@ public class LispReader {
       //		IObj s = (IObj) RT.seq(list);
       if (line != -1) {
         Object meta = RT.meta(s);
-        meta = RT.assoc(meta, RT.LINE_KEY, RT.get(meta, RT.LINE_KEY, line));
-        meta = RT.assoc(meta, RT.COLUMN_KEY, RT.get(meta, RT.COLUMN_KEY, column));
+        meta = RT.assoc(meta, Keywords.LINE_KEY, RT.get(meta, Keywords.LINE_KEY, line));
+        meta = RT.assoc(meta, Keywords.COLUMN_KEY, RT.get(meta, Keywords.COLUMN_KEY, column));
         return s.withMeta((IPersistentMap) meta);
       } else return s;
     }
@@ -1243,13 +1246,13 @@ public class LispReader {
 
     private Object readTagged(Object o, Symbol tag, Object opts, Object pendingForms) {
 
-      ILookup data_readers = (ILookup) RT.DATA_READERS.deref();
+      ILookup data_readers = (ILookup) Vars.DATA_READERS.deref();
       IFn data_reader = (IFn) RT.get(data_readers, tag);
       if (data_reader == null) {
-        data_readers = (ILookup) RT.DEFAULT_DATA_READERS.deref();
+        data_readers = (ILookup) Vars.DEFAULT_DATA_READERS.deref();
         data_reader = (IFn) RT.get(data_readers, tag);
         if (data_reader == null) {
-          IFn default_reader = (IFn) RT.DEFAULT_DATA_READER_FN.deref();
+          IFn default_reader = (IFn) Vars.DEFAULT_DATA_READER_FN.deref();
           if (default_reader != null) return default_reader.invoke(tag, o);
           else throw new RuntimeException("No reader function for tag " + tag.toString());
         }
@@ -1371,7 +1374,7 @@ public class LispReader {
                     true,
                     opts,
                     pendingForms,
-                    (Resolver) RT.READER_RESOLVER.deref());
+                    (Resolver) Vars.READER_RESOLVER.deref());
 
             if (form == READ_EOF) {
               if (firstline < 0) throw Util.runtimeException("EOF while reading");
@@ -1393,7 +1396,7 @@ public class LispReader {
         // When we already have a result, or when the feature didn't match, discard the next form in
         // the reader
         try {
-          Var.pushThreadBindings(RT.map(RT.SUPPRESS_READ, RT.T));
+          Var.pushThreadBindings(RT.map(Vars.SUPPRESS_READ, Vars.T));
           form =
               read(
                   r,
@@ -1404,7 +1407,7 @@ public class LispReader {
                   true,
                   opts,
                   pendingForms,
-                  (Resolver) RT.READER_RESOLVER.deref());
+                  (Resolver) Vars.READER_RESOLVER.deref());
 
           if (form == READ_EOF) {
             if (firstline < 0) throw Util.runtimeException("EOF while reading");
@@ -1465,7 +1468,7 @@ public class LispReader {
       if (ch != '(') throw Util.runtimeException("read-cond body must be a list");
 
       try {
-        Var.pushThreadBindings(RT.map(READ_COND_ENV, RT.T));
+        Var.pushThreadBindings(RT.map(READ_COND_ENV, Vars.T));
 
         if (isPreserveReadCond(opts)) {
           IFn listReader = getMacro(ch); // should always be a list
