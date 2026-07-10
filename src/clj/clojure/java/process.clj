@@ -50,6 +50,38 @@
   ^ProcessBuilder$Redirect [f]
   (ProcessBuilder$Redirect/from (jio/file f)))
 
+(defn- redirect
+  ^ProcessBuilder$Redirect [x]
+  (case x
+    :pipe ProcessBuilder$Redirect/PIPE
+    :inherit ProcessBuilder$Redirect/INHERIT
+    :discard (ProcessBuilder$Redirect/to @null-file)
+    ;; in Java 9+, just use ProcessBuilder$Redirect/DISCARD
+    x))
+
+(defn- process-builder
+  ^ProcessBuilder [command dir]
+  (doto (ProcessBuilder. ^List command)
+    (.directory (jio/file dir))))
+
+(defn- configure-redirects
+  ^ProcessBuilder [^ProcessBuilder pb in out err]
+  (.redirectInput pb (redirect in))
+  (.redirectOutput pb (redirect out))
+  (if (= err :stdout)
+    (.redirectErrorStream pb true)
+    (.redirectError pb (redirect err)))
+  pb)
+
+(defn- configure-env
+  ^ProcessBuilder [^ProcessBuilder pb env clear-env]
+  (when clear-env
+    (.clear (.environment pb)))
+  (when env
+    (let [pb-env (.environment pb)]
+      (run! (fn [[k v]] (.put pb-env k v)) env)))
+  pb)
+
 (defn start
   "Start an external command, defined in args.
   The process environment vars are inherited from the parent by
@@ -71,26 +103,9 @@
                          [{} opts+args])
         {:keys [in out err dir env clear-env]
          :or {in :pipe, out :pipe, err :pipe, dir "."}} opts
-        pb (ProcessBuilder. ^List command)
-        to-redirect (fn to-redirect
-                      [x]
-                      (case x
-                        :pipe ProcessBuilder$Redirect/PIPE
-                        :inherit ProcessBuilder$Redirect/INHERIT
-                        :discard (ProcessBuilder$Redirect/to @null-file)
-                        ;; in Java 9+, just use ProcessBuilder$Redirect/DISCARD
-                        x))]
-    (.directory pb (jio/file dir))
-    (.redirectInput pb ^ProcessBuilder$Redirect (to-redirect in))
-    (.redirectOutput pb ^ProcessBuilder$Redirect (to-redirect out))
-    (if
-      (= err :stdout) (.redirectErrorStream pb true)
-      (.redirectError pb ^ProcessBuilder$Redirect (to-redirect err)))
-    (when clear-env
-      (.clear (.environment pb)))
-    (when env
-      (let [pb-env (.environment pb)]
-        (run! (fn [[k v]] (.put pb-env k v)) env)))
+        pb (process-builder command dir)]
+    (configure-redirects pb in out err)
+    (configure-env pb env clear-env)
     (.start pb)))
 
 (defn stdin

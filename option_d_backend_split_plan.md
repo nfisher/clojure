@@ -196,6 +196,10 @@ Each seam PR should include:
 - matrix status updates,
 - confirmation that unsupported target behavior is explicit.
 
+## Phase 5 artifact status
+
+The first host-service seam has been started in `src/clj/clojure/java/process.clj` by extracting private process helper functions for redirect coercion, process builder creation/configuration, and environment mutation. Public API behavior remains unchanged and is covered by the `:host-service` process tests.
+
 ## Suggested implementation order
 
 1. Finish high-priority `:jvm-backend` tests.
