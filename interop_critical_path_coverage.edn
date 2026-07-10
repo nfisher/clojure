@@ -1,0 +1,1448 @@
+;; Conservative critical-path coverage matrix for Java interop callsites.
+;; Generated from *_interop.md reports; coverage statuses are intentionally conservative.
+{:scope :critical-path
+ :strategy :conservative
+ :organization :future-backend-suite
+ :generated-from ["clojure.core_interop.md" "clojure.java_interop.md" "clojure.pprint_interop.md" "clojure.reflect_interop.md" "clojure.repl_interop.md" "clojure.test_interop.md" "clojure.tools_interop.md" "clojure_interop.md"]
+ :semantic-categories {:compiler-backend "JVM compiler/backend and host-member resolution boundary"
+                       :runtime-data-model "Shared runtime semantics candidate requiring per-target contract tests"
+                       :host-service "Host capability boundary for IO/process/env/concurrency/reflection"}
+ :suite-taxonomy {:portable-semantic {:targets [:jvm :browser-js :node-js :future]
+                                      :purpose "Cross-target language/runtime semantics conformance"}
+                  :jvm-backend {:targets [:jvm]
+                                :purpose "JVM compiler, bytecode, Java interop, reflection, and classloading regression"}
+                  :host-service {:targets [:jvm :node-js :browser-js :future]
+                                 :purpose "Capability-specific APIs with target-specific availability expectations"}
+                  :dynamic-review {:targets [:jvm :browser-js :node-js :future]
+                                   :purpose "Dynamic receiver callsites requiring semantic assignment before test promotion"}}
+ :summary {:total-critical-path-callsites 284
+           :host-service 65
+           :runtime-data-model 163
+           :compiler-backend 56
+           :coverage-statuses {:covered-behavioral-internal 15
+                               :covered-behavioral-public-api 109
+                               :manual-review-required 160}
+           }
+ :callsites
+ [
+  {:report "clojure.core_interop.md" :source-file "src/clj/clojure/core/server.clj" :function "prepl" :line 235 :column 40
+   :snippet "System/nanoTime" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.core_interop.md" :source-file "src/clj/clojure/core/server.clj" :function "prepl" :line 237 :column 46
+   :snippet "System/nanoTime" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/basis/impl.clj" :function "init-basis" :line 42 :column 23
+   :snippet "System/getProperty" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/browse.clj" :function "macosx?" :line 20 :column 17
+   :snippet "System/getProperty" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/browse.clj" :function "open-url-in-browser" :line 50 :column 12
+   :snippet "clojure.lang.Reflector/invokeStaticMethod" :interop-kind :static :operating-type "clojure.lang.Reflector"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/browse.clj" :function "open-url-in-browser" :line 52 :column 12
+   :snippet "clojure.lang.Reflector/invokeStaticMethod" :interop-kind :static :operating-type "clojure.lang.Reflector"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/browse.clj" :function "browse-url" :line 79 :column 54
+   :snippet "System/getProperty" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/io.clj" :function "<top-level>" :line 31 :column 37
+   :snippet "Byte/TYPE" :interop-kind :static :operating-type "Byte"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/io.clj" :function "escaped-utf8-urlstring->str" :line 44 :column 38
+   :snippet "URLEncoder/encode" :interop-kind :static :operating-type "URLEncoder"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/io.clj" :function "escaped-utf8-urlstring->str" :line 45 :column 8
+   :snippet "URLDecoder/decode" :interop-kind :static :operating-type "URLDecoder"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/io.clj" :function "escaped-utf8-urlstring->str" :line 54 :column 16
+   :snippet "RT/toUrl" :interop-kind :static :operating-type "RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/io.clj" :function "escaped-utf8-urlstring->str" :line 58 :column 16
+   :snippet "RT/toUrl" :interop-kind :static :operating-type "RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/io.clj" :function "escaped-utf8-urlstring->str" :line 65 :column 43
+   :snippet "File/separatorChar" :interop-kind :static :operating-type "File"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/io.clj" :function "outputstream->writer" :line 259 :column 47
+   :snippet "RT/toUrl" :interop-kind :static :operating-type "RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/io.clj" :function "outputstream->writer" :line 264 :column 49
+   :snippet "RT/toUrl" :interop-kind :static :operating-type "RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/io.clj" :function "do-copy" :line 306 :column 28
+   :snippet "Byte/TYPE" :interop-kind :static :operating-type "Byte"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/io.clj" :function "resource" :line 453 :column 45
+   :snippet "Thread/currentThread" :interop-kind :static :operating-type "Thread"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/javadoc.clj" :function "*core-java-api*" :line 22 :column 10
+   :snippet "System/getProperty" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/javadoc.clj" :function "fill-in-module-name" :line 65 :column 18
+   :snippet "Class/forName" :interop-kind :static :operating-type "Class"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/javadoc.clj" :function "javadoc-url" :line 76 :column 42
+   :snippet "File/separatorChar" :interop-kind :static :operating-type "File"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/process.clj" :function "null-file" :line 32 :column 24
+   :snippet "System/getProperty" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/process.clj" :function "to-file" :line 43 :column 8
+   :snippet "ProcessBuilder$Redirect/appendTo" :interop-kind :static :operating-type "ProcessBuilder$Redirect"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/process.clj" :function "to-file" :line 44 :column 8
+   :snippet "ProcessBuilder$Redirect/to" :interop-kind :static :operating-type "ProcessBuilder$Redirect"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/process.clj" :function "from-file" :line 51 :column 4
+   :snippet "ProcessBuilder$Redirect/from" :interop-kind :static :operating-type "ProcessBuilder$Redirect"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/process.clj" :function "start" :line 78 :column 31
+   :snippet "ProcessBuilder$Redirect/PIPE" :interop-kind :static :operating-type "ProcessBuilder$Redirect"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/process.clj" :function "start" :line 79 :column 34
+   :snippet "ProcessBuilder$Redirect/INHERIT" :interop-kind :static :operating-type "ProcessBuilder$Redirect"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/process.clj" :function "start" :line 80 :column 35
+   :snippet "ProcessBuilder$Redirect/to" :interop-kind :static :operating-type "ProcessBuilder$Redirect"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/process.clj" :function "exit-ref" :line 125 :column 40
+   :snippet "java.util.concurrent.TimeUnit/MILLISECONDS" :interop-kind :static :operating-type "java.util.concurrent.TimeUnit"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/process.clj" :function "io-executor" :line 140 :column 4
+   :snippet "Executors/newCachedThreadPool" :interop-kind :static :operating-type "Executors"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/shell.clj" :function "aconcat" :line 41 :column 10
+   :snippet "System/arraycopy" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/shell.clj" :function "stream-to-string" :line 67 :column 38
+   :snippet "Charset/defaultCharset" :interop-kind :static :operating-type "Charset"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.java_interop.md" :source-file "src/clj/clojure/java/shell.clj" :function "sh" :line 113 :column 22
+   :snippet "Runtime/getRuntime" :interop-kind :static :operating-type "Runtime"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.pprint_interop.md" :source-file "src/clj/clojure/pprint/dispatch.clj" :function "pprint-ideref" :line 139 :column 90
+   :snippet "System/identityHashCode" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.pprint_interop.md" :source-file "src/clj/clojure/pprint/pretty_writer.clj" :function "pp-newline" :line 108 :column 38
+   :snippet "System/getProperty" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure.reflect_interop.md" :source-file "src/clj/clojure/reflect/java.clj" :function "<top-level>" :line 29 :column 15
+   :snippet "Type/getType" :interop-kind :static :operating-type "Type"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.reflect_interop.md" :source-file "src/clj/clojure/reflect/java.clj" :function "field-descriptor->class-symbol" :line 65 :column 13
+   :snippet "Type/getType" :interop-kind :static :operating-type "Type"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.reflect_interop.md" :source-file "src/clj/clojure/reflect/java.clj" :function "internal-name->class-symbol" :line 75 :column 13
+   :snippet "Type/getObjectType" :interop-kind :static :operating-type "Type"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.reflect_interop.md" :source-file "src/clj/clojure/reflect/java.clj" :function "typeref->class" :line 176 :column 6
+   :snippet "clojure.lang.RT/classForName" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.reflect_interop.md" :source-file "src/clj/clojure/reflect/java.clj" :function "default-reflector" :line 189 :column 47
+   :snippet "Thread/currentThread" :interop-kind :static :operating-type "Thread"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.reflect_interop.md" :source-file "src/clj/clojure/reflect/java.clj" :function "parse-method-descriptor" :line 193 :column 40
+   :snippet "Type/getArgumentTypes" :interop-kind :static :operating-type "Type"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.reflect_interop.md" :source-file "src/clj/clojure/reflect/java.clj" :function "parse-method-descriptor" :line 194 :column 27
+   :snippet "Type/getReturnType" :interop-kind :static :operating-type "Type"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.reflect_interop.md" :source-file "src/clj/clojure/reflect/java.clj" :function "AsmReflector" :line 219 :column 12
+   :snippet "Opcodes/ASM4" :interop-kind :static :operating-type "Opcodes"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.repl_interop.md" :source-file "src/clj/clojure/repl/deps.clj" :function "add-loader-url" :line 25 :column 30
+   :snippet "RT/toUrl" :interop-kind :static :operating-type "RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.repl_interop.md" :source-file "src/clj/clojure/repl/deps.clj" :function "add-loader-url" :line 26 :column 55
+   :snippet "Thread/currentThread" :interop-kind :static :operating-type "Thread"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure.repl_interop.md" :source-file "src/clj/clojure/repl/deps.clj" :function "add-libs" :line 51 :column 51
+   :snippet "RT/toUrl" :interop-kind :static :operating-type "RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 87 :column 20
+   :snippet "clojure.lang.RT/conj" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 90 :column 20
+   :snippet "clojure.lang.RT/conj" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 91 :column 13
+   :snippet "clojure.lang.RT/conj" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 193 :column 20
+   :snippet "clojure.lang.RT/assoc" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 195 :column 16
+   :snippet "clojure.lang.RT/assoc" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "assert-valid-fdecl" :line 234 :column 31
+   :snippet "clojure.lang.Util/equals" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "assert-valid-fdecl" :line 235 :column 29
+   :snippet "clojure.lang.RT/subvec" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "assert-valid-fdecl" :line 235 :column 63
+   :snippet "clojure.lang.RT/count" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "assert-valid-fdecl" :line 247 :column 34
+   :snippet "clojure.lang.Util/equiv" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "assert-valid-fdecl" :line 248 :column 36
+   :snippet "clojure.lang.Util/equals" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "assert-valid-fdecl" :line 248 :column 66
+   :snippet "clojure.lang.Compiler$HostExpr/maybeSpecialTag" :interop-kind :static :operating-type "clojure.lang.Compiler$HostExpr"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "assert-valid-fdecl" :line 249 :column 42
+   :snippet "clojure.lang.Compiler$HostExpr/maybeClass" :interop-kind :static :operating-type "clojure.lang.Compiler$HostExpr"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "assert-valid-fdecl" :line 251 :column 70
+   :snippet "clojure.lang.Symbol/intern" :interop-kind :static :operating-type "clojure.lang.Symbol"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "defn" :line 325 :column 28
+   :snippet "clojure.lang.Util/equiv" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "defn" :line 328 :column 55
+   :snippet "clojure.lang.Symbol/intern" :interop-kind :static :operating-type "clojure.lang.Symbol"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "vec" :line 378 :column 9
+   :snippet "clojure.lang.LazilyPersistentVector/create" :interop-kind :static :operating-type "clojure.lang.LazilyPersistentVector"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "vec" :line 379 :column 7
+   :snippet "clojure.lang.LazilyPersistentVector/create" :interop-kind :static :operating-type "clojure.lang.LazilyPersistentVector"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "sorted-map" :line 407 :column 5
+   :snippet "clojure.lang.PersistentTreeMap/create" :interop-kind :static :operating-type "clojure.lang.PersistentTreeMap"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "sorted-map-by" :line 417 :column 5
+   :snippet "clojure.lang.PersistentTreeMap/create" :interop-kind :static :operating-type "clojure.lang.PersistentTreeMap"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "sorted-set" :line 425 :column 5
+   :snippet "clojure.lang.PersistentTreeSet/create" :interop-kind :static :operating-type "clojure.lang.PersistentTreeSet"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "sorted-set-by" :line 434 :column 5
+   :snippet "clojure.lang.PersistentTreeSet/create" :interop-kind :static :operating-type "clojure.lang.PersistentTreeSet"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "nil?" :line 443 :column 27
+   :snippet "clojure.lang.Util/identical" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "nil?" :line 444 :column 8
+   :snippet "clojure.lang.Util/identical" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "false?" :line 512 :column 8
+   :snippet "clojure.lang.Util/identical" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "true?" :line 519 :column 8
+   :snippet "clojure.lang.Util/identical" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "symbol" :line 600 :column 32
+   :snippet "clojure.lang.Symbol/intern" :interop-kind :static :operating-type "clojure.lang.Symbol"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "symbol" :line 604 :column 15
+   :snippet "clojure.lang.Symbol/intern" :interop-kind :static :operating-type "clojure.lang.Symbol"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "keyword" :line 623 :column 33
+   :snippet "clojure.lang.Keyword/intern" :interop-kind :static :operating-type "clojure.lang.Keyword"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "keyword" :line 624 :column 33
+   :snippet "clojure.lang.Keyword/intern" :interop-kind :static :operating-type "clojure.lang.Keyword"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "keyword" :line 625 :column 15
+   :snippet "clojure.lang.Keyword/intern" :interop-kind :static :operating-type "clojure.lang.Keyword"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "find-keyword" :line 636 :column 33
+   :snippet "clojure.lang.Keyword/find" :interop-kind :static :operating-type "clojure.lang.Keyword"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "find-keyword" :line 637 :column 33
+   :snippet "clojure.lang.Keyword/find" :interop-kind :static :operating-type "clojure.lang.Keyword"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "find-keyword" :line 638 :column 15
+   :snippet "clojure.lang.Keyword/find" :interop-kind :static :operating-type "clojure.lang.Keyword"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "chunk-cons" :line 713 :column 8
+   :snippet "clojure.lang.Numbers/isZero" :interop-kind :static :operating-type "clojure.lang.Numbers"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "chunk-cons" :line 713 :column 37
+   :snippet "clojure.lang.RT/count" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "identical?" :line 782 :column 11
+   :snippet "clojure.lang.Util/identical" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "=" :line 795 :column 11
+   :snippet "clojure.lang.Util/equiv" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "=" :line 797 :column 9
+   :snippet "clojure.lang.Util/equiv" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "=" :line 800 :column 9
+   :snippet "clojure.lang.Util/equiv" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "=" :line 813 :column 11
+   :snippet "clojure.lang.Util/equals" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "count" :line 882 :column 11
+   :snippet "clojure.lang.RT/count" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function ">1?" :line 971 :column 26
+   :snippet "clojure.lang.Numbers/gt" :interop-kind :static :operating-type "clojure.lang.Numbers"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function ">0?" :line 972 :column 26
+   :snippet "clojure.lang.Numbers/gt" :interop-kind :static :operating-type "clojure.lang.Numbers"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "abs" :line 1144 :column 22
+   :snippet "clojure.lang.Numbers/abs" :interop-kind :static :operating-type "clojure.lang.Numbers"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "abs" :line 1147 :column 4
+   :snippet "clojure.lang.Numbers/abs" :interop-kind :static :operating-type "clojure.lang.Numbers"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "even?" :line 1405 :column 26
+   :snippet "clojure.lang.RT/uncheckedLongCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "req!" :line 1525 :column 25
+   :snippet "clojure.lang.RT/req" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "req!" :line 1529 :column 4
+   :snippet "clojure.lang.RT/req" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "boolean" :line 1622 :column 8
+   :snippet "clojure.lang.RT/booleanCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "push-thread-bindings" :line 1943 :column 4
+   :snippet "clojure.lang.Var/pushThreadBindings" :interop-kind :static :operating-type "clojure.lang.Var"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "pop-thread-bindings" :line 1951 :column 4
+   :snippet "clojure.lang.Var/popThreadBindings" :interop-kind :static :operating-type "clojure.lang.Var"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "get-thread-bindings" :line 1959 :column 4
+   :snippet "clojure.lang.Var/getThreadBindings" :interop-kind :static :operating-type "clojure.lang.Var"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "binding-conveyor-fn" :line 2040 :column 16
+   :snippet "clojure.lang.Var/cloneThreadBindingFrame" :interop-kind :static :operating-type "clojure.lang.Var"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "binding-conveyor-fn" :line 2043 :column 11
+   :snippet "clojure.lang.Var/resetThreadBindingFrame" :interop-kind :static :operating-type "clojure.lang.Var"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "binding-conveyor-fn" :line 2046 :column 11
+   :snippet "clojure.lang.Var/resetThreadBindingFrame" :interop-kind :static :operating-type "clojure.lang.Var"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "binding-conveyor-fn" :line 2049 :column 11
+   :snippet "clojure.lang.Var/resetThreadBindingFrame" :interop-kind :static :operating-type "clojure.lang.Var"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "binding-conveyor-fn" :line 2052 :column 11
+   :snippet "clojure.lang.Var/resetThreadBindingFrame" :interop-kind :static :operating-type "clojure.lang.Var"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "binding-conveyor-fn" :line 2055 :column 11
+   :snippet "clojure.lang.Var/resetThreadBindingFrame" :interop-kind :static :operating-type "clojure.lang.Var"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "deref-future" :line 2316 :column 32
+   :snippet "java.util.concurrent.TimeUnit/MILLISECONDS" :interop-kind :static :operating-type "java.util.concurrent.TimeUnit"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "sequence" :line 2676 :column 11
+   :snippet "clojure.lang.RT/chunkIteratorSeq" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "sequence" :line 2677 :column 11
+   :snippet "clojure.lang.TransformerIterator/create" :interop-kind :static :operating-type "clojure.lang.TransformerIterator"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "sequence" :line 2677 :column 58
+   :snippet "clojure.lang.RT/iter" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "sequence" :line 2680 :column 11
+   :snippet "clojure.lang.RT/chunkIteratorSeq" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "sequence" :line 2681 :column 11
+   :snippet "clojure.lang.TransformerIterator/createMulti" :interop-kind :static :operating-type "clojure.lang.TransformerIterator"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "sequence" :line 2683 :column 19
+   :snippet "clojure.lang.RT/iter" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "dotimes" :line 2735 :column 16
+   :snippet "clojure.lang.RT/longCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "reduced?" :line 2858 :column 22
+   :snippet "clojure.lang.RT/isReduced" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "reduced?" :line 2861 :column 9
+   :snippet "clojure.lang.RT/isReduced" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "range" :line 3051 :column 7
+   :snippet "clojure.lang.LongRange/create" :interop-kind :static :operating-type "clojure.lang.LongRange"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "range" :line 3052 :column 7
+   :snippet "clojure.lang.Range/create" :interop-kind :static :operating-type "clojure.lang.Range"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "range" :line 3055 :column 7
+   :snippet "clojure.lang.LongRange/create" :interop-kind :static :operating-type "clojure.lang.LongRange"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "range" :line 3056 :column 7
+   :snippet "clojure.lang.Range/create" :interop-kind :static :operating-type "clojure.lang.Range"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "range" :line 3059 :column 7
+   :snippet "clojure.lang.LongRange/create" :interop-kind :static :operating-type "clojure.lang.LongRange"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "range" :line 3060 :column 7
+   :snippet "clojure.lang.Range/create" :interop-kind :static :operating-type "clojure.lang.Range"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "into-array" :line 3475 :column 7
+   :snippet "clojure.lang.RT/seqToTypedArray" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "into-array" :line 3477 :column 7
+   :snippet "clojure.lang.RT/seqToTypedArray" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "long" :line 3507 :column 16
+   :snippet "clojure.lang.RT/longCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "float" :line 3513 :column 16
+   :snippet "clojure.lang.RT/floatCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "double" :line 3519 :column 16
+   :snippet "clojure.lang.RT/doubleCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "short" :line 3525 :column 16
+   :snippet "clojure.lang.RT/shortCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "byte" :line 3531 :column 16
+   :snippet "clojure.lang.RT/byteCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "unchecked-byte" :line 3543 :column 16
+   :snippet "clojure.lang.RT/uncheckedByteCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "unchecked-short" :line 3549 :column 16
+   :snippet "clojure.lang.RT/uncheckedShortCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "unchecked-int" :line 3561 :column 16
+   :snippet "clojure.lang.RT/uncheckedIntCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "unchecked-long" :line 3567 :column 16
+   :snippet "clojure.lang.RT/uncheckedLongCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "unchecked-float" :line 3573 :column 16
+   :snippet "clojure.lang.RT/uncheckedFloatCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "unchecked-double" :line 3579 :column 16
+   :snippet "clojure.lang.RT/uncheckedDoubleCast" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "bigint" :line 3649 :column 34
+   :snippet "clojure.lang.BigInt/fromBigInteger" :interop-kind :static :operating-type "clojure.lang.BigInt"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "bigint" :line 3653 :column 21
+   :snippet "clojure.lang.BigInt/valueOf" :interop-kind :static :operating-type "clojure.lang.BigInt"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "system-newline" :line 3718 :column 7
+   :snippet "System/getProperty" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "read-string" :line 3838 :column 9
+   :snippet "clojure.lang.RT/readString" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "read-string" :line 3839 :column 14
+   :snippet "clojure.lang.RT/readString" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "aget" :line 3942 :column 5
+   :snippet "clojure.lang.Reflector/prepRet" :interop-kind :static :operating-type "clojure.lang.Reflector"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "find-ns" :line 4153 :column 10
+   :snippet "clojure.lang.Namespace/find" :interop-kind :static :operating-type "clojure.lang.Namespace"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "create-ns" :line 4161 :column 10
+   :snippet "clojure.lang.Namespace/findOrCreate" :interop-kind :static :operating-type "clojure.lang.Namespace"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "remove-ns" :line 4168 :column 10
+   :snippet "clojure.lang.Namespace/remove" :interop-kind :static :operating-type "clojure.lang.Namespace"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "all-ns" :line 4174 :column 7
+   :snippet "clojure.lang.Namespace/all" :interop-kind :static :operating-type "clojure.lang.Namespace"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "ns-resolve" :line 4393 :column 8
+   :snippet "clojure.lang.Compiler/maybeResolveIn" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "array-map" :line 4412 :column 11
+   :snippet "clojure.lang.PersistentArrayMap/createAsIfByAssoc" :interop-kind :static :operating-type "clojure.lang.PersistentArrayMap"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "seq-to-map-for-destructuring" :line 4420 :column 6
+   :snippet "clojure.lang.PersistentArrayMap/createAsIfByAssoc" :interop-kind :static :operating-type "clojure.lang.PersistentArrayMap"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "seq-to-map-for-destructuring" :line 4421 :column 27
+   :snippet "clojure.lang.PersistentArrayMap/EMPTY" :interop-kind :static :operating-type "clojure.lang.PersistentArrayMap"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "destmap*" :line 4478 :column 41
+   :snippet "clojure.lang.PersistentArrayMap/createAsIfByAssoc" :interop-kind :static :operating-type "clojure.lang.PersistentArrayMap"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "destmap*" :line 4479 :column 76
+   :snippet "clojure.lang.PersistentArrayMap/EMPTY" :interop-kind :static :operating-type "clojure.lang.PersistentArrayMap"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "add-classpath" :line 5235 :column 4
+   :snippet "clojure.lang.RT/addURL" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "mix-collection-hash" :line 5258 :column 35
+   :snippet "clojure.lang.Murmur3/mixCollHash" :interop-kind :static :operating-type "clojure.lang.Murmur3"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "hash-ordered-coll" :line 5267 :column 11
+   :snippet "clojure.lang.Murmur3/hashOrdered" :interop-kind :static :operating-type "clojure.lang.Murmur3"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "hash-unordered-coll" :line 5278 :column 11
+   :snippet "clojure.lang.Murmur3/hashUnordered" :interop-kind :static :operating-type "clojure.lang.Murmur3"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "bytes?" :line 5467 :column 42
+   :snippet "Byte/TYPE" :interop-kind :static :operating-type "Byte"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "descriptor" :line 5534 :column 31
+   :snippet "clojure.asm.Type/getDescriptor" :interop-kind :static :operating-type "clojure.asm.Type"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "add-annotation" :line 5547 :column 48
+   :snippet "clojure.asm.Type/getType" :interop-kind :static :operating-type "clojure.asm.Type"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "iterator-seq" :line 5803 :column 4
+   :snippet "clojure.lang.RT/chunkIteratorSeq" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "with-loading-context" :line 5831 :column 50
+   :snippet "clojure.lang.Compiler/LOADER" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "ns" :line 5886 :column 27
+   :snippet "clojure.lang.Namespace/find" :interop-kind :static :operating-type "clojure.lang.Namespace"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "throw-if" :line 5940 :column 23
+   :snippet "clojure.lang.Compiler/LINE" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "throw-if" :line 5941 :column 23
+   :snippet "clojure.lang.Compiler/COLUMN" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "serialized-require" :line 6163 :column 12
+   :snippet "clojure.lang.RT/REQUIRE_LOCK" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "load" :line 6210 :column 12
+   :snippet "clojure.lang.RT/load" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "seqable?" :line 6305 :column 8
+   :snippet "clojure.lang.RT/canSeq" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "intern" :line 6417 :column 15
+   :snippet "clojure.lang.Var/intern" :interop-kind :static :operating-type "clojure.lang.Var"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "intern" :line 6421 :column 15
+   :snippet "clojure.lang.Var/intern" :interop-kind :static :operating-type "clojure.lang.Var"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "merge-hash-collisions" :line 6762 :column 34
+   :snippet "clojure.lang.Util/hash" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "prep-hashes" :line 6789 :column 20
+   :snippet "clojure.lang.Util/hash" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "when-class" :line 6923 :column 7
+   :snippet "Class/forName" :interop-kind :static :operating-type "Class"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "random-uuid" :line 6965 :column 23
+   :snippet "java.util.UUID/randomUUID" :interop-kind :static :operating-type "java.util.UUID"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "select-keys" :line 7107 :column 33
+   :snippet "clojure.lang.RT/find" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "pvalues" :line 7238 :column 47
+   :snippet "clojure.lang.RT/baseLoader" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "*clojure-version*" :line 7253 :column 8
+   :snippet "clojure.lang.RT/assoc" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "promise" :line 7295 :column 34
+   :snippet "java.util.concurrent.TimeUnit/MILLISECONDS" :interop-kind :static :operating-type "java.util.concurrent.TimeUnit"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "shuffle" :line 7507 :column 6
+   :snippet "clojure.lang.RT/vector" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "Eduction" :line 7911 :column 7
+   :snippet "clojure.lang.TransformerIterator/create" :interop-kind :static :operating-type "clojure.lang.TransformerIterator"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "Eduction" :line 7911 :column 54
+   :snippet "clojure.lang.RT/iter" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core.clj" :function "parse-uuid" :line 8234 :column 6
+   :snippet "java.util.UUID/fromString" :interop-kind :static :operating-type "java.util.UUID"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "hash-combine" :line 142 :column 4
+   :snippet "clojure.lang.Util/hashCombine" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "hash-combine" :line 142 :column 37
+   :snippet "clojure.lang.Util/hash" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "munge" :line 145 :column 33
+   :snippet "clojure.lang.Compiler/munge" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "emit-defrecord" :line 190 :column 72
+   :snippet "clojure.lang.APersistentMap/mapHasheq" :interop-kind :static :operating-type "clojure.lang.APersistentMap"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "emit-defrecord" :line 196 :column 49
+   :snippet "clojure.lang.APersistentMap/mapHash" :interop-kind :static :operating-type "clojure.lang.APersistentMap"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "emit-defrecord" :line 200 :column 38
+   :snippet "clojure.lang.APersistentMap/mapEquals" :interop-kind :static :operating-type "clojure.lang.APersistentMap"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "emit-defrecord" :line 242 :column 48
+   :snippet "clojure.lang.MapEntry/create" :interop-kind :static :operating-type "clojure.lang.MapEntry"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "emit-defrecord" :line 243 :column 63
+   :snippet "clojure.lang.MapEntry/create" :interop-kind :static :operating-type "clojure.lang.MapEntry"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "emit-defrecord" :line 246 :column 90
+   :snippet "RT/iter" :interop-kind :static :operating-type "RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "validate-fields" :line 320 :column 23
+   :snippet "clojure.lang.Compiler/LINE" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "validate-fields" :line 321 :column 23
+   :snippet "clojure.lang.Compiler/COLUMN" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "emit-method-builder" :line 625 :column 54
+   :snippet "clojure.lang.Util/classOf" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_deftype.clj" :function "emit-method-builder" :line 635 :column 54
+   :snippet "clojure.lang.Util/classOf" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_print.clj" :function "print-tagged-object" :line 113 :column 30
+   :snippet "System/identityHashCode" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_print.clj" :function "print-method" :line 379 :column 15
+   :snippet "Byte/TYPE" :interop-kind :static :operating-type "Byte"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_proxy.clj" :function "generate-proxy" :line 49 :column 13
+   :snippet "clojure.lang.Compiler/classWriter" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_proxy.clj" :function "generate-proxy" :line 219 :column 47
+   :snippet "Modifier/isPublic" :interop-kind :static :operating-type "Modifier"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_proxy.clj" :function "generate-proxy" :line 219 :column 72
+   :snippet "Modifier/isProtected" :interop-kind :static :operating-type "Modifier"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_proxy.clj" :function "generate-proxy" :line 235 :column 48
+   :snippet "Modifier/isAbstract" :interop-kind :static :operating-type "Modifier"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_proxy.clj" :function "get-proxy-class" :line 291 :column 12
+   :snippet "RT/loadClassForName" :interop-kind :static :operating-type "RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_proxy.clj" :function "get-proxy-class" :line 293 :column 43
+   :snippet "clojure.lang.Compiler/LOADER" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_proxy.clj" :function "proxy" :line 365 :column 30
+   :snippet "clojure.lang.Compiler/writeClassFile" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_proxy.clj" :function "bean" :line 413 :column 41
+   :snippet "clojure.lang.Reflector/prepRet" :interop-kind :static :operating-type "clojure.lang.Reflector"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_proxy.clj" :function "bean" :line 427 :column 29
+   :snippet "clojure.lang.MapEntry/create" :interop-kind :static :operating-type "clojure.lang.MapEntry"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/core_proxy.clj" :function "bean" :line 433 :column 46
+   :snippet "clojure.lang.MapEntry/create" :interop-kind :static :operating-type "clojure.lang.MapEntry"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "non-private-methods" :line 45 :column 44
+   :snippet "Modifier/isPublic" :interop-kind :static :operating-type "Modifier"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "non-private-methods" :line 45 :column 69
+   :snippet "Modifier/isProtected" :interop-kind :static :operating-type "Modifier"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "protected-final-methods" :line 54 :column 39
+   :snippet "Modifier/isProtected" :interop-kind :static :operating-type "Modifier"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "protected-final-methods" :line 55 :column 39
+   :snippet "Modifier/isFinal" :interop-kind :static :operating-type "Modifier"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "protected-final-methods" :line 56 :column 44
+   :snippet "Modifier/isStatic" :interop-kind :static :operating-type "Modifier"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "prim->class" :line 87 :column 14
+   :snippet "Class/forName" :interop-kind :static :operating-type "Class"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "prim->class" :line 89 :column 15
+   :snippet "Class/forName" :interop-kind :static :operating-type "Class"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "prim->class" :line 91 :column 16
+   :snippet "Class/forName" :interop-kind :static :operating-type "Class"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "prim->class" :line 93 :column 17
+   :snippet "Class/forName" :interop-kind :static :operating-type "Class"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "prim->class" :line 96 :column 16
+   :snippet "Class/forName" :interop-kind :static :operating-type "Class"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "prim->class" :line 98 :column 18
+   :snippet "Class/forName" :interop-kind :static :operating-type "Class"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "prim->class" :line 99 :column 13
+   :snippet "Byte/TYPE" :interop-kind :static :operating-type "Byte"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "prim->class" :line 100 :column 15
+   :snippet "Class/forName" :interop-kind :static :operating-type "Class"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "prim->class" :line 102 :column 15
+   :snippet "Class/forName" :interop-kind :static :operating-type "Class"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "the-array-class" :line 105 :column 4
+   :snippet "clojure.lang.RT/classForName" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "the-array-class" :line 107 :column 7
+   :snippet "clojure.lang.Compiler$HostExpr/buildArrayClassDescriptor" :interop-kind :static :operating-type "clojure.lang.Compiler$HostExpr"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "the-array-class" :line 108 :column 16
+   :snippet "clojure.lang.Compiler/primClass" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "the-class" :line 116 :column 24
+   :snippet "clojure.lang.Compiler$HostExpr/looksLikeArrayClass" :interop-kind :static :operating-type "clojure.lang.Compiler$HostExpr"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "the-class" :line 119 :column 32
+   :snippet "clojure.lang.RT/classForName" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "the-class" :line 123 :column 12
+   :snippet "clojure.lang.RT/classForName" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "valid-java-method-name" :line 128 :column 9
+   :snippet "clojure.lang.Compiler/munge" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-class" :line 147 :column 13
+   :snippet "clojure.lang.Compiler/classWriter" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-class" :line 168 :column 27
+   :snippet "clojure.lang.Compiler/munge" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-class" :line 487 :column 22
+   :snippet "Modifier/isStatic" :interop-kind :static :operating-type "Modifier"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-class" :line 488 :column 20
+   :snippet "Opcodes/ACC_PUBLIC" :interop-kind :static :operating-type "Opcodes"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-class" :line 488 :column 51
+   :snippet "Opcodes/ACC_STATIC" :interop-kind :static :operating-type "Opcodes"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-class" :line 501 :column 44
+   :snippet "Type/VOID_TYPE" :interop-kind :static :operating-type "Type"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "gen-class" :line 649 :column 10
+   :snippet "clojure.lang.Compiler/writeClassFile" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "asm-type" :line 660 :column 33
+   :snippet "clojure.lang.Compiler$HostExpr/maybeArrayClass" :interop-kind :static :operating-type "clojure.lang.Compiler$HostExpr"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "asm-type" :line 662 :column 8
+   :snippet "Type/getType" :interop-kind :static :operating-type "Type"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "asm-type" :line 664 :column 10
+   :snippet "Type/getObjectType" :interop-kind :static :operating-type "Type"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-interface" :line 676 :column 13
+   :snippet "clojure.lang.Compiler/classWriter" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-interface" :line 677 :column 17
+   :snippet "Opcodes/V1_8" :interop-kind :static :operating-type "Opcodes"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-interface" :line 677 :column 33
+   :snippet "Opcodes/ACC_PUBLIC" :interop-kind :static :operating-type "Opcodes"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-interface" :line 678 :column 33
+   :snippet "Opcodes/ACC_ABSTRACT" :interop-kind :static :operating-type "Opcodes"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-interface" :line 679 :column 33
+   :snippet "Opcodes/ACC_INTERFACE" :interop-kind :static :operating-type "Opcodes"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-interface" :line 686 :column 37
+   :snippet "Opcodes/ACC_PUBLIC" :interop-kind :static :operating-type "Opcodes"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-interface" :line 686 :column 56
+   :snippet "Opcodes/ACC_ABSTRACT" :interop-kind :static :operating-type "Opcodes"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "generate-interface" :line 688 :column 20
+   :snippet "Type/getMethodDescriptor" :interop-kind :static :operating-type "Type"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "gen-interface" :line 733 :column 10
+   :snippet "clojure.lang.Compiler/writeClassFile" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "gen-interface" :line 734 :column 48
+   :snippet "clojure.lang.Compiler/LOADER" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/genclass.clj" :function "gen-and-load-class" :line 751 :column 10
+   :snippet "clojure.lang.RT/getRootClassLoader" :interop-kind :static :operating-type "clojure.lang.RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "VecSeq" :line 90 :column 13
+   :snippet "clojure.lang.PersistentList/EMPTY" :interop-kind :static :operating-type "clojure.lang.PersistentList"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "VecSeq" :line 109 :column 16
+   :snippet "clojure.lang.Util/equiv" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "VecSeq" :line 113 :column 5
+   :snippet "clojure.lang.PersistentList/EMPTY" :interop-kind :static :operating-type "clojure.lang.PersistentList"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "VecSeq" :line 127 :column 13
+   :snippet "clojure.lang.PersistentList/EMPTY" :interop-kind :static :operating-type "clojure.lang.PersistentList"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "VecSeq" :line 161 :column 6
+   :snippet "Murmur3/hashOrdered" :interop-kind :static :operating-type "Murmur3"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "Vec" :line 195 :column 34
+   :snippet "clojure.lang.Util/hash" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "Vec" :line 201 :column 6
+   :snippet "Murmur3/hashOrdered" :interop-kind :static :operating-type "Murmur3"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "Vec" :line 226 :column 10
+   :snippet "System/arraycopy" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "Vec" :line 250 :column 9
+   :snippet "clojure.lang.Util/equiv" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "Vec" :line 266 :column 10
+   :snippet "System/arraycopy" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "Vec" :line 285 :column 13
+   :snippet "System/arraycopy" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "Vec" :line 301 :column 10
+   :snippet "clojure.lang.Util/isInteger" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "Vec" :line 305 :column 11
+   :snippet "clojure.lang.Util/isInteger" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "Vec" :line 310 :column 8
+   :snippet "clojure.lang.MapEntry/create" :interop-kind :static :operating-type "clojure.lang.MapEntry"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "Vec" :line 315 :column 10
+   :snippet "clojure.lang.Util/isInteger" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "Vec" :line 326 :column 10
+   :snippet "clojure.lang.Util/isInteger" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/gvec.clj" :function "Vec" :line 418 :column 29
+   :snippet "clojure.lang.Util/compare" :interop-kind :static :operating-type "clojure.lang.Util"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/main.clj" :function "demunge" :line 33 :column 4
+   :snippet "clojure.lang.Compiler/demunge" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/main.clj" :function "with-bindings" :line 91 :column 30
+   :snippet "System/getProperty" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/main.clj" :function "repl" :line 412 :column 37
+   :snippet "Thread/currentThread" :interop-kind :static :operating-type "Thread"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/main.clj" :function "repl" :line 413 :column 30
+   :snippet "Thread/currentThread" :interop-kind :static :operating-type "Thread"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/main.clj" :function "load-script" :line 474 :column 6
+   :snippet "RT/loadResourceScript" :interop-kind :static :operating-type "RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/main.clj" :function "repl-opt" :line 529 :column 4
+   :snippet "System/exit" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/main.clj" :function "report-error" :line 614 :column 34
+   :snippet "System/lineSeparator" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/main.clj" :function "report-error" :line 614 :column 75
+   :snippet "System/lineSeparator" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/main.clj" :function "report-error" :line 615 :column 37
+   :snippet "System/lineSeparator" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/main.clj" :function "main" :line 667 :column 59
+   :snippet "System/getProperty" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Covered by clojure.test-clojure.backend.host-services public host-service regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/main.clj" :function "main" :line 668 :column 15
+   :snippet "System/exit" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/main.clj" :function "main" :line 673 :column 11
+   :snippet "System/exit" :interop-kind :static :operating-type "System"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/repl.clj" :function "special-doc-map" :line 23 :column 17
+   :snippet "Classname/staticMethod" :interop-kind :static :operating-type "Classname"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/repl.clj" :function "special-doc-map" :line 24 :column 16
+   :snippet "Classname/staticField" :interop-kind :static :operating-type "Classname"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/repl.clj" :function "source-fn" :line 158 :column 46
+   :snippet "RT/baseLoader" :interop-kind :static :operating-type "RT"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/repl.clj" :function "demunge" :line 212 :column 4
+   :snippet "clojure.lang.Compiler/demunge" :interop-kind :static :operating-type "clojure.lang.Compiler"
+   :semantic-category :compiler-backend :suite :jvm-backend :coverage-status :covered-behavioral-internal
+   :candidate-test-files ["test/clojure/test_clojure/backend/jvm_backend.clj" "test/clojure/test_clojure/compilation.clj" "test/clojure/test_clojure/java_interop.clj" "test/clojure/test_clojure/protocols.clj"]
+   :notes "Covered by clojure.test-clojure.backend.jvm-backend JVM backend regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/repl.clj" :function "thread-stopper" :line 276 :column 24
+   :snippet "Thread/currentThread" :interop-kind :static :operating-type "Thread"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/string.clj" :function "split" :line 225 :column 7
+   :snippet "LazilyPersistentVector/createOwning" :interop-kind :static :operating-type "LazilyPersistentVector"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/string.clj" :function "split" :line 227 :column 7
+   :snippet "LazilyPersistentVector/createOwning" :interop-kind :static :operating-type "LazilyPersistentVector"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/test.clj" :function "do-report" :line 367 :column 63
+   :snippet "Thread/currentThread" :interop-kind :static :operating-type "Thread"
+   :semantic-category :host-service :suite :host-service :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/host_services.clj" "test/clojure/test_clojure/java/io.clj" "test/clojure/test_clojure/java/process.clj" "test/clojure/test_clojure/server.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/uuid.clj" :function "default-uuid-reader" :line 13 :column 6
+   :snippet "java.util.UUID/fromString" :interop-kind :static :operating-type "java.util.UUID"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :manual-review-required
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Existing tests may cover this indirectly; keep manual-review-required until a behavioral assertion is linked."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/walk.clj" :function "walk" :line 46 :column 12
+   :snippet "clojure.lang.MapEntry/create" :interop-kind :static :operating-type "clojure.lang.MapEntry"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+  {:report "clojure_interop.md" :source-file "src/clj/clojure/xml.clj" :function "content-handler" :line 40 :column 45
+   :snippet "clojure.lang.Keyword/intern" :interop-kind :static :operating-type "clojure.lang.Keyword"
+   :semantic-category :runtime-data-model :suite :portable-semantic :coverage-status :covered-behavioral-public-api
+   :candidate-test-files ["test/clojure/test_clojure/backend/portable_semantics.clj" "test/clojure/test_clojure/data_structures.clj" "test/clojure/test_clojure/sequences.clj" "test/clojure/test_clojure/protocols.clj" "test/clojure/test_clojure/rt.clj"]
+   :notes "Covered by clojure.test-clojure.backend.portable-semantics public semantic regression tests."}
+ ]}

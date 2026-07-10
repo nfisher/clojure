@@ -1,0 +1,156 @@
+;; Proposed semantic review of dynamic receiver Java interop callsites.
+;; Generated from *_interop.md reports; proposed suites require reviewer approval before matrix promotion.
+{:scope :dynamic-receiver-review
+ :total-dynamic-dot-calls 1659
+ :focus-dynamic-dot-calls 1394
+ :proposed-suite-counts {:host-service 187 :jvm-backend 600 :manual-review 72 :mixed-review 503 :portable-semantic 297}
+ :focus-files
+ [
+  {:source-file "src/clj/clojure/core.clj" :dynamic-dot-calls 512 :proposed-suite-counts {:host-service 6 :jvm-backend 3 :mixed-review 503}
+   :top-snippets [{:snippet "(." :count 288} {:snippet "(.nth" :count 7} {:snippet "(.deref" :count 6} {:snippet "(.reduce" :count 5} {:snippet "(.toArray" :count 5} {:snippet "(.getName" :count 4} {:snippet "(.add" :count 4} {:snippet "(.reset" :count 4}]}
+  {:source-file "src/clj/clojure/core_deftype.clj" :dynamic-dot-calls 59 :proposed-suite-counts {:jvm-backend 59}
+   :top-snippets [{:snippet "(.sym" :count 8} {:snippet "(.protocol" :count 5} {:snippet "(.methodk" :count 5} {:snippet "(.__methodImplCache" :count 5} {:snippet "(.valAt" :count 4} {:snippet "(." :count 4} {:snippet "(.getName" :count 3} {:snippet "(.assoc" :count 3}]}
+  {:source-file "src/clj/clojure/core_print.clj" :dynamic-dot-calls 63 :proposed-suite-counts {:portable-semantic 63}
+   :top-snippets [{:snippet "(.write" :count 45} {:snippet "(.getName" :count 6} {:snippet "(.append" :count 5} {:snippet "(.isNaN" :count 2} {:snippet "(.isArray" :count 1} {:snippet "(.name" :count 1} {:snippet "(.ns" :count 1} {:snippet "(.sym" :count 1}]}
+  {:source-file "src/clj/clojure/java/io.clj" :dynamic-dot-calls 29 :proposed-suite-counts {:host-service 29}
+   :top-snippets [{:snippet "(.read" :count 4} {:snippet "(.write" :count 4} {:snippet "(.getProtocol" :count 3} {:snippet "(.toURL" :count 3} {:snippet "(.replace" :count 1} {:snippet "(.getFile" :count 1} {:snippet "(.openStream" :count 1} {:snippet "(.getInputStream" :count 1}]}
+  {:source-file "src/clj/clojure/java/process.clj" :dynamic-dot-calls 26 :proposed-suite-counts {:host-service 26}
+   :top-snippets [{:snippet "(.environment" :count 2} {:snippet "(.waitFor" :count 2} {:snippet "(.isDone" :count 2} {:snippet "(.get" :count 2} {:snippet "(.startsWith" :count 1} {:snippet "(.directory" :count 1} {:snippet "(.redirectInput" :count 1} {:snippet "(.redirectOutput" :count 1}]}
+  {:source-file "src/clj/clojure/pprint/cl_format.clj" :dynamic-dot-calls 63 :proposed-suite-counts {:portable-semantic 63}
+   :top-snippets [{:snippet "(.write" :count 15} {:snippet "(.length" :count 9} {:snippet "(.toLowerCase" :count 6} {:snippet "(.flush" :count 5} {:snippet "(.indexOf" :count 4} {:snippet "(.charAt" :count 4} {:snippet "(.close" :count 4} {:snippet "(.numerator" :count 3}]}
+  {:source-file "src/clj/clojure/pprint/dispatch.clj" :dynamic-dot-calls 25 :proposed-suite-counts {:portable-semantic 25}
+   :top-snippets [{:snippet "(.write" :count 18} {:snippet "(.col_write" :count 2} {:snippet "(." :count 1} {:snippet "(.getName" :count 1} {:snippet "(.isArray" :count 1} {:snippet "(.replaceFirst" :count 1} {:snippet "(.substring" :count 1}]}
+  {:source-file "src/clj/clojure/reflect/java.clj" :dynamic-dot-calls 22 :proposed-suite-counts {:jvm-backend 22}
+   :top-snippets [{:snippet "(.getModifiers" :count 4} {:snippet "(.getName" :count 3} {:snippet "(.getDeclaringClass" :count 3} {:snippet "(.getParameterTypes" :count 2} {:snippet "(.getExceptionTypes" :count 2} {:snippet "(.getClassName" :count 1} {:snippet "(.getDeclaredConstructors" :count 1} {:snippet "(.getReturnType" :count 1}]}
+  {:source-file "src/clj/clojure/genclass.clj" :dynamic-dot-calls 232 :proposed-suite-counts {:jvm-backend 232}
+   :top-snippets [{:snippet "(." :count 205} {:snippet "(.getName" :count 6} {:snippet "(.checkCast" :count 4} {:snippet "(.getParameterTypes" :count 3} {:snippet "(.getReturnType" :count 3} {:snippet "(.replace" :count 2} {:snippet "(.getSimpleName" :count 1} {:snippet "(.getDeclaredFields" :count 1}]}
+  {:source-file "src/clj/clojure/core_proxy.clj" :dynamic-dot-calls 157 :proposed-suite-counts {:jvm-backend 157}
+   :top-snippets [{:snippet "(." :count 145} {:snippet "(.getName" :count 5} {:snippet "(.replace" :count 2} {:snippet "(.checkCast" :count 2} {:snippet "(.lastIndexOf" :count 1} {:snippet "(.getDeclaringClass" :count 1} {:snippet "(.getPropertyType" :count 1}]}
+  {:source-file "src/clj/clojure/gvec.clj" :dynamic-dot-calls 127 :proposed-suite-counts {:jvm-backend 127}
+   :top-snippets [{:snippet "(.nth" :count 17} {:snippet "(.aset" :count 15} {:snippet "(.arr" :count 14} {:snippet "(.alength" :count 12} {:snippet "(.array" :count 12} {:snippet "(.edit" :count 9} {:snippet "(.aget" :count 5} {:snippet "(.arrayFor" :count 5}]}
+  {:source-file "src/clj/clojure/string.clj" :dynamic-dot-calls 79 :proposed-suite-counts {:portable-semantic 79}
+   :top-snippets [{:snippet "(.toString" :count 24} {:snippet "(.length" :count 10} {:snippet "(.charAt" :count 7} {:snippet "(.indexOf" :count 6} {:snippet "(.append" :count 4} {:snippet "(.charValue" :count 4} {:snippet "(.lastIndexOf" :count 4} {:snippet "(.find" :count 3}]}
+ ]
+ :sample-callsites
+ [
+  {:source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 20 :column 8 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 29 :column 34 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 46 :column 10 :snippet "(.withMeta" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 47 :column 21 :snippet "(.meta" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 55 :column 34 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 64 :column 29 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 73 :column 29 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 139 :column 49 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 146 :column 39 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 211 :column 11 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unquote-splicing" :line 220 :column 14 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "assert-valid-fdecl" :line 247 :column 58 :snippet "(.indexOf" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "assert-valid-fdecl" :line 247 :column 68 :snippet "(.getName" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "assert-valid-fdecl" :line 251 :column 97 :snippet "(.getName" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "defn" :line 328 :column 82 :snippet "(.concat" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "defn" :line 328 :column 91 :snippet "(.getName" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "defn" :line 338 :column 1 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "to-array" :line 346 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "cast" :line 353 :column 3 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "vector" :line 367 :column 6 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "hash-map" :line 389 :column 4 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "nil?" :line 493 :column 1 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "str" :line 555 :column 20 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "str" :line 559 :column 20 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "symbol" :line 601 :column 41 :snippet "(.toSymbol" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "symbol" :line 602 :column 45 :snippet "(.sym" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "gensym" :line 613 :column 20 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "gensym" :line 613 :column 75 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "apply" :line 667 :column 6 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "apply" :line 669 :column 6 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "apply" :line 671 :column 6 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "apply" :line 673 :column 6 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "apply" :line 675 :column 6 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "chunk-append" :line 698 :column 3 :snippet "(.add" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "chunk" :line 701 :column 3 :snippet "(.chunk" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "chunk-first" :line 704 :column 3 :snippet "(.chunkedFirst" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "chunk-rest" :line 707 :column 3 :snippet "(.chunkedMore" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "chunk-next" :line 710 :column 3 :snippet "(.chunkedNext" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "force" :line 767 :column 7 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "identical?" :line 779 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "=" :line 791 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "=" :line 809 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "compare" :line 840 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "compare" :line 842 :column 9 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "zero?" :line 872 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "zero?" :line 874 :column 9 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "count" :line 880 :column 22 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "int" :line 887 :column 22 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "int" :line 889 :column 7 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "nth" :line 896 :column 29 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "nth" :line 899 :column 17 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "nth" :line 900 :column 27 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "<" :line 905 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "<" :line 909 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "inc'" :line 920 :column 21 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "inc'" :line 922 :column 7 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "inc" :line 927 :column 21 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "inc" :line 929 :column 7 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "reduce1" :line 944 :column 24 :snippet "(.reduce" :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "nary-inline" :line 962 :column 16 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "nary-inline" :line 964 :column 18 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "nary-inline" :line 968 :column 25 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "nary-inline" :line 969 :column 15 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "+'" :line 982 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "+" :line 994 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "*'" :line 1006 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "*" :line 1018 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "/" :line 1029 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "-'" :line 1040 :column 8 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "-'" :line 1041 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "-" :line 1052 :column 8 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "-" :line 1053 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "<=" :line 1060 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "<=" :line 1064 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function ">" :line 1075 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function ">" :line 1079 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function ">=" :line 1090 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function ">=" :line 1094 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "==" :line 1105 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "==" :line 1109 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "max" :line 1123 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "min" :line 1133 :column 10 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "dec'" :line 1152 :column 21 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "dec'" :line 1154 :column 7 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "dec" :line 1159 :column 21 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "dec" :line 1161 :column 7 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-inc-int" :line 1166 :column 21 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-inc-int" :line 1168 :column 7 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-inc" :line 1173 :column 21 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-inc" :line 1175 :column 7 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-dec-int" :line 1180 :column 21 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-dec-int" :line 1182 :column 7 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-dec" :line 1187 :column 21 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-dec" :line 1189 :column 7 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-negate-int" :line 1194 :column 21 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-negate-int" :line 1196 :column 7 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-negate" :line 1201 :column 21 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-negate" :line 1203 :column 7 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-add-int" :line 1208 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-add-int" :line 1210 :column 9 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-add" :line 1215 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-add" :line 1217 :column 9 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-subtract-int" :line 1222 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-subtract-int" :line 1224 :column 9 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-subtract" :line 1229 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-subtract" :line 1231 :column 9 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-multiply-int" :line 1236 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-multiply-int" :line 1238 :column 9 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-multiply" :line 1243 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-multiply" :line 1245 :column 9 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-divide-int" :line 1250 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-divide-int" :line 1252 :column 9 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-remainder-int" :line 1257 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "unchecked-remainder-int" :line 1259 :column 9 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "pos?" :line 1264 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "pos?" :line 1266 :column 9 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "neg?" :line 1271 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "neg?" :line 1273 :column 9 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "quot" :line 1279 :column 23 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+  {:source-file "src/clj/clojure/core.clj" :function "quot" :line 1281 :column 5 :snippet "(." :proposed-suite :mixed-review :status :proposed}
+ ]}
