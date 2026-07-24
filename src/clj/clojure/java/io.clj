@@ -44,6 +44,21 @@
   (-> (clojure.string/replace s "+" (URLEncoder/encode "+" "UTF-8"))
       (URLDecoder/decode "UTF-8")))
 
+(defn- file-url?
+  [^URL u]
+  (= "file" (.getProtocol u)))
+
+(defn- file-url-path
+  [^URL u]
+  (escaped-utf8-urlstring->str
+    (.replace (.getFile u) \/ File/separatorChar)))
+
+(defn- url->file
+  [^URL u]
+  (if (file-url? u)
+    (as-file (file-url-path u))
+    (throw (IllegalArgumentException. (str "Not a file: " u)))))
+
 (extend-protocol Coercions
   nil
   (as-file [_] nil)
@@ -59,11 +74,7 @@
 
   URL
   (as-url [u] u)
-  (as-file [u]
-    (if (= "file" (.getProtocol u))
-      (as-file (escaped-utf8-urlstring->str
-                (.replace (.getFile u) \/ File/separatorChar)))
-      (throw (IllegalArgumentException. (str "Not a file: " u)))))
+  (as-file [u] (url->file u))
 
   URI
   (as-url [u] (.toURL u))
@@ -237,11 +248,11 @@
   (assoc default-streams-impl
     :make-input-stream (fn [^URL x opts]
                          (make-input-stream
-                          (if (= "file" (.getProtocol x))
+                          (if (file-url? x)
                             (FileInputStream. (as-file x))
                             (.openStream x)) opts))
     :make-output-stream (fn [^URL x opts]
-                          (if (= "file" (.getProtocol x))
+                          (if (file-url? x)
                             (make-output-stream (as-file x) opts)
                             (throw (IllegalArgumentException. (str "Can not write to non-file URL <" x ">")))))))
 

@@ -43,6 +43,16 @@
                     (p/start {:out :discard :err :discard}
                              "bash" "-c" "printf '%s' discarded; printf '%s' err >&2")))))))
 
+(deftest ^:host-service io-file-url-contracts
+  (testing "file URLs round-trip through host-service file and stream coercions"
+    (let [f (temp-file "clj-io-url")]
+      (spit f "url-content")
+      (let [u (.toURL (.toURI f))]
+        (is (= f (jio/as-file u)))
+        (is (= "url-content" (slurp u)))
+        (spit u "updated")
+        (is (= "updated" (slurp f)))))))
+
 (deftest ^:host-service process-exit-timeout-contract
   (testing "exit refs support blocking deref with timeout for process scheduling"
     (let [proc (p/start "bash" "-c" "sleep 0.2")]

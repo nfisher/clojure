@@ -23,7 +23,7 @@ This is the next Option D migration artifact: a semantic review queue for direct
 | `src/clj/clojure/core.clj` | 512 | `host-service` 6, `jvm-backend` 3, `mixed-review` 503 | `(.` (288), `(.nth` (7), `(.deref` (6), `(.reduce` (5), `(.toArray` (5) |
 | `src/clj/clojure/core_deftype.clj` | 59 | `jvm-backend` 59 | `(.sym` (8), `(.protocol` (5), `(.methodk` (5), `(.__methodImplCache` (5), `(.valAt` (4) |
 | `src/clj/clojure/core_print.clj` | 63 | `portable-semantic` 63 | `(.write` (45), `(.getName` (6), `(.append` (5), `(.isNaN` (2), `(.isArray` (1) |
-| `src/clj/clojure/java/io.clj` | 29 | `host-service` 29 | `(.read` (4), `(.write` (4), `(.getProtocol` (3), `(.toURL` (3), `(.replace` (1) |
+| `src/clj/clojure/java/io.clj` | 29 | `host-service` 29; status `seam-started` | `(.read` (4), `(.write` (4), `(.getProtocol` (3), `(.toURL` (3), `(.replace` (1) |
 | `src/clj/clojure/java/process.clj` | 26 | `host-service` 26; status `seam-started` | `(.environment` (2), `(.waitFor` (2), `(.isDone` (2), `(.get` (2), `(.startsWith` (1) |
 | `src/clj/clojure/pprint/cl_format.clj` | 63 | `portable-semantic` 63 | `(.write` (15), `(.length` (9), `(.toLowerCase` (6), `(.flush` (5), `(.indexOf` (4) |
 | `src/clj/clojure/pprint/dispatch.clj` | 25 | `portable-semantic` 25 | `(.write` (18), `(.col_write` (2), `(.` (1), `(.getName` (1), `(.isArray` (1) |
@@ -43,4 +43,4 @@ This is the next Option D migration artifact: a semantic review queue for direct
 
 ## Recommended next implementation step
 
-`src/clj/clojure/java/process.clj` has started seam extraction; continue next with `src/clj/clojure/java/io.clj` because it is strongly host-service oriented and already has backend-suite tests. After that, review `src/clj/clojure/genclass.clj`, `src/clj/clojure/core_proxy.clj`, and `src/clj/clojure/reflect/java.clj` for JVM-backend promotion.
+`src/clj/clojure/java/process.clj` has started seam extraction; `src/clj/clojure/java/io.clj` has also started seam extraction. Next, review `src/clj/clojure/genclass.clj`, `src/clj/clojure/core_proxy.clj`, and `src/clj/clojure/reflect/java.clj` for JVM-backend promotion.

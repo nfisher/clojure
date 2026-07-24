@@ -198,7 +198,7 @@ Each seam PR should include:
 
 ## Phase 5 artifact status
 
-The first host-service seam has been started in `src/clj/clojure/java/process.clj` by extracting private process helper functions for redirect coercion, process builder creation/configuration, and environment mutation. Public API behavior remains unchanged and is covered by the `:host-service` process tests.
+Host-service seam extraction has started in `src/clj/clojure/java/process.clj` and `src/clj/clojure/java/io.clj`. Process startup now uses private helpers for redirect coercion, process builder creation/configuration, and environment mutation. File URL handling now uses private helpers for file URL detection, decoded file path conversion, and URL-to-file coercion. Public API behavior remains unchanged and is covered by the `:host-service` tests.
 
 ## Suggested implementation order
 

@@ -12,7 +12,7 @@
    :top-snippets [{:snippet "(.sym" :count 8} {:snippet "(.protocol" :count 5} {:snippet "(.methodk" :count 5} {:snippet "(.__methodImplCache" :count 5} {:snippet "(.valAt" :count 4} {:snippet "(." :count 4} {:snippet "(.getName" :count 3} {:snippet "(.assoc" :count 3}]}
   {:source-file "src/clj/clojure/core_print.clj" :dynamic-dot-calls 63 :proposed-suite-counts {:portable-semantic 63}
    :top-snippets [{:snippet "(.write" :count 45} {:snippet "(.getName" :count 6} {:snippet "(.append" :count 5} {:snippet "(.isNaN" :count 2} {:snippet "(.isArray" :count 1} {:snippet "(.name" :count 1} {:snippet "(.ns" :count 1} {:snippet "(.sym" :count 1}]}
-  {:source-file "src/clj/clojure/java/io.clj" :dynamic-dot-calls 29 :proposed-suite-counts {:host-service 29}
+  {:source-file "src/clj/clojure/java/io.clj" :dynamic-dot-calls 29 :proposed-suite-counts {:host-service 29} :status :seam-started
    :top-snippets [{:snippet "(.read" :count 4} {:snippet "(.write" :count 4} {:snippet "(.getProtocol" :count 3} {:snippet "(.toURL" :count 3} {:snippet "(.replace" :count 1} {:snippet "(.getFile" :count 1} {:snippet "(.openStream" :count 1} {:snippet "(.getInputStream" :count 1}]}
   {:source-file "src/clj/clojure/java/process.clj" :dynamic-dot-calls 26 :proposed-suite-counts {:host-service 26} :status :seam-started
    :top-snippets [{:snippet "(.environment" :count 2} {:snippet "(.waitFor" :count 2} {:snippet "(.isDone" :count 2} {:snippet "(.get" :count 2} {:snippet "(.startsWith" :count 1} {:snippet "(.directory" :count 1} {:snippet "(.redirectInput" :count 1} {:snippet "(.redirectOutput" :count 1}]}
